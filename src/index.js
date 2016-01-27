@@ -6,6 +6,7 @@ import ExpressWrapper from'./express-compiled.js';
 import OS from 'os';
 
 class Castle {
+
     /**
      *
      * @param apiKey
