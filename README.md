@@ -43,7 +43,7 @@ app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
 
 To track events
 
-```javascript`
+```javascript
 (request, response, next) => {
     request.trackEvent({
         event     : request.castleEvents.LOGIN_SUCCEEDED,
