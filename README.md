@@ -10,7 +10,7 @@ Obtain the latest version of the SDK with npm:
 npm install castleio-sdk
 ```
 
-## Getting Started: The Manly Way
+## Getting Started: The Vanilla Way
 
 ```javascript
 import Castle from 'castleio-sdk';
@@ -60,3 +60,22 @@ To track events
     });   
 }
 ```
+
+## Options
+
+The Castle object accepts these options upon initialization
+
+| Code                             | Description     |Default    |
+|:---------------------------------|:----------------|:----------|
+|apiKey|Your api key. This is currently unused|null|
+|apiSecret|Your api secret. This is used for authenticating you|undefined|
+|disableClientUserAgent|Wether or not you want to send SDK info and OS information to castle for analytics|false|
+
+## Errors
+Whenever something unexpected happens, a error is created and returned. Here's a list of errors
+that we're shamefully created
+
+| Code                             | Description     |
+|:---------------------------------|:----------------|
+|MISSING_EVENT_NAME|You've missed the event parameter for the trackEvent function|
+|INVALID_HTTP_STATUS_CODE|The HTTP Code returned by the Castle API was unexpected|
