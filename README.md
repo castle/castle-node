@@ -1,6 +1,6 @@
 # Node.js SDK for Castle
 
-**[Castle](https://castle.io) adds real-time monitoring of your authentication stack, instantly notifying you and your users on potential account hijacks.**
+**[Castle](https:castle.io) adds real-time monitoring of your authentication stack, instantly notifying you and your users on potential account hijacks.**
 
 ## Installation
 
@@ -24,20 +24,20 @@ var castle = new Castle({apiSecret : 'YOUR-SECRET-HERE'});
 ```javascript
 
 castle.trackEvent({
-    event     : Castle.Events.LOGIN_SUCCEEDED, //This can also be a string EX: $login.failed
-    user_id   : 2473, //The ID of your user
-    details   : { //Optional
+    event     : Castle.Events.LOGIN_SUCCEEDED, This can also be a string EX: $login.failed
+    user_id   : 2473, The ID of your user
+    details   : { Optional
         email: castle@castle.io
     },
     userAgent : 'Really long user agent string here',
     cookie    : 'The cookie the client side javascript created with the name __cid',
     ip        : '0.0.0.0',
-    headers   : {} //Tons of headers here
+    headers   : {} Tons of headers here
 }).then(obj => {
-    //Handle success
-    //Note that "obj" is almost always just {}
+    Handle success
+    Note that "obj" is almost always just {}
 }).catch(e => {
-    //Handle error
+    Handle error
 });
 ```
 
@@ -45,19 +45,19 @@ castle.trackEvent({
 
 ```javascript
 castle.identify({
-    user_id   : 2473, //The ID of your user
-    user_data   : { //Optional
+    user_id   : 2473, The ID of your user
+    user_data   : { Optional
         email: castle@castle.io
     },
     userAgent : 'Really long user agent string here',
     cookie    : 'The cookie the client side javascript created with the name __cid',
     ip        : '0.0.0.0',
-    headers   : {} //Tons of headers here
+    headers   : {} Tons of headers here
 }).then(obj => {
-    //Handle success
-    //Note that "obj" is almost always just {}
+    Handle success
+    Note that "obj" is almost always just {}
 }).catch(e => {
-    //Handle error
+    Handle error
 });
 ```
 
@@ -78,15 +78,15 @@ app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
 (request, response, next) => {
     request.trackEvent({
         event     : request.castleEvents.LOGIN_SUCCEEDED,
-        user_id   : 2473, //The ID of your user
-        details   : { //Optional
+        user_id   : 2473, The ID of your user
+        details   : { Optional
             email: castle@castle.io
         }
     }).then(obj => {
-        //Handle success
-        //Note that "obj" is almost always just {}
+        Handle success
+        Note that "obj" is almost always just {}
     }).catch(e => {
-        //Handle error
+        Handle error
         next(e)
     });   
 }
@@ -97,15 +97,15 @@ app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
 ```javascript
 (request, response, next) => {
     request.identify({
-        user_id   : 2473, //The ID of your user
-        user_data   : { //Optional
+        user_id   : 2473, The ID of your user
+        user_data   : { Optional
             email: castle@castle.io
         }
     }).then(obj => {
-        //Handle success
-        //Note that "obj" is almost always just {}
+        Handle success
+        Note that "obj" is almost always just {}
     }).catch(e => {
-        //Handle error
+        Handle error
         next(e)
     });   
 }
@@ -127,22 +127,22 @@ These are the events Available through Castle.Events
 
 | Code                             | Description     |Default    |
 |:---------------------------------|:----------------|:----------|
-|   LOGIN_SUCCEEDED           | $login.succeeded | //Record when a user attempts to log in|
-|   LOGIN_FAILED              | $login.failed | //Record when a user logs out|
-|   LOGOUT_SUCCEEDED          | $logout.succeeded | //Record when a user logs out|
-|   REGISTRATION_SUCCEEDED    | $registration.succeeded | //Capture account creation, both when a user signs up as well as when created manually by an administrator|
-|   REGISTRATION_FAILED       | $registration.failed | //Record when an account failed to be created|
-|   EMAIL_CHANGE_REQUESTED    | $email_change.requested | //An attempt was made to change a user’s email|
-|   EMAIL_CHANGE_SUCCEEDED    | $email_change.succeeded | //The user completed all of the steps in the email address change process and the email was successfully changed|
-|   EMAIL_CHANGE_FAILED       | $email_change.failed | //Use to record when a user failed to change their email address|
-|   PASSWORD_RESET_REQUESTED  | $password_reset.requested | //An attempt was made to reset a user’s password|
-|   PASSWORD_RESET_SUCCEEDED  | $password_reset.succeeded | //The user completed all of the steps in the password reset process and the password was successfully reset. Password resets do not required knowledge of the current password|
-|   PASSWORD_RESET_FAILED     | $password_reset.failed | //Use to record when a user failed to reset their password|
-|   PASSWORD_CHANGE_SUCCEEDED | $password_change.succeeded |//Use to record when a user changed their password. This event is only logged when users change their own password|
-|   PASSWORD_CHANGE_FAILED    | $password_change.failed | //Use to record when a user failed to change their password|
-|   CHALLENGE_REQUESTED       | $challenge.requested | //Record when a user is prompted with additional verification, such as two-factor authentication or a captcha|
-|   CHALLENGE_SUCCEEDED       | $challenge.succeeded | //Record when additional verification was successful|
-|   CHALLENGE_FAILED          | $challenge.failed |//Record when additional verification failed|
+|   LOGIN_SUCCEEDED           | $login.succeeded | Record when a user attempts to log in|
+|   LOGIN_FAILED              | $login.failed | Record when a user logs out|
+|   LOGOUT_SUCCEEDED          | $logout.succeeded | Record when a user logs out|
+|   REGISTRATION_SUCCEEDED    | $registration.succeeded | Capture account creation, both when a user signs up as well as when created manually by an administrator|
+|   REGISTRATION_FAILED       | $registration.failed | Record when an account failed to be created|
+|   EMAIL_CHANGE_REQUESTED    | $email_change.requested | An attempt was made to change a user’s email|
+|   EMAIL_CHANGE_SUCCEEDED    | $email_change.succeeded | The user completed all of the steps in the email address change process and the email was successfully changed|
+|   EMAIL_CHANGE_FAILED       | $email_change.failed | Use to record when a user failed to change their email address|
+|   PASSWORD_RESET_REQUESTED  | $password_reset.requested | An attempt was made to reset a user’s password|
+|   PASSWORD_RESET_SUCCEEDED  | $password_reset.succeeded | The user completed all of the steps in the password reset process and the password was successfully reset. Password resets do not required knowledge of the current password|
+|   PASSWORD_RESET_FAILED     | $password_reset.failed | Use to record when a user failed to reset their password|
+|   PASSWORD_CHANGE_SUCCEEDED | $password_change.succeeded |Use to record when a user changed their password. This event is only logged when users change their own password|
+|   PASSWORD_CHANGE_FAILED    | $password_change.failed | Use to record when a user failed to change their password|
+|   CHALLENGE_REQUESTED       | $challenge.requested | Record when a user is prompted with additional verification, such as two-factor authentication or a captcha|
+|   CHALLENGE_SUCCEEDED       | $challenge.succeeded | Record when additional verification was successful|
+|   CHALLENGE_FAILED          | $challenge.failed |Record when additional verification failed|
 
 ## Errors
 Whenever something unexpected happens, a error is created and returned. Here's a list of errors
