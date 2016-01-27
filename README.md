@@ -36,7 +36,7 @@ castle.trackEvent({
 ## Getting Started: The Express Way
 
 First, intialize the SDK with the rest of your Express 4.x middleware
-```javascript`
+```javascript
 import Castle from 'castleio-sdk'
 app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
 ```
@@ -59,4 +59,4 @@ To track events
         next(e)
     });   
 }
-``
+```
