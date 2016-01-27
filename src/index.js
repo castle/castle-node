@@ -37,20 +37,13 @@ class Castle {
             }
 
             var postData = {
-                    name    : event,
-                    user_id : user_id,
-                    details : details
-                },
-                headers  = {
-                    'X-Castle-Ip'                : ip,
-                    'X-Castle-Cookie-Id'         : cookie,
-                    'X-Castle-User-Agent'        : userAgent,
-                    'X-Castle-Headers'           : JSON.stringify(headers),
-                    'X-Castle-Client-User-Agent' : this.isClientUserAgentDisabled() ? undefined : this.getClientUserAgent()
-                };
+                name    : event,
+                user_id : user_id,
+                details : details
+            };
             this.getClient().post({
                 path    : '/v1/events',
-                headers : this.stripUndefinedVariables(headers)
+                headers : this.generateHeaders(headers, ip, cookie, userAgent)
             }, postData, (error, request, response, obj) => {
                 if (error) {
                     return reject(error);
@@ -58,7 +51,33 @@ class Castle {
                     return reject(new Error(`Invalid HTTP Status Code ${request.statusCode}`, 'INVALID_HTTP_STATUS_CODE'))
                 }
                 return resolve(obj);
-            })
+            });
+        });
+    }
+
+    identify({user_id, user_data, headers = {}, ip = undefined, cookie = '', userAgent = ''}) {
+        return new Promise((resolve, reject) => {
+            this.getClient().put({
+                path    : `/v1/users/${user_id}`,
+                headers : this.generateHeaders(headers, ip, cookie, userAgent)
+            }, user_data, (error, request, response, obj) => {
+                if (error) {
+                    return reject(error);
+                } else if (request.statusCode < 200 || request.statusCode >= 300) {
+                    return reject(new Error(`Invalid HTTP Status Code ${request.statusCode}`, 'INVALID_HTTP_STATUS_CODE'))
+                }
+                return resolve(obj);
+            });
+        });
+    }
+
+    generateHeaders(clientHeaders, ip, cookie, userAgent) {
+        return this.stripUndefinedVariables({
+            'X-Castle-Ip'                : ip,
+            'X-Castle-Cookie-Id'         : cookie,
+            'X-Castle-User-Agent'        : userAgent,
+            'X-Castle-Headers'           : JSON.stringify(clientHeaders),
+            'X-Castle-Client-User-Agent' : this.isClientUserAgentDisabled() ? undefined : this.getClientUserAgent()
         });
     }
 

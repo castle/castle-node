@@ -84,17 +84,10 @@ var Castle = function () {
                     name: event,
                     user_id: user_id,
                     details: details
-                },
-                    headers = {
-                    'X-Castle-Ip': ip,
-                    'X-Castle-Cookie-Id': cookie,
-                    'X-Castle-User-Agent': userAgent,
-                    'X-Castle-Headers': JSON.stringify(headers),
-                    'X-Castle-Client-User-Agent': _this.isClientUserAgentDisabled() ? undefined : _this.getClientUserAgent()
                 };
                 _this.getClient().post({
                     path: '/v1/events',
-                    headers: _this.stripUndefinedVariables(headers)
+                    headers: _this.generateHeaders(headers, ip, cookie, userAgent)
                 }, postData, function (error, request, response, obj) {
                     if (error) {
                         return reject(error);
@@ -103,6 +96,47 @@ var Castle = function () {
                     }
                     return resolve(obj);
                 });
+            });
+        }
+    }, {
+        key: 'identify',
+        value: function identify(_ref3) {
+            var _this2 = this;
+
+            var user_id = _ref3.user_id;
+            var user_data = _ref3.user_data;
+            var _ref3$headers = _ref3.headers;
+            var headers = _ref3$headers === undefined ? {} : _ref3$headers;
+            var _ref3$ip = _ref3.ip;
+            var ip = _ref3$ip === undefined ? undefined : _ref3$ip;
+            var _ref3$cookie = _ref3.cookie;
+            var cookie = _ref3$cookie === undefined ? '' : _ref3$cookie;
+            var _ref3$userAgent = _ref3.userAgent;
+            var userAgent = _ref3$userAgent === undefined ? '' : _ref3$userAgent;
+
+            return new Promise(function (resolve, reject) {
+                _this2.getClient().put({
+                    path: '/v1/users/' + user_id,
+                    headers: _this2.generateHeaders(headers, ip, cookie, userAgent)
+                }, user_data, function (error, request, response, obj) {
+                    if (error) {
+                        return reject(error);
+                    } else if (request.statusCode < 200 || request.statusCode >= 300) {
+                        return reject(new Error('Invalid HTTP Status Code ' + request.statusCode, 'INVALID_HTTP_STATUS_CODE'));
+                    }
+                    return resolve(obj);
+                });
+            });
+        }
+    }, {
+        key: 'generateHeaders',
+        value: function generateHeaders(clientHeaders, ip, cookie, userAgent) {
+            return this.stripUndefinedVariables({
+                'X-Castle-Ip': ip,
+                'X-Castle-Cookie-Id': cookie,
+                'X-Castle-User-Agent': userAgent,
+                'X-Castle-Headers': JSON.stringify(clientHeaders),
+                'X-Castle-Client-User-Agent': this.isClientUserAgentDisabled() ? undefined : this.getClientUserAgent()
             });
         }
     }, {
