@@ -12,9 +12,17 @@ npm install castleio-sdk
 
 ## Getting Started: The Vanilla Way
 
+### Initializing
+
 ```javascript
 import Castle from 'castleio-sdk';
 var castle = new Castle({apiSecret : 'YOUR-SECRET-HERE'});
+```
+
+### Tracking Events
+
+```javascript
+
 castle.trackEvent({
     event     : Castle.Events.LOGIN_SUCCEEDED, //This can also be a string EX: $login.failed
     user_id   : 2473, //The ID of your user
@@ -33,15 +41,38 @@ castle.trackEvent({
 });
 ```
 
+### Identifying Users
+
+```javascript
+castle.identify({
+    user_id   : 2473, //The ID of your user
+    user_data   : { //Optional
+        email: castle@castle.io
+    },
+    userAgent : 'Really long user agent string here',
+    cookie    : 'The cookie the client side javascript created with the name __cid',
+    ip        : '0.0.0.0',
+    headers   : {} //Tons of headers here
+}).then(obj => {
+    //Handle success
+    //Note that "obj" is almost always just {}
+}).catch(e => {
+    //Handle error
+});
+```
+
 ## Getting Started: The Express Way
 
-First, intialize the SDK with the rest of your Express 4.x middleware
+This is the way to go if you're using Express 4.x
+
+### Initializing
+
 ```javascript
 import Castle from 'castleio-sdk'
 app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
 ```
 
-To track events
+### Tracking Events
 
 ```javascript
 (request, response, next) => {
@@ -49,6 +80,25 @@ To track events
         event     : request.castleEvents.LOGIN_SUCCEEDED,
         user_id   : 2473, //The ID of your user
         details   : { //Optional
+            email: castle@castle.io
+        }
+    }).then(obj => {
+        //Handle success
+        //Note that "obj" is almost always just {}
+    }).catch(e => {
+        //Handle error
+        next(e)
+    });   
+}
+```
+
+### Identifying Users
+
+```javascript
+(request, response, next) => {
+    request.identify({
+        user_id   : 2473, //The ID of your user
+        user_data   : { //Optional
             email: castle@castle.io
         }
     }).then(obj => {
