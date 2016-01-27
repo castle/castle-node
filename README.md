@@ -24,20 +24,20 @@ var castle = new Castle({apiSecret : 'YOUR-SECRET-HERE'});
 ```javascript
 
 castle.trackEvent({
-    event     : Castle.Events.LOGIN_SUCCEEDED, This can also be a string EX: $login.failed
-    user_id   : 2473, The ID of your user
-    details   : { Optional
-        email: castle@castle.io
+    event     : Castle.Events.LOGIN_SUCCEEDED, //This can also be a string EX: $login.failed
+    user_id   : 2473, //The ID of your user
+    details   : { //Optional
+            email: 'castle@castle.io'
     },
     userAgent : 'Really long user agent string here',
     cookie    : 'The cookie the client side javascript created with the name __cid',
     ip        : '0.0.0.0',
     headers   : {} Tons of headers here
 }).then(obj => {
-    Handle success
-    Note that "obj" is almost always just {}
+    //Handle success
+    //Note that "obj" is almost always just {}
 }).catch(e => {
-    Handle error
+    //Handle error
 });
 ```
 
@@ -45,19 +45,19 @@ castle.trackEvent({
 
 ```javascript
 castle.identify({
-    user_id   : 2473, The ID of your user
-    user_data   : { Optional
-        email: castle@castle.io
+    user_id   : 2473, //The ID of your user
+    user_data   : { //Optional
+            email: 'castle@castle.io'
     },
     userAgent : 'Really long user agent string here',
     cookie    : 'The cookie the client side javascript created with the name __cid',
     ip        : '0.0.0.0',
     headers   : {} Tons of headers here
 }).then(obj => {
-    Handle success
-    Note that "obj" is almost always just {}
+    //Handle success
+    //Note that "obj" is almost always just {}
 }).catch(e => {
-    Handle error
+    //Handle error
 });
 ```
 
@@ -78,15 +78,15 @@ app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
 (request, response, next) => {
     request.trackEvent({
         event     : request.castleEvents.LOGIN_SUCCEEDED,
-        user_id   : 2473, The ID of your user
-        details   : { Optional
-            email: castle@castle.io
-        }
+        user_id   : 2473, //The ID of your user
+        details   : { //Optional
+            email: 'castle@castle.io'
+        }.
     }).then(obj => {
-        Handle success
-        Note that "obj" is almost always just {}
+        //Handle success
+        //Note that "obj" is almost always just {}
     }).catch(e => {
-        Handle error
+        //Handle error
         next(e)
     });   
 }
@@ -97,15 +97,15 @@ app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
 ```javascript
 (request, response, next) => {
     request.identify({
-        user_id   : 2473, The ID of your user
-        user_data   : { Optional
-            email: castle@castle.io
+        user_id   : 2473, //The ID of your user
+        user_data   : { //Optional
+            email: 'castle@castle.io'
         }
     }).then(obj => {
-        Handle success
-        Note that "obj" is almost always just {}
+        //Handle success
+        //Note that "obj" is almost always just {}
     }).catch(e => {
-        Handle error
+        //Handle error
         next(e)
     });   
 }
