@@ -119,6 +119,7 @@ The Castle object accepts these options upon initialization
 |:---------------------------------|:----------------|:----------|
 |apiKey|Your api key. This is currently unused|null|
 |apiSecret|Your api secret. This is used for authenticating you|undefined|
+|apiUrl|The endpoint you want to send your api requests to|https://api.castle.io|
 |disableClientUserAgent|Wether or not you want to send SDK info and OS information to castle for analytics|false|
 
 ## Events
