@@ -18,7 +18,7 @@ module.exports = function (castle) {
             }));
         };
 
-        request.castleIdentifyUser = function (user_id, user_data) {
+        request.castleIdentify = function (user_id, user_data) {
             return castle.identify(injectClientData({
                 user_id,
                 user_data

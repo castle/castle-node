@@ -76,7 +76,7 @@ app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
 
 ```javascript
 (request, response, next) => {
-    request.trackEvent({
+    request.castleTrackEvent({
         event     : request.castleEvents.LOGIN_SUCCEEDED,
         user_id   : 2473, The ID of your user
         details   : { Optional
@@ -88,7 +88,7 @@ app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
     }).catch(e => {
         Handle error
         next(e)
-    });   
+    });
 }
 ```
 
@@ -96,7 +96,7 @@ app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
 
 ```javascript
 (request, response, next) => {
-    request.identify({
+    request.castleIdentify({
         user_id   : 2473, The ID of your user
         user_data   : { Optional
             email: castle@castle.io
@@ -107,7 +107,7 @@ app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
     }).catch(e => {
         Handle error
         next(e)
-    });   
+    });
 }
 ```
 
