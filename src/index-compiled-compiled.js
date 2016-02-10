@@ -1,6 +1,14 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
 
 var _restify = require('restify');
 
@@ -18,9 +26,15 @@ var _os = require('os');
 
 var _os2 = _interopRequireDefault(_os);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
 
 var Castle = function () {
 
@@ -36,16 +50,14 @@ var Castle = function () {
         var apiSecret = _ref.apiSecret;
         var _ref$disableClientUse = _ref.disableClientUserAgent;
         var disableClientUserAgent = _ref$disableClientUse === undefined ? false : _ref$disableClientUse;
-        var _ref$apiUrl = _ref.apiUrl;
-        var apiUrl = _ref$apiUrl === undefined ? 'https://api.castle.io' : _ref$apiUrl;
 
         _classCallCheck(this, Castle);
 
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.disableClientUserAgent = disableClientUserAgent;
-        this.client = _restify2.default.createJsonClient({ url: this.apiUrl });
-        this.getClient().basicAuth('', apiSecret);
+        this.client = _restify2.default.createJsonClient({ url: 'https://api.castle.io' });
+        this.getClient().basicAuth('call-the-cops-i-dont-give-a-fck', apiSecret);
     }
 
     /**
@@ -154,6 +166,12 @@ var Castle = function () {
             return toReturn;
         }
     }, {
+        key: 'express',
+        value: function express(opts) {
+            var castle = new Castle(opts);
+            return (0, _expressCompiled2.default)(castle);
+        }
+    }, {
         key: 'getClient',
         value: function getClient() {
             return this.client;
@@ -179,12 +197,6 @@ var Castle = function () {
         key: 'isClientUserAgentDisabled',
         value: function isClientUserAgentDisabled() {
             return this.disableClientUserAgent || false;
-        }
-    }], [{
-        key: 'express',
-        value: function express(opts) {
-            var castle = new Castle(opts);
-            return (0, _expressCompiled2.default)(castle);
         }
     }]);
 
@@ -220,3 +232,5 @@ Castle.Events = {
 module.exports = Castle;
 
 //# sourceMappingURL=index-compiled.js.map
+
+//# sourceMappingURL=index-compiled-compiled.js.map
