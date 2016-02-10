@@ -1,6 +1,8 @@
 'use strict';
 
-module.exports = function (castle) {
+import Events from './events-compiled.js';
+
+module.exports = function (castle, events = Events) {
     return function (request, response, next) {
         function injectClientData(data) {
             data.headers   = request.headers || undefined;
@@ -25,7 +27,7 @@ module.exports = function (castle) {
             }));
         };
 
-        request.castleEvents = castle.Events;
+        request.castleEvents = events;
 
         next();
     }
