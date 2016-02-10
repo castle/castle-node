@@ -12,11 +12,11 @@ class Castle {
      * @param apiKey
      * @param apiSecret
      */
-    constructor({apiKey = null, apiSecret, disableClientUserAgent = false}) {
+    constructor({apiKey = null, apiSecret, disableClientUserAgent = false, apiUrl = 'https://api.castle.io'}) {
         this.apiKey                 = apiKey;
         this.apiSecret              = apiSecret;
         this.disableClientUserAgent = disableClientUserAgent;
-        this.client                 = restify.createJsonClient({url : 'https://api.castle.io'});
+        this.client                 = restify.createJsonClient({url : this.apiUrl });
         this.getClient().basicAuth('call-the-cops-i-dont-give-a-fck', apiSecret);
     }
 

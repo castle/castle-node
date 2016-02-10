@@ -36,13 +36,15 @@ var Castle = function () {
         var apiSecret = _ref.apiSecret;
         var _ref$disableClientUse = _ref.disableClientUserAgent;
         var disableClientUserAgent = _ref$disableClientUse === undefined ? false : _ref$disableClientUse;
+        var _ref$apiUrl = _ref.apiUrl;
+        var apiUrl = _ref$apiUrl === undefined ? 'https://api.castle.io' : _ref$apiUrl;
 
         _classCallCheck(this, Castle);
 
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.disableClientUserAgent = disableClientUserAgent;
-        this.client = _restify2.default.createJsonClient({ url: 'https://api.castle.io' });
+        this.client = _restify2.default.createJsonClient({ url: this.apiUrl });
         this.getClient().basicAuth('call-the-cops-i-dont-give-a-fck', apiSecret);
     }
 
@@ -56,6 +58,7 @@ var Castle = function () {
      * @param {string} cookie [optional] the castle cookie left by the clientside javascript sdk
      * @returns {Promise}
      */
+
 
     _createClass(Castle, [{
         key: 'trackEvent',
@@ -195,6 +198,7 @@ var Castle = function () {
  *
  * @type {{LOGIN_SUCCEEDED: string, LOGIN_FAILED: string, LOGOUT_SUCCEEDED: string, REGISTRATION_SUCCEEDED: string, REGISTRATION_FAILED: string, EMAIL_CHANGE_REQUESTED: string, EMAIL_CHANGE_SUCCEEDED: string, EMAIL_CHANGE_FAILED: string, PASSWORD_RESET_REQUESTED: string, PASSWORD_RESET_SUCCEEDED: string, PASSWORD_RESET_FAILED: string, PASSWORD_CHANGE_SUCCEEDED: string, PASSWORD_CHANGE_FAILED: string, CHALLENGE_REQUESTED: string, CHALLENGE_SUCCEEDED: string, CHALLENGE_FAILED: string}}
  */
+
 
 Castle.Events = {
     LOGIN_SUCCEEDED: '$login.succeeded', //Record when a user attempts to log in.
