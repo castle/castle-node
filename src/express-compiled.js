@@ -13,8 +13,8 @@ module.exports = function (castle) {
         function injectClientData(data) {
             data.headers = request.headers || undefined;
             data.ip = request.ip || undefined;
-            data.cookie = request.cookies['__cid'] || undefined;
-            data.userAgent = request.headers['user-agent'] || '';
+            data.cookie = (request.cookies || {})['__cid'] || undefined;
+            data.userAgent = (request.headers || {})['user-agent'] || '';
             return data;
         }
 
