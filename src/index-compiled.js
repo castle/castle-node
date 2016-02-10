@@ -45,7 +45,7 @@ var Castle = function () {
         this.apiSecret = apiSecret;
         this.disableClientUserAgent = disableClientUserAgent;
         this.client = _restify2.default.createJsonClient({ url: this.apiUrl });
-        this.getClient().basicAuth('call-the-cops-i-dont-give-a-fck', apiSecret);
+        this.getClient().basicAuth('', apiSecret);
     }
 
     /**

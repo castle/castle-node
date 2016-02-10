@@ -17,7 +17,7 @@ class Castle {
         this.apiSecret              = apiSecret;
         this.disableClientUserAgent = disableClientUserAgent;
         this.client                 = restify.createJsonClient({url : this.apiUrl });
-        this.getClient().basicAuth('call-the-cops-i-dont-give-a-fck', apiSecret);
+        this.getClient().basicAuth('', apiSecret);
     }
 
     /**
