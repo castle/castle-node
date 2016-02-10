@@ -13,12 +13,13 @@ class Castle {
      * @param apiKey
      * @param apiSecret
      */
-    constructor({apiKey = null, apiSecret, disableClientUserAgent = false, apiUrl = 'https://api.castle.io'}) {
+    constructor({apiKey = null, apiSecret, apiUrl = 'https://api.castle.io', disableClientUserAgent = false}) {
         this.apiKey                 = apiKey;
         this.apiSecret              = apiSecret;
         this.disableClientUserAgent = disableClientUserAgent;
-        this.client                 = restify.createJsonClient({url : this.apiUrl});
-        this.getClient().basicAuth('', apiSecret);
+        this.apiUrl                 = apiUrl;
+        this.client                 = restify.createJsonClient({url : apiUrl});
+        this.getClient().basicAuth('test', apiSecret);
     }
 
     /**
@@ -78,7 +79,7 @@ class Castle {
             'X-Castle-Cookie-Id'         : cookie,
             'X-Castle-User-Agent'        : userAgent,
             'X-Castle-Headers'           : JSON.stringify(clientHeaders),
-            'X-Castle-Client-User-Agent' : this.isClientUserAgentDisabled() ? undefined : this.getClientUserAgent()
+            'X-Castle-Client-User-Agent' : this.isClientUserAgentDisabled() ? undefined : JSON.stringify(this.getClientUserAgent())
         });
     }
 

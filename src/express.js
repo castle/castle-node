@@ -12,15 +12,15 @@ module.exports = function (castle, events = Events) {
             return data;
         }
 
-        request.castleTrackEvent = function (event, userID, details) {
+        request.castleTrackEvent = function ({event, user_id, details}) {
             return castle.trackEvent(injectClientData({
                 event,
-                userID,
+                user_id,
                 details
             }));
         };
 
-        request.castleIdentify = function (user_id, user_data) {
+        request.castleIdentify = function ({user_id, user_data}) {
             return castle.identify(injectClientData({
                 user_id,
                 user_data
