@@ -185,7 +185,7 @@ var Castle = function () {
         key: 'express',
         value: function express(opts) {
             var castle = new Castle(opts);
-            return (0, _expressCompiled2.default)(castle);
+            return (0, _expressCompiled2.default)(castle, Castle.Events);
         }
     }]);
 

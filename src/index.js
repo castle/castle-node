@@ -94,7 +94,7 @@ class Castle {
 
     static express(opts) {
         var castle = new Castle(opts);
-        return ExpressWrapper(castle);
+        return ExpressWrapper(castle, Castle.Events);
     }
 
     getClient() {
