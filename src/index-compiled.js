@@ -155,12 +155,6 @@ var Castle = function () {
             return toReturn;
         }
     }, {
-        key: 'express',
-        value: function express(opts) {
-            var castle = new Castle(opts);
-            return (0, _expressCompiled2.default)(castle);
-        }
-    }, {
         key: 'getClient',
         value: function getClient() {
             return this.client;
@@ -186,6 +180,12 @@ var Castle = function () {
         key: 'isClientUserAgentDisabled',
         value: function isClientUserAgentDisabled() {
             return this.disableClientUserAgent || false;
+        }
+    }], [{
+        key: 'express',
+        value: function express(opts) {
+            var castle = new Castle(opts);
+            return (0, _expressCompiled2.default)(castle);
         }
     }]);
 

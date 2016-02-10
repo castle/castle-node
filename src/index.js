@@ -92,7 +92,7 @@ class Castle {
         return toReturn;
     }
 
-    express(opts) {
+    static express(opts) {
         var castle = new Castle(opts);
         return ExpressWrapper(castle);
     }
