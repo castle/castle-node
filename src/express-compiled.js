@@ -18,15 +18,22 @@ module.exports = function (castle) {
             return data;
         }
 
-        request.castleTrackEvent = function (event, userID, details) {
+        request.castleTrackEvent = function (_ref) {
+            var event = _ref.event;
+            var user_id = _ref.user_id;
+            var details = _ref.details;
+
             return castle.trackEvent(injectClientData({
                 event: event,
-                userID: userID,
+                user_id: user_id,
                 details: details
             }));
         };
 
-        request.castleIdentify = function (user_id, user_data) {
+        request.castleIdentify = function (_ref2) {
+            var user_id = _ref2.user_id;
+            var user_data = _ref2.user_data;
+
             return castle.identify(injectClientData({
                 user_id: user_id,
                 user_data: user_data

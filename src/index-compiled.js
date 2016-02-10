@@ -38,18 +38,19 @@ var Castle = function () {
         var _ref$apiKey = _ref.apiKey;
         var apiKey = _ref$apiKey === undefined ? null : _ref$apiKey;
         var apiSecret = _ref.apiSecret;
-        var _ref$disableClientUse = _ref.disableClientUserAgent;
-        var disableClientUserAgent = _ref$disableClientUse === undefined ? false : _ref$disableClientUse;
         var _ref$apiUrl = _ref.apiUrl;
         var apiUrl = _ref$apiUrl === undefined ? 'https://api.castle.io' : _ref$apiUrl;
+        var _ref$disableClientUse = _ref.disableClientUserAgent;
+        var disableClientUserAgent = _ref$disableClientUse === undefined ? false : _ref$disableClientUse;
 
         _classCallCheck(this, Castle);
 
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.disableClientUserAgent = disableClientUserAgent;
-        this.client = _restify2.default.createJsonClient({ url: this.apiUrl });
-        this.getClient().basicAuth('', apiSecret);
+        this.apiUrl = apiUrl;
+        this.client = _restify2.default.createJsonClient({ url: apiUrl });
+        this.getClient().basicAuth('test', apiSecret);
     }
 
     /**
@@ -142,7 +143,7 @@ var Castle = function () {
                 'X-Castle-Cookie-Id': cookie,
                 'X-Castle-User-Agent': userAgent,
                 'X-Castle-Headers': JSON.stringify(clientHeaders),
-                'X-Castle-Client-User-Agent': this.isClientUserAgentDisabled() ? undefined : this.getClientUserAgent()
+                'X-Castle-Client-User-Agent': this.isClientUserAgentDisabled() ? undefined : JSON.stringify(this.getClientUserAgent())
             });
         }
     }, {
