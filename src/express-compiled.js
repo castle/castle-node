@@ -1,6 +1,14 @@
 'use strict';
 
+var _eventsCompiled = require('./events-compiled.js');
+
+var _eventsCompiled2 = _interopRequireDefault(_eventsCompiled);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 module.exports = function (castle) {
+    var events = arguments.length <= 1 || arguments[1] === undefined ? _eventsCompiled2.default : arguments[1];
+
     return function (request, response, next) {
         function injectClientData(data) {
             data.headers = request.headers || undefined;
@@ -25,7 +33,7 @@ module.exports = function (castle) {
             }));
         };
 
-        request.castleEvents = castle.Events;
+        request.castleEvents = events;
 
         next();
     };
