@@ -1,6 +1,6 @@
-// var Events = require('castleio-sdk').Events;
+import { Request, Response, NextFunction } from 'express';
+import { Castle } from './Castle';
 
-// optformat
 // {
 //   routes: {
 //     '/login': {
@@ -12,7 +12,31 @@
 // }
 //
 
-const requestMatchesOpts = (request, response, opts) => {
+type Route = {
+  statusCode: number;
+  method: string;
+  event: string;
+};
+
+type CastleMwOptions = {
+  routes: { [key: string]: Route };
+  userIdGetter: (request: Request) => string;
+};
+
+type Header = {};
+
+type RequestData = {
+  cookie: string;
+  headers: any;
+  ip: string;
+  userAgent: string;
+};
+
+const requestMatchesOpts = (
+  request: Request,
+  response: Response,
+  opts: Route
+) => {
   if (
     !opts ||
     opts.statusCode !== response.statusCode ||
@@ -24,8 +48,11 @@ const requestMatchesOpts = (request, response, opts) => {
   return true;
 };
 
-export const castleExpressMw = (castle, { userIdGetter, routes }) => {
-  return (request, response, next) => {
+export const castleExpressMw = (
+  castle: Castle,
+  { userIdGetter, routes }: CastleMwOptions
+) => {
+  return (request: Request, response: Response, next: NextFunction) => {
     const beforeHandlerUserId = userIdGetter(request);
 
     response.on('finish', async () => {
@@ -33,13 +60,14 @@ export const castleExpressMw = (castle, { userIdGetter, routes }) => {
 
       if (requestMatchesOpts(request, response, requestOpts)) {
         const userId = userIdGetter(request);
-        const requestData = {
+        const requestData: RequestData = {
           cookie: request.cookies.__cid,
           headers: request.headers,
           ip: request.ip,
           userAgent: request.headers['user-agent'],
         };
 
+        // tslint:disable-next-line:no-console
         console.log('TRACKEVENT', {
           event: requestOpts.event,
           user_id: userId || beforeHandlerUserId,
@@ -49,9 +77,15 @@ export const castleExpressMw = (castle, { userIdGetter, routes }) => {
           await castle.trackEvent({
             event: requestOpts.event,
             user_id: userId || beforeHandlerUserId,
-            ...requestData,
+            user_traits: {},
+            context: {
+              ip: request.ip,
+              client_id: request.cookies.__cid,
+              headers: request.headers,
+            },
           });
         } catch (e) {
+          // tslint:disable-next-line:no-console
           console.error(e);
         }
       }

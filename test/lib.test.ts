@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Castle } from '../src/lib';
+import { Castle } from '../index';
 
 describe('asd', () => {
   it('asd', () => {

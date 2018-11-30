@@ -8,7 +8,7 @@
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "noEmitHelpers": true,
+    "noEmitHelpers": false,
     "outDir": "dist",
     "rootDir": ".",
     "resolveJsonModule": true,
@@ -16,9 +16,5 @@
   },
   "compileOnSave": true,
   "buildOnSave": true,
-  "exclude": [
-    "**/*.spec.ts",
-    "dist",
-    "node_modules"
-  ]
+  "exclude": ["**/*.spec.ts", "dist", "node_modules"]
 }
