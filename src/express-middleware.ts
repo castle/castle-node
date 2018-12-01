@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Castle } from './Castle';
+import { EVENTS } from './events';
 
 // {
 //   routes: {
@@ -20,7 +21,7 @@ type Route = {
 
 type CastleMwOptions = {
   routes: { [key: string]: Route };
-  userIdGetter: (request: Request) => string;
+  userGetter: (request: Request) => { email: string; id: string };
 };
 
 type Header = {};
@@ -50,16 +51,16 @@ const requestMatchesOpts = (
 
 export const castleExpressMw = (
   castle: Castle,
-  { userIdGetter, routes }: CastleMwOptions
+  { userGetter, routes }: CastleMwOptions
 ) => {
   return (request: Request, response: Response, next: NextFunction) => {
-    const beforeHandlerUserId = userIdGetter(request);
+    const beforeHandlerUser = userGetter(request);
 
     response.on('finish', async () => {
       const requestOpts = routes[request.originalUrl];
 
       if (requestMatchesOpts(request, response, requestOpts)) {
-        const userId = userIdGetter(request);
+        const user = beforeHandlerUser || userGetter(request);
         const requestData: RequestData = {
           cookie: request.cookies.__cid,
           headers: request.headers,
@@ -67,26 +68,31 @@ export const castleExpressMw = (
           userAgent: request.headers['user-agent'],
         };
 
-        // tslint:disable-next-line:no-console
-        console.log('TRACKEVENT', {
-          event: requestOpts.event,
-          user_id: userId || beforeHandlerUserId,
-          ...requestData,
-        });
+        const functionArguments = {
+          user_id: user.id,
+          user_traits: user,
+          context: {
+            ip: request.ip,
+            client_id: request.cookies.__cid,
+            headers: request.headers,
+          },
+        };
         try {
-          await castle.trackEvent({
-            event: requestOpts.event,
-            user_id: userId || beforeHandlerUserId,
-            user_traits: {},
-            context: {
-              ip: request.ip,
-              client_id: request.cookies.__cid,
-              headers: request.headers,
-            },
-          });
+          if (requestOpts.event === EVENTS.LOGIN_SUCCEEDED) {
+            castle.authenticate(functionArguments).then(
+              // tslint:disable-next-line:no-console
+              r => console.log(`AUTHENTICATION RESPONSE: ${JSON.stringify(r)}`),
+              // tslint:disable-next-line:no-console
+              e => console.error(`AUTHENTICATION ERROR: ${e}`)
+            );
+          } else {
+            castle.trackEvent({
+              event: requestOpts.event,
+              ...functionArguments,
+            });
+          }
         } catch (e) {
-          // tslint:disable-next-line:no-console
-          console.error(e);
+          throw e;
         }
       }
     });
