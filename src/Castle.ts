@@ -74,7 +74,7 @@ export class Castle {
     return response.json();
   }
 
-  public async trackEvent({
+  public async track({
     event,
     user_id,
     user_traits,
