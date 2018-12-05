@@ -33,13 +33,6 @@ export class Castle {
     this.apiUrl = apiUrl || defaultApiUrl;
   }
 
-  // CLIENT ID IS MISSING
-  // VERIFY PARAMETERS
-  // HANDLE STATUS CODES
-  // IMPLEMENT IDENTIFY
-  // WHAT HEADERS SHOULD I SEND? IDEAL HEADERS
-  // SECURE MODE
-
   public async authenticate({
     user_id,
     user_traits,
