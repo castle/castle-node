@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, Send } from 'express';
 import { Castle } from './Castle';
 import { EVENTS } from './events';
 
@@ -33,6 +33,10 @@ type RequestData = {
   userAgent: string;
 };
 
+type UpgradedRequest = Request & {
+  session?: any;
+};
+
 const requestMatchesOpts = (
   request: Request,
   response: Response,
@@ -53,49 +57,61 @@ export const castleExpressMw = (
   castle: Castle,
   { userGetter, routes }: CastleMwOptions
 ) => {
-  return (request: Request, response: Response, next: NextFunction) => {
+  return (request: UpgradedRequest, response: Response, next: NextFunction) => {
+    const shortCircuit = false;
     const beforeHandlerUser = userGetter(request);
 
-    response.on('finish', async () => {
+    const originalSend = response.send;
+    // tslint:disable-next-line:only-arrow-functions
+    response.send = function(data) {
       const requestOpts = routes[request.originalUrl];
 
       if (requestMatchesOpts(request, response, requestOpts)) {
         const user = beforeHandlerUser || userGetter(request);
-        const requestData: RequestData = {
-          cookie: request.cookies.__cid,
-          headers: request.headers,
-          ip: request.ip,
-          userAgent: request.headers['user-agent'],
-        };
 
         const functionArguments = {
           user_id: user.id,
           user_traits: user,
           context: {
-            ip: request.ip,
-            client_id: request.cookies.__cid,
+            ip: request.ip, // x-remote-addr|| x-forwarded-for[0] || x-real-ip
+            client_id: request.cookies.__cid, // x-castle-client-id
             headers: request.headers,
           },
         };
         try {
           if (requestOpts.event === EVENTS.LOGIN_SUCCEEDED) {
-            castle.authenticate(functionArguments).then(
-              // tslint:disable-next-line:no-console
-              r => console.log(`AUTHENTICATION RESPONSE: ${JSON.stringify(r)}`),
-              // tslint:disable-next-line:no-console
-              e => console.error(`AUTHENTICATION ERROR: ${e}`)
-            );
+            return castle
+              .authenticate(functionArguments)
+              .then(r => {
+                console.log('finished', response.finished);
+                if (response.finished) {
+                  // tslint:disable-next-line:no-empty
+                  return () => {};
+                }
+                console.log('action', r.action);
+                if (r.action === 'deny') {
+                  console.log('call fail');
+                  response.clearCookie('login');
+                  request.session = null;
+                  response.status(400);
+                  return originalSend.apply(response, ['']);
+                }
+              })
+              .catch(e => console.error(e));
           } else {
             castle.trackEvent({
               event: requestOpts.event,
               ...functionArguments,
             });
+            return originalSend.apply(response, arguments);
           }
         } catch (e) {
           throw e;
         }
       }
-    });
+
+      return originalSend.apply(response, arguments);
+    };
 
     next();
   };

@@ -33,6 +33,13 @@ export class Castle {
     this.apiUrl = apiUrl || defaultApiUrl;
   }
 
+  // CLIENT ID IS MISSING
+  // VERIFY PARAMETERS
+  // HANDLE STATUS CODES
+  // IMPLEMENT IDENTIFY
+  // WHAT HEADERS SHOULD I SEND? IDEAL HEADERS
+  // SECURE MODE
+
   public async authenticate({
     user_id,
     user_traits,
@@ -54,8 +61,14 @@ export class Castle {
       }),
     });
 
+    if (response.status === 401) {
+      throw new Error(
+        'Castle: Failed to authenticate with API, please verify the secret.'
+      );
+    }
+
     if (response.status !== 201) {
-      throw new Error('Castle: Authentication request unsuccessful.');
+      throw new Error('Castle: `/authenticate` request unsuccessful.');
     }
 
     return response.json();
@@ -87,34 +100,14 @@ export class Castle {
       }),
     });
 
+    if (response.status === 401) {
+      throw new Error(
+        'Castle: Failed to authenticate with API, please verify the secret.'
+      );
+    }
+
     if (response.status !== 204) {
-      throw new Error('Castle: Track request unsuccessful.');
+      throw new Error('Castle: `/track` request unsuccessful.');
     }
   }
-
-  // public identify({
-  //   user_id,
-  //   user_data,
-  //   headers = {},
-  //   ip,
-  //   cookie = '',
-  //   userAgent = '',
-  // }: {
-  //   user_id: string;
-  //   user_data: object;
-  //   headers?: object;
-  //   ip?: string;
-  //   cookie?: string;
-  //   userAgent?: string;
-  // }) {
-  //   return fetch(`${this.apiUrl}/v1/users/${user_id}`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       Authorization: `Basic ${new Buffer(`test:${this.apiSecret}`).toString(
-  //         'base64'
-  //       )}`,
-  //     },
-  //     body: JSON.stringify(user_data),
-  //   });
-  // }
 }
