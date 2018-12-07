@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { IncomingHttpHeaders } from 'http2';
 
-const defaultApiUrl = 'https://api.castle.io';
+const apiUrl = 'https://api.castle.io';
 
 type TrackParameters = {
   event: string;
@@ -22,43 +22,36 @@ type AuthenticateResult = {
 
 export class Castle {
   private apiSecret: string;
-  private apiUrl: string;
+  private timeout: number;
 
-  constructor({ apiSecret, apiUrl }: { apiSecret: string; apiUrl: string }) {
+  constructor({
+    apiSecret,
+    timeout = 1000,
+  }: {
+    apiSecret: string;
+    timeout: number;
+  }) {
     if (!apiSecret) {
       throw new Error('Castle: API secret is missing.');
     }
 
     this.apiSecret = apiSecret;
-    this.apiUrl = apiUrl || defaultApiUrl;
+    this.timeout = timeout;
   }
 
-  public async authenticate({
-    event,
-    user_id,
-    user_traits,
-    context,
-  }: TrackParameters): Promise<AuthenticateResult> {
-    if (!event) {
+  public async authenticate(
+    params: TrackParameters
+  ): Promise<AuthenticateResult> {
+    if (!params.event) {
       throw new Error('Castle: event is required when calling authenticate.');
     }
 
-    const response = await this.createRequest(
-      `${this.apiUrl}/v1/authenticate`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          sent_at: new Date().toISOString(),
-          event,
-          user_id,
-          user_traits,
-          context: {
-            ...context,
-            headers: this.scrubHeaders(context.headers),
-          },
-        }),
-      }
-    );
+    const response = await fetch(`${apiUrl}/v1/authenticate`, {
+      method: 'POST',
+      timeout: this.timeout,
+      headers: this.generateDefaultRequestHeaders(),
+      body: this.generateRequestBody(params),
+    });
 
     if (response.status === 401) {
       throw new Error(
@@ -73,51 +66,23 @@ export class Castle {
     return response.json();
   }
 
-  public async track({
-    event,
-    user_id,
-    user_traits,
-    context,
-  }: TrackParameters) {
-    if (!event) {
+  public async track(params: TrackParameters) {
+    if (!params.event) {
       throw new Error('Castle: event is required when calling track.');
     }
 
-    const response = await this.createRequest(`${this.apiUrl}/v1/track`, {
+    const response = await fetch(`${apiUrl}/v1/track`, {
       method: 'POST',
-      body: JSON.stringify({
-        sent_at: new Date().toISOString(),
-        event,
-        user_id,
-        user_traits,
-        context: {
-          ...context,
-          headers: this.scrubHeaders(context.headers),
-        },
-      }),
+      timeout: this.timeout,
+      headers: this.generateDefaultRequestHeaders(),
+      body: this.generateRequestBody(params),
     });
 
-    if (response.status === 401) {
-      throw new Error(
-        'Castle: Failed to authenticate with API, please verify the secret.'
-      );
-    }
+    this.handleUnauthorized(response);
 
     if (response.status !== 204) {
       throw new Error('Castle: `/track` request unsuccessful.');
     }
-  }
-
-  private createRequest(url: string, options: any) {
-    return fetch(url, {
-      headers: {
-        Authorization: `Basic ${Buffer.from(`:${this.apiSecret}`).toString(
-          'base64'
-        )}`,
-        'Content-Type': 'application/json',
-      },
-      ...options,
-    });
   }
 
   private scrubHeaders(headers: IncomingHttpHeaders) {
@@ -125,5 +90,40 @@ export class Castle {
       ...headers,
       cookie: true,
     };
+  }
+
+  private generateDefaultRequestHeaders() {
+    return {
+      Authorization: `Basic ${Buffer.from(`test:${this.apiSecret}`).toString(
+        'base64'
+      )}`,
+      'Content-Type': 'application/json',
+    };
+  }
+
+  private generateRequestBody({
+    event,
+    user_id,
+    user_traits,
+    context,
+  }: TrackParameters) {
+    return JSON.stringify({
+      sent_at: new Date().toISOString(),
+      event,
+      user_id,
+      user_traits,
+      context: {
+        ...context,
+        headers: this.scrubHeaders(context.headers),
+      },
+    });
+  }
+
+  private handleUnauthorized(response) {
+    if (response.status === 401) {
+      throw new Error(
+        'Castle: Failed to authenticate with API, please verify the secret.'
+      );
+    }
   }
 }
