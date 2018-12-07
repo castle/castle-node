@@ -29,7 +29,7 @@ export class Castle {
     timeout = 1000,
   }: {
     apiSecret: string;
-    timeout: number;
+    timeout?: number;
   }) {
     if (!apiSecret) {
       throw new Error('Castle: API secret is missing.');
