@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import { omit, pick } from 'lodash';
 import { IncomingHttpHeaders } from 'http2';
 
 const apiUrl = 'https://api.castle.io';
@@ -23,20 +24,30 @@ type AuthenticateResult = {
 export class Castle {
   private apiSecret: string;
   private timeout: number;
+  private allowedHeaders: string[];
+  private disallowedHeaders: string[];
 
   constructor({
     apiSecret,
     timeout = 1000,
+    allowedHeaders,
+    disallowedHeaders,
   }: {
     apiSecret: string;
     timeout?: number;
+    allowedHeaders?: string[];
+    disallowedHeaders?: string[];
   }) {
     if (!apiSecret) {
-      throw new Error('Castle: API secret is missing.');
+      throw new Error(
+        'Castle: Unable to instantiate Castle client, API secret is missing.'
+      );
     }
 
     this.apiSecret = apiSecret;
     this.timeout = timeout;
+    this.allowedHeaders = allowedHeaders;
+    this.disallowedHeaders = disallowedHeaders;
   }
 
   public async authenticate(
@@ -86,8 +97,16 @@ export class Castle {
   }
 
   private scrubHeaders(headers: IncomingHttpHeaders) {
+    let scrubbedHeaders;
+    if (this.disallowedHeaders) {
+      scrubbedHeaders = omit(headers, this.disallowedHeaders);
+    }
+    if (this.allowedHeaders) {
+      scrubbedHeaders = pick(headers, this.allowedHeaders);
+    }
+
     return {
-      ...headers,
+      ...scrubbedHeaders,
       cookie: true,
     };
   }
