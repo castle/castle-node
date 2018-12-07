@@ -24,11 +24,13 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/express": "^4.16.0",
+    "@types/fetch-mock": "^6.0.4",
     "@types/lodash": "^4.14.118",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.10",
     "@types/node-fetch": "^2.1.4",
     "chai": "^4.2.0",
+    "fetch-mock": "^7.2.5",
     "husky": "^1.2.0",
     "mocha": "^5.2.0",
     "prettier": "^1.15.2",
@@ -41,7 +43,6 @@
     "typescript": "^3.2.1"
   },
   "dependencies": {
-    "fetch-node": "^0.0.1",
     "lodash": "^4.17.11",
     "node-fetch": "^2.3.0"
   }

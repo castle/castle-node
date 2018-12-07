@@ -26,17 +26,20 @@ export class Castle {
   private timeout: number;
   private allowedHeaders: string[];
   private disallowedHeaders: string[];
+  private overrideFetch: any;
 
   constructor({
     apiSecret,
     timeout = 1000,
     allowedHeaders,
     disallowedHeaders,
+    overrideFetch = fetch,
   }: {
     apiSecret: string;
     timeout?: number;
     allowedHeaders?: string[];
     disallowedHeaders?: string[];
+    overrideFetch?: any;
   }) {
     if (!apiSecret) {
       throw new Error(
@@ -48,6 +51,7 @@ export class Castle {
     this.timeout = timeout;
     this.allowedHeaders = allowedHeaders;
     this.disallowedHeaders = disallowedHeaders;
+    this.overrideFetch = overrideFetch;
   }
 
   public async authenticate(
@@ -57,7 +61,7 @@ export class Castle {
       throw new Error('Castle: event is required when calling authenticate.');
     }
 
-    const response = await fetch(`${apiUrl}/v1/authenticate`, {
+    const response = await this.getFetch()(`${apiUrl}/v1/authenticate`, {
       method: 'POST',
       timeout: this.timeout,
       headers: this.generateDefaultRequestHeaders(),
@@ -82,7 +86,7 @@ export class Castle {
       throw new Error('Castle: event is required when calling track.');
     }
 
-    const response = await fetch(`${apiUrl}/v1/track`, {
+    const response = await this.getFetch()(`${apiUrl}/v1/track`, {
       method: 'POST',
       timeout: this.timeout,
       headers: this.generateDefaultRequestHeaders(),
@@ -94,6 +98,10 @@ export class Castle {
     if (response.status !== 204) {
       throw new Error('Castle: `/track` request unsuccessful.');
     }
+  }
+
+  private getFetch() {
+    return this.overrideFetch || fetch;
   }
 
   private scrubHeaders(headers: IncomingHttpHeaders) {
