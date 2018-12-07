@@ -1,10 +1,10 @@
 import fetch from 'node-fetch';
 import { IncomingHttpHeaders } from 'http2';
-import { EVENTS } from './events';
 
 const defaultApiUrl = 'https://api.castle.io';
 
-type AuthenticateArguments = {
+type TrackParameters = {
+  event: string;
   user_id: string;
   user_traits: any;
   context: {
@@ -13,10 +13,6 @@ type AuthenticateArguments = {
     headers: IncomingHttpHeaders;
   };
 };
-
-type TrackParameters = {
-  event: string;
-} & AuthenticateArguments;
 
 type AuthenticateResult = {
   action: string;
@@ -29,30 +25,40 @@ export class Castle {
   private apiUrl: string;
 
   constructor({ apiSecret, apiUrl }: { apiSecret: string; apiUrl: string }) {
+    if (!apiSecret) {
+      throw new Error('Castle: API secret is missing.');
+    }
+
     this.apiSecret = apiSecret;
     this.apiUrl = apiUrl || defaultApiUrl;
   }
 
   public async authenticate({
+    event,
     user_id,
     user_traits,
     context,
-  }: AuthenticateArguments): Promise<AuthenticateResult> {
-    const response = await fetch(`${this.apiUrl}/v1/authenticate`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${Buffer.from(`test:${this.apiSecret}`).toString(
-          'base64'
-        )}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        event: EVENTS.LOGIN_SUCCEEDED,
-        user_id,
-        user_traits,
-        context,
-      }),
-    });
+  }: TrackParameters): Promise<AuthenticateResult> {
+    if (!event) {
+      throw new Error('Castle: event is required when calling authenticate.');
+    }
+
+    const response = await this.createRequest(
+      `${this.apiUrl}/v1/authenticate`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          sent_at: new Date().toISOString(),
+          event,
+          user_id,
+          user_traits,
+          context: {
+            ...context,
+            headers: this.scrubHeaders(context.headers),
+          },
+        }),
+      }
+    );
 
     if (response.status === 401) {
       throw new Error(
@@ -74,22 +80,20 @@ export class Castle {
     context,
   }: TrackParameters) {
     if (!event) {
-      throw new Error('Missing event');
+      throw new Error('Castle: event is required when calling track.');
     }
 
-    const response = await fetch(`${this.apiUrl}/v1/track`, {
+    const response = await this.createRequest(`${this.apiUrl}/v1/track`, {
       method: 'POST',
-      headers: {
-        Authorization: `Basic ${Buffer.from(`test:${this.apiSecret}`).toString(
-          'base64'
-        )}`,
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
+        sent_at: new Date().toISOString(),
         event,
         user_id,
         user_traits,
-        context,
+        context: {
+          ...context,
+          headers: this.scrubHeaders(context.headers),
+        },
       }),
     });
 
@@ -102,5 +106,24 @@ export class Castle {
     if (response.status !== 204) {
       throw new Error('Castle: `/track` request unsuccessful.');
     }
+  }
+
+  private createRequest(url: string, options: any) {
+    return fetch(url, {
+      headers: {
+        Authorization: `Basic ${Buffer.from(`:${this.apiSecret}`).toString(
+          'base64'
+        )}`,
+        'Content-Type': 'application/json',
+      },
+      ...options,
+    });
+  }
+
+  private scrubHeaders(headers: IncomingHttpHeaders) {
+    return {
+      ...headers,
+      cookie: true,
+    };
   }
 }
