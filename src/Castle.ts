@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import { omit, pick } from 'lodash';
 import { IncomingHttpHeaders } from 'http2';
 
-const apiUrl = 'https://api.castle.io';
+const apiUrl = 'https://api.castle.com';
 
 type TrackParameters = {
   event: string;
@@ -18,8 +18,10 @@ type TrackParameters = {
 
 type AuthenticateResult = {
   action: string;
-  user_id: string;
-  device_token: string;
+  user_id?: string;
+  device_token?: string;
+  failover?: boolean;
+  failover_reason?: string;
 };
 
 export class Castle {
@@ -28,6 +30,7 @@ export class Castle {
   private allowedHeaders: string[];
   private disallowedHeaders: string[];
   private overrideFetch: any;
+  private failoverStrategy: string;
 
   constructor({
     apiSecret,
@@ -35,12 +38,14 @@ export class Castle {
     allowedHeaders,
     disallowedHeaders,
     overrideFetch = fetch,
+    failoverStrategy = 'allow',
   }: {
     apiSecret: string;
     timeout?: number;
     allowedHeaders?: string[];
     disallowedHeaders?: string[];
     overrideFetch?: any;
+    failoverStrategy?: string;
   }) {
     if (!apiSecret) {
       throw new Error(
@@ -53,6 +58,7 @@ export class Castle {
     this.allowedHeaders = allowedHeaders;
     this.disallowedHeaders = disallowedHeaders;
     this.overrideFetch = overrideFetch;
+    this.failoverStrategy = failoverStrategy;
   }
 
   public async authenticate(
@@ -62,18 +68,29 @@ export class Castle {
       throw new Error('Castle: event is required when calling authenticate.');
     }
 
-    const response = await this.getFetch()(`${apiUrl}/v1/authenticate`, {
-      method: 'POST',
-      timeout: this.timeout,
-      headers: this.generateDefaultRequestHeaders(),
-      body: this.generateRequestBody(params),
-    });
+    const controller = new AbortController();
+    const signal = controller.signal;
 
-    if (response.status === 401) {
-      throw new Error(
-        'Castle: Failed to authenticate with API, please verify the secret.'
-      );
+    let response: Response;
+
+    try {
+      response = await this.getFetch()(`${apiUrl}/v1/authenticate`, {
+        method: 'POST',
+        timeout: this.timeout,
+        headers: this.generateDefaultRequestHeaders(),
+        body: this.generateRequestBody(params),
+      });
+    } catch (e) {
+      if (e.message.startsWith('network timeout')) {
+        return {
+          action: this.failoverStrategy,
+          failover: true,
+          failover_reason: 'timeout',
+        };
+      }
     }
+
+    this.handleUnauthorized(response);
 
     if (!response.ok) {
       throw new Error(
@@ -91,12 +108,26 @@ export class Castle {
       throw new Error('Castle: event is required when calling track.');
     }
 
-    const response = await this.getFetch()(`${apiUrl}/v1/track`, {
-      method: 'POST',
-      timeout: this.timeout,
-      headers: this.generateDefaultRequestHeaders(),
-      body: this.generateRequestBody(params),
-    });
+    let response: Response;
+
+    try {
+      response = await this.getFetch()(`${apiUrl}/v1/track`, {
+        method: 'POST',
+        timeout: this.timeout,
+        headers: this.generateDefaultRequestHeaders(),
+        body: this.generateRequestBody(params),
+      });
+    } catch (e) {
+      if (e.message.startsWith('network timeout')) {
+        // tslint:disable-next-line:no-console
+        console.error(
+          `Castle: an exception occured while tracking ${
+            params.event
+          } event. Request timed out.`
+        );
+        return;
+      }
+    }
 
     this.handleUnauthorized(response);
 
