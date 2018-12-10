@@ -8,6 +8,7 @@ type TrackParameters = {
   event: string;
   user_id: string;
   user_traits: any;
+  created_at?: string;
   context: {
     ip: string;
     client_id: string;
@@ -74,8 +75,12 @@ export class Castle {
       );
     }
 
-    if (response.status !== 201) {
-      throw new Error('Castle: `/authenticate` request unsuccessful.');
+    if (!response.ok) {
+      throw new Error(
+        `Castle: \`/authenticate\` request unsuccessful. Expected ok result, got ${
+          response.status
+        }`
+      );
     }
 
     return response.json();
@@ -95,7 +100,7 @@ export class Castle {
 
     this.handleUnauthorized(response);
 
-    if (response.status !== 204) {
+    if (!response.ok) {
       throw new Error('Castle: `/track` request unsuccessful.');
     }
   }
@@ -133,9 +138,11 @@ export class Castle {
     user_id,
     user_traits,
     context,
+    created_at,
   }: TrackParameters) {
     return JSON.stringify({
       sent_at: new Date().toISOString(),
+      created_at,
       event,
       user_id,
       user_traits,
