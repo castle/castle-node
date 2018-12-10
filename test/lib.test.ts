@@ -86,6 +86,84 @@ describe('Castle', () => {
 
       clock.restore();
     });
+
+    it('should only allow whitelisted headers', () => {
+      // Because we don't use a global fetch we have to create a
+      // sandboxed instance of it here.
+      const fetch = fetchMock.sandbox().post('*', 204);
+
+      const castle = new Castle({
+        apiSecret: 'some secret',
+        // Pass the sandboxed instance to Castle constructor
+        // using the optional property `overrideFetch`
+        overrideFetch: fetch,
+        allowedHeaders: ['X-NOT-A-SECRET'],
+      });
+
+      castle.track({
+        ...sampleRequestData,
+        context: {
+          ...sampleRequestData.context,
+          headers: {
+            'X-NOT-A-SECRET': 'not secret!',
+            'X-SUPER-SECRET': 'so secret!',
+          },
+        },
+      });
+
+      const lastOptions = fetch.lastOptions();
+      const payload = JSON.parse(lastOptions.body.toString());
+
+      expect(payload).to.have.property('context');
+      expect(payload.context).to.have.property('headers');
+      expect(payload.context.headers).to.have.property(
+        'X-NOT-A-SECRET',
+        'not secret!'
+      );
+      expect(payload.context.headers).to.not.have.property(
+        'X-SUPER-SECRET',
+        'so secret!'
+      );
+    });
+
+    it('should not allow blacklisted headers', () => {
+      // Because we don't use a global fetch we have to create a
+      // sandboxed instance of it here.
+      const fetch = fetchMock.sandbox().post('*', 204);
+
+      const castle = new Castle({
+        apiSecret: 'some secret',
+        // Pass the sandboxed instance to Castle constructor
+        // using the optional property `overrideFetch`
+        overrideFetch: fetch,
+        disallowedHeaders: ['X-SUPER-SECRET'],
+      });
+
+      castle.track({
+        ...sampleRequestData,
+        context: {
+          ...sampleRequestData.context,
+          headers: {
+            'X-NOT-A-SECRET': 'not secret!',
+            'X-SUPER-SECRET': 'so secret!',
+          },
+        },
+      });
+
+      const lastOptions = fetch.lastOptions();
+      const payload = JSON.parse(lastOptions.body.toString());
+
+      expect(payload).to.have.property('context');
+      expect(payload.context).to.have.property('headers');
+      expect(payload.context.headers).to.have.property(
+        'X-NOT-A-SECRET',
+        'not secret!'
+      );
+      expect(payload.context.headers).to.not.have.property(
+        'X-SUPER-SECRET',
+        'so secret!'
+      );
+    });
   });
 
   describe('authenticate', () => {
