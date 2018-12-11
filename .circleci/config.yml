@@ -1,15 +1,11 @@
 version: 2
 jobs:
-  deps:
+  dependencies:
     steps:
       - checkout
       - restore_cache:
-          name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
-      - run:
-          name: Install Dependencies
-          command: yarn install --frozen-lockfile
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+      - run: yarn install --frozen-lockfile
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
@@ -18,32 +14,32 @@ jobs:
   lint:
     steps:
       - checkout
-      - run:
-        name: tslint
-        command: yarn lint && yarn prettier && git diff --quiet
+      - restore_cache:
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+      - run: yarn lint && yarn prettier
   test:
     steps:
       - checkout
-      - run:
-        name: test
-        command: yarn test
+      - restore_cache:
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+      - run: yarn test
   build:
     steps:
       - checkout
-      - run:
-        name: build
-        command: yarn tsc
+      - restore_cache:
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+      - run: yarn tsc
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - deps
+      - dependencies
       - lint:
-        requires:
-          - deps
+          requires:
+            - dependencies
       - test:
-        requires:
-          - deps
+          requires:
+            - dependencies
       - build:
-        requires:
-          - deps
+          requires:
+            - dependencies
