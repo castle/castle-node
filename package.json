@@ -13,7 +13,7 @@
     "build": "tsc",
     "start": "tsc -w",
     "test": "mocha -r ts-node/register test/**/*.ts",
-    "prettier": "prettier --write --parser typescript",
+    "prettier": "prettier --write --parser typescript src/**/*.ts",
     "prepush": "yarn build && yarn lint && yarn prettier && git diff --quiet"
   },
   "husky": {
