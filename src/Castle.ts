@@ -3,7 +3,7 @@ import { reduce } from 'lodash';
 import { IncomingHttpHeaders } from 'http2';
 import AbortController from 'abort-controller';
 
-const defaultApiUrl = 'https://api.castle.com';
+const defaultApiUrl = 'https://api.castle.io';
 
 type TrackParameters = {
   event: string;
