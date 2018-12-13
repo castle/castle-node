@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { Castle } from '../index';
-import { FetchError } from 'node-fetch';
 import fetchMock from 'fetch-mock';
 import { EVENTS } from '../src/events';
 import sinon from 'sinon';
@@ -87,45 +86,6 @@ describe('Castle', () => {
       clock.restore();
     });
 
-    it('should only allow whitelisted headers', () => {
-      // Because we don't use a global fetch we have to create a
-      // sandboxed instance of it here.
-      const fetch = fetchMock.sandbox().post('*', 204);
-
-      const castle = new Castle({
-        apiSecret: 'some secret',
-        // Pass the sandboxed instance to Castle constructor
-        // using the optional property `overrideFetch`
-        overrideFetch: fetch,
-        allowedHeaders: ['X-NOT-A-SECRET'],
-      });
-
-      castle.track({
-        ...sampleRequestData,
-        context: {
-          ...sampleRequestData.context,
-          headers: {
-            'X-NOT-A-SECRET': 'not secret!',
-            'X-SUPER-SECRET': 'so secret!',
-          },
-        },
-      });
-
-      const lastOptions = fetch.lastOptions();
-      const payload = JSON.parse(lastOptions.body.toString());
-
-      expect(payload).to.have.property('context');
-      expect(payload.context).to.have.property('headers');
-      expect(payload.context.headers).to.have.property(
-        'X-NOT-A-SECRET',
-        'not secret!'
-      );
-      expect(payload.context.headers).to.not.have.property(
-        'X-SUPER-SECRET',
-        'so secret!'
-      );
-    });
-
     it('should handle timeout', async () => {
       const fetch = fetchMock
         .sandbox()
@@ -175,14 +135,8 @@ describe('Castle', () => {
 
       expect(payload).to.have.property('context');
       expect(payload.context).to.have.property('headers');
-      expect(payload.context.headers).to.have.property(
-        'X-NOT-A-SECRET',
-        'not secret!'
-      );
-      expect(payload.context.headers).to.not.have.property(
-        'X-SUPER-SECRET',
-        'so secret!'
-      );
+      expect(payload.context.headers).to.have.property('X-NOT-A-SECRET', true);
+      expect(payload.context.headers).to.not.have.property('X-SUPER-SECRET');
     });
 
     it('should not allow blacklisted headers', () => {
@@ -214,14 +168,8 @@ describe('Castle', () => {
 
       expect(payload).to.have.property('context');
       expect(payload.context).to.have.property('headers');
-      expect(payload.context.headers).to.have.property(
-        'X-NOT-A-SECRET',
-        'not secret!'
-      );
-      expect(payload.context.headers).to.not.have.property(
-        'X-SUPER-SECRET',
-        'so secret!'
-      );
+      expect(payload.context.headers).to.have.property('X-NOT-A-SECRET', true);
+      expect(payload.context.headers).to.not.have.property('X-SUPER-SECRET');
     });
   });
 

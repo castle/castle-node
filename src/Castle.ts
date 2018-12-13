@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { omit, pick } from 'lodash';
+import { reduce } from 'lodash';
 import { IncomingHttpHeaders } from 'http2';
 
 const apiUrl = 'https://api.castle.com';
@@ -35,8 +35,8 @@ export class Castle {
   constructor({
     apiSecret,
     timeout = 1000,
-    allowedHeaders,
-    disallowedHeaders,
+    allowedHeaders = [],
+    disallowedHeaders = [],
     overrideFetch = fetch,
     failoverStrategy = 'allow',
   }: {
@@ -84,6 +84,8 @@ export class Castle {
           failover: true,
           failover_reason: 'timeout',
         };
+      } else {
+        throw e;
       }
     }
 
@@ -138,18 +140,23 @@ export class Castle {
   }
 
   private scrubHeaders(headers: IncomingHttpHeaders) {
-    let scrubbedHeaders;
-    if (this.disallowedHeaders) {
-      scrubbedHeaders = omit(headers, this.disallowedHeaders);
-    }
-    if (this.allowedHeaders) {
-      scrubbedHeaders = pick(headers, this.allowedHeaders);
-    }
+    return reduce(
+      headers,
+      (accumulator: object, value: string, key: string) => {
+        if (this.disallowedHeaders.includes(key)) {
+          return accumulator;
+        }
+        if (this.allowedHeaders.length && !this.allowedHeaders.includes(key)) {
+          return accumulator;
+        }
 
-    return {
-      ...scrubbedHeaders,
-      cookie: true,
-    };
+        return {
+          ...accumulator,
+          [key]: true,
+        };
+      },
+      {}
+    );
   }
 
   private generateDefaultRequestHeaders() {
@@ -181,7 +188,7 @@ export class Castle {
     });
   }
 
-  private handleUnauthorized(response) {
+  private handleUnauthorized(response: Response) {
     if (response.status === 401) {
       throw new Error(
         'Castle: Failed to authenticate with API, please verify the secret.'
