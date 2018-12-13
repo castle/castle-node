@@ -1,8 +1,9 @@
 import fetch from 'node-fetch';
 import { reduce } from 'lodash';
 import { IncomingHttpHeaders } from 'http2';
+import AbortController from 'abort-controller';
 
-const apiUrl = 'https://api.castle.com';
+const defaultApiUrl = 'https://api.castle.com';
 
 type TrackParameters = {
   event: string;
@@ -24,8 +25,11 @@ type AuthenticateResult = {
   failover_reason?: string;
 };
 
+const isTimeout = (e: Error) => e.name === 'AbortError';
+
 export class Castle {
   private apiSecret: string;
+  private apiUrl: string;
   private timeout: number;
   private allowedHeaders: string[];
   private disallowedHeaders: string[];
@@ -34,13 +38,15 @@ export class Castle {
 
   constructor({
     apiSecret,
-    timeout = 1000,
+    apiUrl,
+    timeout = 500,
     allowedHeaders = [],
     disallowedHeaders = [],
     overrideFetch = fetch,
     failoverStrategy = 'allow',
   }: {
     apiSecret: string;
+    apiUrl?: string;
     timeout?: number;
     allowedHeaders?: string[];
     disallowedHeaders?: string[];
@@ -54,6 +60,7 @@ export class Castle {
     }
 
     this.apiSecret = apiSecret;
+    this.apiUrl = apiUrl || defaultApiUrl;
     this.timeout = timeout;
     this.allowedHeaders = allowedHeaders;
     this.disallowedHeaders = disallowedHeaders;
@@ -69,16 +76,20 @@ export class Castle {
     }
 
     let response: Response;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, this.timeout);
 
     try {
-      response = await this.getFetch()(`${apiUrl}/v1/authenticate`, {
+      response = await this.getFetch()(`${this.apiUrl}/v1/authenticate`, {
+        signal: controller.signal,
         method: 'POST',
-        timeout: this.timeout,
         headers: this.generateDefaultRequestHeaders(),
         body: this.generateRequestBody(params),
       });
     } catch (e) {
-      if (e.message.startsWith('network timeout')) {
+      if (isTimeout(e)) {
         return {
           action: this.failoverStrategy,
           failover: true,
@@ -87,6 +98,8 @@ export class Castle {
       } else {
         throw e;
       }
+    } finally {
+      clearTimeout(timeout);
     }
 
     this.handleUnauthorized(response);
@@ -108,16 +121,20 @@ export class Castle {
     }
 
     let response: Response;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, this.timeout);
 
     try {
-      response = await this.getFetch()(`${apiUrl}/v1/track`, {
+      response = await this.getFetch()(`${this.apiUrl}/v1/track`, {
+        signal: controller.signal,
         method: 'POST',
-        timeout: this.timeout,
         headers: this.generateDefaultRequestHeaders(),
         body: this.generateRequestBody(params),
       });
     } catch (e) {
-      if (e.message.startsWith('network timeout')) {
+      if (isTimeout(e)) {
         // tslint:disable-next-line:no-console
         console.error(
           `Castle: an exception occured while tracking ${
@@ -126,6 +143,8 @@ export class Castle {
         );
         return;
       }
+    } finally {
+      clearTimeout(timeout);
     }
 
     this.handleUnauthorized(response);
