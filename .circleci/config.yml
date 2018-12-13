@@ -1,43 +1,44 @@
-defaults: &defaults
-  working_directory: ~/repo
-  docker:
-    - image: circleci/node:10
+aliases:
+  - &job_defaults
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:10
+  - &yarn-checksum yarn-packages-{{ checksum "yarn.lock" }}-v1
+  - &yarn-restore
+    keys:
+      - *yarn-checksum
 
 version: 2
 jobs:
   dependencies:
-    <<: *defaults
+    <<: *job_defaults
     steps:
       - checkout
-      - restore_cache:
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+      - restore_cache: *yarn-restore
       - run: yarn install --frozen-lockfile
       - save_cache:
           name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+          key: yarn-packages-{{ checksum "yarn.lock" }}-v1
           paths:
             - node_modules
             - ~/.cache/yarn
   lint:
-    <<: *defaults
+    <<: *job_defaults
     steps:
       - checkout
-      - restore_cache:
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+      - restore_cache: *yarn-restore
       - run: yarn lint && yarn prettier
   test:
-    <<: *defaults
+    <<: *job_defaults
     steps:
       - checkout
-      - restore_cache:
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+      - restore_cache: *yarn-restore
       - run: yarn test
   build:
-    <<: *defaults
+    <<: *job_defaults
     steps:
       - checkout
-      - restore_cache:
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+      - restore_cache: *yarn-restore
       - run: yarn build
 workflows:
   version: 2
