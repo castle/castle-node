@@ -1,6 +1,8 @@
 version: 2
 jobs:
   dependencies:
+    docker:
+      - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
@@ -12,18 +14,24 @@ jobs:
           paths:
             - ~/.cache/yarn
   lint:
+    docker:
+      - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
           key: yarn-packages-{{ checksum "yarn.lock" }}
       - run: yarn lint && yarn prettier
   test:
+    docker:
+      - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
           key: yarn-packages-{{ checksum "yarn.lock" }}
       - run: yarn test
   build:
+    docker:
+      - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
