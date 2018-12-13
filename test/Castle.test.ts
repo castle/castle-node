@@ -87,9 +87,11 @@ describe('Castle', () => {
     });
 
     it('should handle timeout', async () => {
-      const fetch = fetchMock
-        .sandbox()
-        .post('*', { throws: new Error('network timeout') });
+      // Create a fake AbortError
+      const abortError = new Error();
+      abortError.name = 'AbortError';
+
+      const fetch = fetchMock.sandbox().post('*', { throws: abortError });
       // Because we don't use a global fetch we have to create a
       // sandboxed instance of it here.
       const castle = new Castle({
