@@ -68,9 +68,6 @@ export class Castle {
       throw new Error('Castle: event is required when calling authenticate.');
     }
 
-    const controller = new AbortController();
-    const signal = controller.signal;
-
     let response: Response;
 
     try {
