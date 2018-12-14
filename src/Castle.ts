@@ -94,6 +94,7 @@ export class Castle {
           action: this.failoverStrategy,
           failover: true,
           failover_reason: 'timeout',
+          user_id: params.user_id,
         };
       } else {
         throw e;

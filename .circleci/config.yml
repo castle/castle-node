@@ -1,5 +1,5 @@
 aliases:
-  - &job_defaults
+  - &job-defaults
     working_directory: ~/repo
     docker:
       - image: circleci/node:10
@@ -11,7 +11,7 @@ aliases:
 version: 2
 jobs:
   dependencies:
-    <<: *job_defaults
+    <<: *job-defaults
     steps:
       - checkout
       - restore_cache: *yarn-restore
@@ -23,19 +23,19 @@ jobs:
             - node_modules
             - ~/.cache/yarn
   lint:
-    <<: *job_defaults
+    <<: *job-defaults
     steps:
       - checkout
       - restore_cache: *yarn-restore
       - run: yarn lint && yarn prettier
   test:
-    <<: *job_defaults
+    <<: *job-defaults
     steps:
       - checkout
       - restore_cache: *yarn-restore
       - run: yarn test
   build:
-    <<: *job_defaults
+    <<: *job-defaults
     steps:
       - checkout
       - restore_cache: *yarn-restore
