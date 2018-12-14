@@ -9,6 +9,7 @@ type TrackParameters = {
   event: string;
   user_id: string;
   user_traits?: object;
+  properties?: object;
   created_at?: string;
   context: {
     ip: string;
@@ -192,6 +193,7 @@ export class Castle {
     event,
     user_id,
     user_traits,
+    properties,
     context,
     created_at,
   }: TrackParameters) {
@@ -201,6 +203,7 @@ export class Castle {
       event,
       user_id,
       user_traits,
+      properties,
       context: {
         ...context,
         headers: this.scrubHeaders(context.headers),
