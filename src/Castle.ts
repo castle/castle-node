@@ -8,7 +8,7 @@ const defaultApiUrl = 'https://api.castle.io';
 type TrackParameters = {
   event: string;
   user_id: string;
-  user_traits: any;
+  user_traits?: any;
   created_at?: string;
   context: {
     ip: string;
