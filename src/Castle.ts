@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 import { reduce } from 'lodash';
 import { IncomingHttpHeaders } from 'http2';
 import AbortController from 'abort-controller';
+import packageJson from '../package.json';
 
 const defaultApiUrl = 'https://api.castle.io';
 
@@ -207,6 +208,10 @@ export class Castle {
       context: {
         ...context,
         headers: this.scrubHeaders(context.headers),
+        library: {
+          name: 'castle-node',
+          version: packageJson.version,
+        },
       },
     });
   }
