@@ -16,7 +16,7 @@ const sampleRequestData = {
     ip: '8.8.8.8',
     client_id: 'clientid',
     headers: {
-      cookie: 'SECRET=pleasedontbehere',
+      Cookie: 'SECRET=pleasedontbehere',
     },
   },
 };
@@ -81,7 +81,7 @@ describe('Castle', () => {
       );
       expect(payload.context).to.have.property('headers');
       // Ensure that cookie header property is scrubbed.
-      expect(payload.context.headers).to.have.property('cookie', true);
+      expect(payload.context.headers).to.have.property('Cookie', true);
 
       clock.restore();
     });
@@ -137,8 +137,11 @@ describe('Castle', () => {
 
       expect(payload).to.have.property('context');
       expect(payload.context).to.have.property('headers');
-      expect(payload.context.headers).to.have.property('X-NOT-A-SECRET', true);
-      expect(payload.context.headers).to.not.have.property('X-SUPER-SECRET');
+      expect(payload.context.headers).to.have.property(
+        'X-NOT-A-SECRET',
+        'not secret!'
+      );
+      expect(payload.context.headers).to.have.property('X-SUPER-SECRET', true);
     });
 
     it('should not allow blacklisted headers', () => {
@@ -170,8 +173,11 @@ describe('Castle', () => {
 
       expect(payload).to.have.property('context');
       expect(payload.context).to.have.property('headers');
-      expect(payload.context.headers).to.have.property('X-NOT-A-SECRET', true);
-      expect(payload.context.headers).to.not.have.property('X-SUPER-SECRET');
+      expect(payload.context.headers).to.have.property(
+        'X-NOT-A-SECRET',
+        'not secret!'
+      );
+      expect(payload.context.headers).to.have.property('X-SUPER-SECRET', true);
     });
   });
 
@@ -229,7 +235,7 @@ describe('Castle', () => {
       );
       expect(payload.context).to.have.property('headers');
       // Ensure that cookie header property is scrubbed.
-      expect(payload.context.headers).to.have.property('cookie', true);
+      expect(payload.context.headers).to.have.property('Cookie', true);
 
       clock.restore();
     });
