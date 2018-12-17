@@ -3,15 +3,17 @@ import { reduce } from 'lodash';
 import { IncomingHttpHeaders } from 'http2';
 import AbortController from 'abort-controller';
 import packageJson from '../package.json';
+import pino from 'pino';
 
 const defaultApiUrl = 'https://api.castle.io';
 
-type TrackParameters = {
+type ActionParameters = {
   event: string;
   user_id: string;
   user_traits?: object;
   properties?: object;
   created_at?: string;
+  device_token?: string;
   context: {
     ip: string;
     client_id: string;
@@ -19,8 +21,12 @@ type TrackParameters = {
   };
 };
 
+type actionTypes = 'allow' | 'deny' | 'challenge';
+
+type failoverStrategyTypes = actionTypes | 'none';
+
 type AuthenticateResult = {
-  action: string;
+  action: actionTypes;
   user_id?: string;
   device_token?: string;
   failover?: boolean;
@@ -29,6 +35,18 @@ type AuthenticateResult = {
 
 const isTimeout = (e: Error) => e.name === 'AbortError';
 
+const requestFormatter = (
+  url: string,
+  request: RequestInit,
+  response: Response
+) => `
+-- Castle request
+URL: ${url}
+Request: ${JSON.stringify(request)}
+-- Castle response
+Status: ${response.status}
+`;
+
 export class Castle {
   private apiSecret: string;
   private apiUrl: string;
@@ -36,7 +54,8 @@ export class Castle {
   private allowedHeaders: string[];
   private disallowedHeaders: string[];
   private overrideFetch: any;
-  private failoverStrategy: string;
+  private failoverStrategy: failoverStrategyTypes;
+  private logger: pino.Logger;
 
   constructor({
     apiSecret,
@@ -46,6 +65,7 @@ export class Castle {
     disallowedHeaders = [],
     overrideFetch = fetch,
     failoverStrategy = 'allow',
+    logLevel = 'error',
   }: {
     apiSecret: string;
     apiUrl?: string;
@@ -53,7 +73,8 @@ export class Castle {
     allowedHeaders?: string[];
     disallowedHeaders?: string[];
     overrideFetch?: any;
-    failoverStrategy?: string;
+    failoverStrategy?: failoverStrategyTypes;
+    logLevel?: pino.Level;
   }) {
     if (!apiSecret) {
       throw new Error(
@@ -68,10 +89,17 @@ export class Castle {
     this.disallowedHeaders = disallowedHeaders.concat(['Cookie']);
     this.overrideFetch = overrideFetch;
     this.failoverStrategy = failoverStrategy;
+
+    this.logger = pino({
+      prettyPrint: {
+        levelFirst: true,
+      },
+    });
+    this.logger.level = logLevel;
   }
 
   public async authenticate(
-    params: TrackParameters
+    params: ActionParameters
   ): Promise<AuthenticateResult> {
     if (!params.event) {
       throw new Error('Castle: event is required when calling authenticate.');
@@ -82,16 +110,24 @@ export class Castle {
     const timeout = setTimeout(() => {
       controller.abort();
     }, this.timeout);
+    const requestUrl = `${this.apiUrl}/v1/authenticate`;
+    const requestOptions = {
+      signal: controller.signal,
+      method: 'POST',
+      headers: this.generateDefaultRequestHeaders(),
+      body: this.generateRequestBody(params),
+    };
 
     try {
-      response = await this.getFetch()(`${this.apiUrl}/v1/authenticate`, {
-        signal: controller.signal,
-        method: 'POST',
-        headers: this.generateDefaultRequestHeaders(),
-        body: this.generateRequestBody(params),
-      });
+      response = await this.getFetch()(requestUrl, requestOptions);
     } catch (e) {
+      if (this.failoverStrategy === 'none') {
+        throw e;
+      }
+
       if (isTimeout(e)) {
+        this.handleRequestLogging(requestUrl, requestOptions, response);
+
         return {
           action: this.failoverStrategy,
           failover: true,
@@ -106,19 +142,12 @@ export class Castle {
     }
 
     this.handleUnauthorized(response);
-
-    if (!response.ok) {
-      throw new Error(
-        `Castle: \`/authenticate\` request unsuccessful. Expected ok result, got ${
-          response.status
-        }`
-      );
-    }
+    this.handleRequestLogging(requestUrl, requestOptions, response);
 
     return response.json();
   }
 
-  public async track(params: TrackParameters) {
+  public async track(params: ActionParameters): Promise<void> {
     if (!params.event) {
       throw new Error('Castle: event is required when calling track.');
     }
@@ -128,14 +157,16 @@ export class Castle {
     const timeout = setTimeout(() => {
       controller.abort();
     }, this.timeout);
+    const requestUrl = `${this.apiUrl}/v1/track`;
+    const requestOptions = {
+      signal: controller.signal,
+      method: 'POST',
+      headers: this.generateDefaultRequestHeaders(),
+      body: this.generateRequestBody(params),
+    };
 
     try {
-      response = await this.getFetch()(`${this.apiUrl}/v1/track`, {
-        signal: controller.signal,
-        method: 'POST',
-        headers: this.generateDefaultRequestHeaders(),
-        body: this.generateRequestBody(params),
-      });
+      response = await this.getFetch()(requestUrl, requestOptions);
     } catch (e) {
       if (isTimeout(e)) {
         // tslint:disable-next-line:no-console
@@ -151,9 +182,22 @@ export class Castle {
     }
 
     this.handleUnauthorized(response);
+    this.handleRequestLogging(requestUrl, requestOptions, response);
+  }
 
+  private handleRequestLogging(
+    url: string,
+    requestOptions: any,
+    response: Response
+  ) {
+    if (!response) {
+      return;
+    }
+    if (response.ok) {
+      this.logger.info(requestFormatter(url, requestOptions, response));
+    }
     if (!response.ok) {
-      throw new Error('Castle: `/track` request unsuccessful.');
+      this.logger.warn(requestFormatter(url, requestOptions, response));
     }
   }
 
@@ -203,7 +247,8 @@ export class Castle {
     properties,
     context,
     created_at,
-  }: TrackParameters) {
+    device_token,
+  }: ActionParameters) {
     return JSON.stringify({
       sent_at: new Date().toISOString(),
       created_at,
@@ -211,6 +256,7 @@ export class Castle {
       user_id,
       user_traits,
       properties,
+      device_token,
       context: {
         ...context,
         headers: this.scrubHeaders(context.headers),

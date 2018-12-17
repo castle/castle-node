@@ -23,14 +23,17 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
+    "@types/chai-as-promised": "^7.1.0",
     "@types/express": "^4.16.0",
     "@types/fetch-mock": "^6.0.4",
     "@types/lodash": "^4.14.118",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.10",
     "@types/node-fetch": "^2.1.4",
+    "@types/pino": "^5.8.3",
     "@types/sinon": "^5.0.7",
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "fetch-mock": "^7.2.5",
     "husky": "^1.2.0",
     "mocha": "^5.2.0",
@@ -47,6 +50,8 @@
   "dependencies": {
     "abort-controller": "^2.0.0",
     "lodash": "^4.17.11",
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^2.3.0",
+    "pino": "^5.10.1",
+    "pino-pretty": "^2.5.0"
   }
 }
