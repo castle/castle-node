@@ -2,6 +2,10 @@
 
 **[Castle](https://castle.io) analyzes device, location, and interaction patterns in your web and mobile apps and lets you stop account takeover attacks in real-time..**
 
+## Documentation
+
+[Official Castle docs](https://castle.io/docs)
+
 ## Installation
 
 Add the `castle-node` package to your `package.json`.
