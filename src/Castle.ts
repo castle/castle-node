@@ -85,8 +85,10 @@ export class Castle {
     this.apiSecret = apiSecret;
     this.apiUrl = apiUrl || defaultApiUrl;
     this.timeout = timeout;
-    this.allowedHeaders = allowedHeaders;
-    this.disallowedHeaders = disallowedHeaders.concat(['Cookie']);
+    this.allowedHeaders = allowedHeaders.map(x => x.toLowerCase());
+    this.disallowedHeaders = disallowedHeaders
+      .concat(['cookie'])
+      .map(x => x.toLowerCase());
     this.overrideFetch = overrideFetch;
     this.failoverStrategy = failoverStrategy;
 
@@ -209,13 +211,16 @@ export class Castle {
     return reduce(
       headers,
       (accumulator: object, value: string, key: string) => {
-        if (this.disallowedHeaders.includes(key)) {
+        if (this.disallowedHeaders.includes(key.toLowerCase())) {
           return {
             ...accumulator,
             [key]: true,
           };
         }
-        if (this.allowedHeaders.length && !this.allowedHeaders.includes(key)) {
+        if (
+          this.allowedHeaders.length &&
+          !this.allowedHeaders.includes(key.toLowerCase())
+        ) {
           return {
             ...accumulator,
             [key]: true,
