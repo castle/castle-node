@@ -264,6 +264,7 @@ export class Castle {
       device_token,
       context: {
         ...context,
+        client_id: context.client_id || false,
         headers: this.scrubHeaders(context.headers),
         library: {
           name: 'castle-node',
