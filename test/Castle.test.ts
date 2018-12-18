@@ -185,15 +185,14 @@ describe('Castle', () => {
         { action: 'allow', device_token: 'device_token', user_id: 'user_id' }
       );
       const clock = sinon.useFakeTimers(new Date(2011, 9, 1).getTime());
-
       const castle = new Castle({
         apiSecret: 'some secret',
         // Pass the sandboxed instance to Castle constructor
         // using the optional property `overrideFetch`
         overrideFetch: fetch,
       });
-      const response = await castle.authenticate(sampleRequestData);
 
+      const response = await castle.authenticate(sampleRequestData);
       expect(response).to.have.property('action', 'allow');
       expect(response).to.have.property('device_token', 'device_token');
       expect(response).to.have.property('user_id', 'user_id');
@@ -230,7 +229,6 @@ describe('Castle', () => {
       expect(payload.context).to.have.property('headers');
       // Ensure that cookie header property is scrubbed.
       expect(payload.context.headers).to.have.property('Cookie', true);
-
       clock.restore();
     });
 
@@ -244,12 +242,16 @@ describe('Castle', () => {
         apiSecret: 'some secret',
         overrideFetch: fetch,
         failoverStrategy: 'deny',
+        // This test causes an error level log event, so increase
+        // logLevel to fatal to prevent clouding the test output.
+        logLevel: 'fatal',
       });
 
       const response = await castle.authenticate(sampleRequestData);
       expect(response).to.have.property('action', 'deny');
       expect(response).to.have.property('failover', true);
       expect(response).to.have.property('failover_reason', 'timeout');
+      expect(response).to.have.property('user_id', 'userid');
     });
 
     it('should fail on unauthorized', async () => {

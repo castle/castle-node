@@ -33,18 +33,59 @@ type AuthenticateResult = {
   failover_reason?: string;
 };
 
+type LoggingParameters = {
+  requestUrl: string;
+  requestOptions: any;
+  response?: Response;
+  err?: Error;
+  body?: any;
+};
+
+// The body on the request is a stream and can only be
+// read once, by default. This is a workaround so that the
+// logging functions can read the body independently
+// of the handlers.
+const getBody = async (response: any) => {
+  if (response.cachedBody) {
+    return response.cachedBody;
+  }
+
+  try {
+    response.cachedBody = await response.json();
+  } catch (e) {
+    if (e.message === "Cannot read property 'cachedBody' of undefined") {
+      response.cachedBody = {};
+    }
+  }
+
+  return response.cachedBody;
+};
+
 const isTimeout = (e: Error) => e.name === 'AbortError';
 
-const requestFormatter = (
-  url: string,
-  request: RequestInit,
-  response: Response
-) => `
+const errorFormatter = (err: Error) => `
+Error name: ${err.name}
+Error message: ${err.message}
+`;
+
+const responseFormatter = (response: Response, body: any) => `
+Response status: ${response.status}
+Response body: ${body}
+`;
+
+const requestFormatter = ({
+  requestUrl,
+  requestOptions,
+  response,
+  err,
+  body,
+}: LoggingParameters) => `
 -- Castle request
-URL: ${url}
-Request: ${JSON.stringify(request)}
+URL: ${requestUrl}
+Request: ${JSON.stringify(requestOptions)}
 -- Castle response
-Status: ${response.status}
+${err && errorFormatter(err)}
+${(response || body) && responseFormatter(response, body)}
 `;
 
 export class Castle {
@@ -122,14 +163,14 @@ export class Castle {
 
     try {
       response = await this.getFetch()(requestUrl, requestOptions);
-    } catch (e) {
+    } catch (err) {
+      this.handleLogging({ requestUrl, requestOptions, err });
+
       if (this.failoverStrategy === 'none') {
-        throw e;
+        throw err;
       }
 
-      if (isTimeout(e)) {
-        this.handleRequestLogging(requestUrl, requestOptions, response);
-
+      if (isTimeout(err)) {
         return {
           action: this.failoverStrategy,
           failover: true,
@@ -137,16 +178,16 @@ export class Castle {
           user_id: params.user_id,
         };
       } else {
-        throw e;
+        throw err;
       }
     } finally {
       clearTimeout(timeout);
     }
 
     this.handleUnauthorized(response);
-    this.handleRequestLogging(requestUrl, requestOptions, response);
+    this.handleLogging({ requestUrl, requestOptions, response });
 
-    return response.json();
+    return getBody(response);
   }
 
   public async track(params: ActionParameters): Promise<void> {
@@ -169,38 +210,45 @@ export class Castle {
 
     try {
       response = await this.getFetch()(requestUrl, requestOptions);
-    } catch (e) {
-      if (isTimeout(e)) {
-        // tslint:disable-next-line:no-console
-        console.error(
-          `Castle: an exception occured while tracking ${
-            params.event
-          } event. Request timed out.`
-        );
-        return;
+    } catch (err) {
+      if (isTimeout(err)) {
+        return this.handleLogging({ requestUrl, requestOptions, err });
       }
     } finally {
       clearTimeout(timeout);
     }
 
     this.handleUnauthorized(response);
-    this.handleRequestLogging(requestUrl, requestOptions, response);
+    this.handleLogging({ requestUrl, requestOptions, response });
   }
 
-  private handleRequestLogging(
-    url: string,
-    requestOptions: any,
-    response: Response
-  ) {
-    if (!response) {
-      return;
+  private handleLogging({
+    requestUrl,
+    requestOptions,
+    response,
+    err,
+  }: LoggingParameters) {
+    if (err) {
+      return this.logger.error(
+        requestFormatter({ requestUrl, requestOptions, err })
+      );
     }
+
+    const body = getBody(response);
+
+    let log: pino.LogFn;
+
     if (response.ok) {
-      this.logger.info(requestFormatter(url, requestOptions, response));
+      log = this.logger.info;
+    } else if (response.status < 500 && response.status >= 400) {
+      log = this.logger.error;
+    } else {
+      log = this.logger.warn;
     }
-    if (!response.ok) {
-      this.logger.warn(requestFormatter(url, requestOptions, response));
-    }
+
+    return log(
+      requestFormatter({ requestUrl, requestOptions, response, err, body })
+    );
   }
 
   private getFetch() {
@@ -238,7 +286,7 @@ export class Castle {
 
   private generateDefaultRequestHeaders() {
     return {
-      Authorization: `Basic ${Buffer.from(`test:${this.apiSecret}`).toString(
+      Authorization: `Basic ${Buffer.from(`:${this.apiSecret}`).toString(
         'base64'
       )}`,
       'Content-Type': 'application/json',
