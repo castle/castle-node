@@ -174,6 +174,11 @@ export class Castle {
       clearTimeout(timeout);
     }
 
+    // Wait to get body here to prevent race conditions
+    // on `.json()` because we attempt to read it in
+    // multiple places.
+    const body = await getBody(response);
+
     this.handleLogging({ requestUrl, requestOptions, response });
 
     this.handleUnauthorized(response);
@@ -183,7 +188,7 @@ export class Castle {
       return this.handleFailover(params);
     }
 
-    return getBody(response);
+    return body;
   }
 
   public async track(params: ActionParameters): Promise<void> {
