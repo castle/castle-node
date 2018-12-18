@@ -70,7 +70,7 @@ Error message: ${err.message}
 
 const responseFormatter = (response: Response, body: any) => `
 Response status: ${response.status}
-Response body: ${body}
+Response body: ${JSON.stringify(body)}
 `;
 
 const requestFormatter = ({
@@ -84,8 +84,7 @@ const requestFormatter = ({
 URL: ${requestUrl}
 Request: ${JSON.stringify(requestOptions)}
 -- Castle response
-${err && errorFormatter(err)}
-${response && responseFormatter(response, body)}
+${response ? responseFormatter(response, body) : errorFormatter(err)}
 `;
 
 export class Castle {
@@ -177,8 +176,8 @@ export class Castle {
 
     this.handleLogging({ requestUrl, requestOptions, response });
 
-    this.handleBadResponse(response);
     this.handleUnauthorized(response);
+    this.handleBadResponse(response);
 
     if (response.status >= 500) {
       return this.handleFailover(params);
@@ -216,8 +215,8 @@ export class Castle {
     }
 
     this.handleLogging({ requestUrl, requestOptions, response });
-    this.handleBadResponse(response);
     this.handleUnauthorized(response);
+    this.handleBadResponse(response);
   }
 
   private async handleLogging({
