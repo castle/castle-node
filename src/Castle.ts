@@ -177,7 +177,7 @@ export class Castle {
 
     this.handleLogging({ requestUrl, requestOptions, response });
 
-    this.handleBadRequest(response);
+    this.handleBadResponse(response);
     this.handleUnauthorized(response);
 
     if (response.status >= 500) {
@@ -216,7 +216,7 @@ export class Castle {
     }
 
     this.handleLogging({ requestUrl, requestOptions, response });
-    this.handleBadRequest(response);
+    this.handleBadResponse(response);
     this.handleUnauthorized(response);
   }
 
@@ -349,7 +349,7 @@ export class Castle {
     }
   }
 
-  private handleBadRequest(response: Response) {
+  private handleBadResponse(response: Response) {
     if (response.status >= 400 && response.status < 500) {
       throw new Error(`Castle: API response not ok, got ${response.status}.`);
     }
