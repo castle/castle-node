@@ -238,7 +238,7 @@ export class Castle {
 
     let body;
     // Don't get body if status is NO CONTENT.
-    if (response.status === 204) {
+    if (response.status !== 204) {
       body = await getBody(response);
     }
 
