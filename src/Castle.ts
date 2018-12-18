@@ -220,7 +220,7 @@ export class Castle {
     this.handleUnauthorized(response);
   }
 
-  private handleLogging({
+  private async handleLogging({
     requestUrl,
     requestOptions,
     response,
@@ -232,16 +232,16 @@ export class Castle {
       );
     }
 
-    const body = getBody(response);
+    const body = await getBody(response);
 
     let log: pino.LogFn;
 
     if (response.ok) {
-      log = this.logger.info;
+      log = this.logger.info.bind(this.logger);
     } else if (response.status < 500 && response.status >= 400) {
-      log = this.logger.warn;
+      log = this.logger.warn.bind(this.logger);
     } else {
-      log = this.logger.error;
+      log = this.logger.error.bind(this.logger);
     }
 
     return log(
