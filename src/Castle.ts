@@ -21,12 +21,12 @@ type ActionParameters = {
   };
 };
 
-type actionTypes = 'allow' | 'deny' | 'challenge';
+type ActionType = 'allow' | 'deny' | 'challenge';
 
-type failoverStrategyTypes = actionTypes | 'none';
+type FailoverStrategyType = ActionType | 'none';
 
 type AuthenticateResult = {
-  action: actionTypes;
+  action: ActionType;
   user_id?: string;
   device_token?: string;
   failover?: boolean;
@@ -53,7 +53,7 @@ const getBody = async (response: any) => {
   try {
     response.cachedBody = await response.json();
   } catch (e) {
-    if (e.message === "Cannot read property 'cachedBody' of undefined") {
+    if (e.message === 'invalid json response body') {
       response.cachedBody = {};
     }
   }
@@ -85,7 +85,7 @@ URL: ${requestUrl}
 Request: ${JSON.stringify(requestOptions)}
 -- Castle response
 ${err && errorFormatter(err)}
-${(response || body) && responseFormatter(response, body)}
+${response && responseFormatter(response, body)}
 `;
 
 export class Castle {
@@ -95,7 +95,7 @@ export class Castle {
   private allowedHeaders: string[];
   private disallowedHeaders: string[];
   private overrideFetch: any;
-  private failoverStrategy: failoverStrategyTypes;
+  private failoverStrategy: FailoverStrategyType;
   private logger: pino.Logger;
 
   constructor({
@@ -114,7 +114,7 @@ export class Castle {
     allowedHeaders?: string[];
     disallowedHeaders?: string[];
     overrideFetch?: any;
-    failoverStrategy?: failoverStrategyTypes;
+    failoverStrategy?: FailoverStrategyType;
     logLevel?: pino.Level;
   }) {
     if (!apiSecret) {
@@ -166,17 +166,8 @@ export class Castle {
     } catch (err) {
       this.handleLogging({ requestUrl, requestOptions, err });
 
-      if (this.failoverStrategy === 'none') {
-        throw err;
-      }
-
       if (isTimeout(err)) {
-        return {
-          action: this.failoverStrategy,
-          failover: true,
-          failover_reason: 'timeout',
-          user_id: params.user_id,
-        };
+        return this.handleFailover(params, err);
       } else {
         throw err;
       }
@@ -184,8 +175,14 @@ export class Castle {
       clearTimeout(timeout);
     }
 
-    this.handleUnauthorized(response);
     this.handleLogging({ requestUrl, requestOptions, response });
+
+    this.handleBadRequest(response);
+    this.handleUnauthorized(response);
+
+    if (response.status >= 500) {
+      return this.handleFailover(params);
+    }
 
     return getBody(response);
   }
@@ -218,8 +215,9 @@ export class Castle {
       clearTimeout(timeout);
     }
 
-    this.handleUnauthorized(response);
     this.handleLogging({ requestUrl, requestOptions, response });
+    this.handleBadRequest(response);
+    this.handleUnauthorized(response);
   }
 
   private handleLogging({
@@ -241,9 +239,9 @@ export class Castle {
     if (response.ok) {
       log = this.logger.info;
     } else if (response.status < 500 && response.status >= 400) {
-      log = this.logger.error;
-    } else {
       log = this.logger.warn;
+    } else {
+      log = this.logger.error;
     }
 
     return log(
@@ -322,11 +320,38 @@ export class Castle {
     });
   }
 
+  private handleFailover(
+    params: ActionParameters,
+    err?: Error
+  ): AuthenticateResult {
+    // Have to check it this way to make sure TS understands
+    // that this.failoverStrategy is of type ActionType,
+    // not FailoverStrategyType.
+    if (this.failoverStrategy !== 'none') {
+      return {
+        action: this.failoverStrategy,
+        failover: true,
+        failover_reason: 'timeout',
+        user_id: params.user_id,
+      };
+    }
+
+    if (this.failoverStrategy === 'none') {
+      throw err;
+    }
+  }
+
   private handleUnauthorized(response: Response) {
     if (response.status === 401) {
       throw new Error(
         'Castle: Failed to authenticate with API, please verify the secret.'
       );
+    }
+  }
+
+  private handleBadRequest(response: Response) {
+    if (response.status >= 400 && response.status < 500) {
+      throw new Error(`Castle: API response not ok, got ${response.status}.`);
     }
   }
 }

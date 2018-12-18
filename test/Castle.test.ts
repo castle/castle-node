@@ -9,7 +9,7 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const sampleRequestData = {
-  event: EVENTS.EMAIL_CHANGE_SUCCEEDED,
+  event: EVENTS.LOGIN_SUCCEEDED,
   created_at: 'now',
   user_id: 'userid',
   user_traits: {
@@ -236,6 +236,7 @@ describe('Castle', () => {
       // Create a fake AbortError, which indicates a timeout.
       const abortError = new Error();
       abortError.name = 'AbortError';
+      abortError.message = 'The request was aborted.';
 
       const fetch = fetchMock.sandbox().post('*', { throws: abortError });
       const castle = new Castle({
