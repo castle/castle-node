@@ -236,7 +236,11 @@ export class Castle {
       );
     }
 
-    const body = await getBody(response);
+    let body;
+    // Don't get body if status is NO CONTENT.
+    if (response.status === 204) {
+      body = await getBody(response);
+    }
 
     let log: pino.LogFn;
 
