@@ -63,15 +63,17 @@ const getBody = async (response: any) => {
 
 const isTimeout = (e: Error) => e.name === 'AbortError';
 
-const errorFormatter = (err: Error) => `
+const errorFormatter = (err: Error) =>
+  `
 Error name: ${err.name}
 Error message: ${err.message}
-`;
+`.trim();
 
-const responseFormatter = (response: Response, body: any) => `
+const responseFormatter = (response: Response, body: any) =>
+  `
 Response status: ${response.status}
 Response body: ${JSON.stringify(body)}
-`;
+`.trim();
 
 const requestFormatter = ({
   requestUrl,
