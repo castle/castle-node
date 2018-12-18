@@ -53,9 +53,7 @@ const getBody = async (response: any) => {
   try {
     response.cachedBody = await response.json();
   } catch (e) {
-    if (e.message === 'invalid json response body') {
-      response.cachedBody = {};
-    }
+    response.cachedBody = {};
   }
 
   return response.cachedBody;
