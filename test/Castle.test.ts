@@ -169,8 +169,10 @@ describe('Castle', () => {
         overrideFetch: fetch,
       });
 
-      expect(castle.track(sampleRequestData)).to.be.rejectedWith(
-        'Castle: Failed to authenticate with API, please verify the secret.'
+      // Promise based expectations have to be awaited to properly fail
+      // tests, instead of just logging unhandled rejections.
+      await expect(castle.authenticate(sampleRequestData)).to.be.rejectedWith(
+        /Castle: Failed to authenticate with API, please verify the secret./
       );
     });
   });
@@ -262,8 +264,10 @@ describe('Castle', () => {
         overrideFetch: fetch,
       });
 
-      expect(castle.authenticate(sampleRequestData)).to.be.rejectedWith(
-        'Castle: Failed to authenticate with API, please verify the secret.'
+      // Promise based expectations have to be awaited to properly fail
+      // tests, instead of just logging unhandled rejections.
+      await expect(castle.authenticate(sampleRequestData)).to.be.rejectedWith(
+        /Castle: Failed to authenticate with API, please verify the secret./
       );
     });
   });
