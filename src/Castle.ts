@@ -100,7 +100,7 @@ export class Castle {
   constructor({
     apiSecret,
     apiUrl,
-    timeout = 500,
+    timeout = 750,
     allowedHeaders = [],
     disallowedHeaders = [],
     overrideFetch = fetch,
