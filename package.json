@@ -1,10 +1,10 @@
 {
   "$schema": "http://json.schemastore.org/package",
-  "name": "castle-node",
-  "version": "0.4.0-alpha1",
+  "name": "@castleio/sdk",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "repository": "git@github.com:castle/castle-node.git",
-  "author": "johanna@castle.io",
+  "author": "castle.io",
   "license": "MIT",
   "private": false,
   "scripts": {
