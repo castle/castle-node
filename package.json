@@ -28,7 +28,7 @@
     "@types/fetch-mock": "^6.0.4",
     "@types/lodash": "^4.14.118",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^10.12.10",
+    "@types/node": "^10.12.18",
     "@types/node-fetch": "^2.1.4",
     "@types/pino": "^5.8.3",
     "@types/sinon": "^5.0.7",
