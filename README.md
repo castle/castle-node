@@ -1,155 +1,127 @@
-# Node.js SDK for Castle
+# Node SDK for Castle
 
-**[Castle](https:castle.io) adds real-time monitoring of your authentication stack, instantly notifying you and your users on potential account hijacks.**
+**[Castle](https://castle.io) analyzes device, location, and interaction patterns in your web and mobile apps and lets you stop account takeover attacks in real-time..**
+
+## Documentation
+
+[Official Castle docs](https://castle.io/docs)
 
 ## Installation
 
-Obtain the latest version of the SDK with npm:
+Add the `castle-node` package to your `package.json`.
+
+### yarn
 
 ```bash
-npm install castleio-sdk
+yarn add castle-node
 ```
 
-## Getting Started: The Vanilla Way
+### npm
 
-### Initializing
-
-```javascript
-import Castle from 'castleio-sdk';
-var castle = new Castle({apiSecret : 'YOUR-SECRET-HERE'});
+```bash
+npm install --save castle-node
 ```
 
-### Tracking Events
+## Configuration
 
-```javascript
+### Framework configuration
 
-castle.trackEvent({
-    event     : Castle.Events.LOGIN_SUCCEEDED, //This can also be a string EX: $login.failed
-    user_id   : 2473, //The ID of your user
-    details   : { //Optional
-            email: 'castle@castle.io'
-    },
-    userAgent : 'Really long user agent string here',
-    cookie    : 'The cookie the client side javascript created with the name __cid',
-    ip        : '0.0.0.0',
-    headers   : {} Tons of headers here
-}).then(obj => {
-    //Handle success
-    //Note that "obj" is almost always just {}
-}).catch(e => {
-    //Handle error
+Load and configure the library with your Castle API secret in an initializer or similar.
+
+```js
+import { Castle } from 'castle-node';
+
+const castle = Castle({ apiSecret: 'YOUR SECRET HERE' });
+```
+
+#### Config options
+
+| Config option     | Explanation                                                                                                                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| apiSecret         | `string` - This can be found in the castle dashboard.                                                                                                                                 |
+| timeout           | `number` - Time before returning the failover strategy. Default value is 500.                                                                                                         |
+| allowedHeaders    | `string[]` - An array of strings matching the headers you want to pass fully to the service.                                                                                          |
+| disallowedHeaders | `string[]` An array of of strings matching the headers you do not want to pass fully to the service.                                                                                  |
+| failoverStrategy  | `string` If the request to our service would for some reason time out, this is where you select the automatic response from `authenticate`. Options are `allow`, `deny`, `challenge`. |
+
+## Actions
+
+The `castle` instance exposes two methods, `track` and `authenticate`. In order to provide the information required in both these methods, you'll need access to the logged in user information (if that is available at that stage in the user flow), as well as request information. In node connect/express, the user is often found in the `session` object, or directly on the `request` object in the `user` property, if you are using passport.
+
+### track
+
+This is the asynchronous version of the castle integration. This is for events where you don't require a response.
+
+```js
+import { EVENTS } from 'castle-node';
+
+track({
+  event: EVENTS.EMAIL_CHANGE_SUCCEEDED,
+  user_id: user.id,
+  user_traits: {
+    email: user.email,
+    registered_at: user.registered_at,
+  },
+  context: {
+    ip: request.ip,
+    client_id: request.cookies['__cid'],
+    headers: request.cookies,
+  },
 });
 ```
 
-### Identifying Users
+### authenticate
 
-```javascript
-castle.identify({
-    user_id   : 2473, //The ID of your user
-    user_data   : { //Optional
-            email: 'castle@castle.io'
+This is the synchronous version of the castle integration. This is for events where you require a response. It is used in the same way as `track`, except that you have the option of waiting for a response.
+
+```js
+let response;
+try {
+  const response = await castle.authenticate({
+    event: EVENTS.EMAIL_CHANGE_SUCCEEDED,
+    user_id: user.id,
+    user_traits: {
+      email: user.email,
+      registered_at: user.registered_at,
     },
-    userAgent : 'Really long user agent string here',
-    cookie    : 'The cookie the client side javascript created with the name __cid',
-    ip        : '0.0.0.0',
-    headers   : {} Tons of headers here
-}).then(obj => {
-    //Handle success
-    //Note that "obj" is almost always just {}
-}).catch(e => {
-    //Handle error
-});
-```
-
-## Getting Started: The Express Way
-
-This is the way to go if you're using Express 4.x
-
-### Initializing
-
-```javascript
-import Castle from 'castleio-sdk'
-app.use(Castle.express({apiSecret : 'YOUR-SECRET-HERE'}));
-```
-
-### Tracking Events
-
-```javascript
-(request, response, next) => {
-    request.castleTrackEvent({
-        event     : request.castleEvents.LOGIN_SUCCEEDED,
-        user_id   : 2473, //The ID of your user
-        details   : { //Optional
-            email: 'castle@castle.io'
-        }.
-    }).then(obj => {
-        //Handle success
-        //Note that "obj" is almost always just {}
-    }).catch(e => {
-        //Handle error
-        next(e)
-    });
+    context: {
+      ip: request.ip,
+      client_id: request.cookies['__cid'],
+      headers: request.headers,
+    },
+  });
+} catch (e) {
+  console.error(e);
 }
+
+console.log(response); // { "action": "allow", "user_id": 123, "device_token": "eyj...." }
 ```
 
-### Identifying Users
+####
 
-```javascript
-(request, response, next) => {
-    request.castleIdentify({
-        user_id   : 2473, The ID of your user
-        user_data   : { //Optional
-            email: 'castle@castle.io'
-        }
-    }).then(obj => {
-        //Handle success
-        //Note that "obj" is almost always just {}
-    }).catch(e => {
-        //Handle error
-        next(e)
-    });
-}
-```
+Response format
 
-## Options
+| Response key    | value                                                                                          |
+| --------------- | ---------------------------------------------------------------------------------------------- |
+| action          | `string` - The recommended action for the given event. Options: `allow`, `challenge`, `deny`.  |
+| user_id         | `string` - The `user_id` of the end user.                                                      |
+| device_token    | `string` - Our token for the device that generated the event.                                  |
+| failover        | `boolean` - An optional property indicating the request failed and the response is a failover. |
+| failover_reason | `string` - A message indicating why the request failed.                                        |
 
-The Castle object accepts these options upon initialization
+### All config options for `track` and `authenticate`
 
-| Code                             | Description     |Default    |
-|:---------------------------------|:----------------|:----------|
-|apiKey|Your api key. This is currently unused|null|
-|apiSecret|Your api secret. This is used for authenticating you|undefined|
-|apiUrl|The endpoint you want to send your api requests to|https://api.castle.io|
-|disableClientUserAgent|Wether or not you want to send SDK info and OS information to castle for analytics|false|
+| Config option | Explanation                                                                                                                                               |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| event         | `string` - The event generated by the user. It can be either an event from `EVENTS` or a custom one.                                                      |
+| user_id       | `string` - The `user_id` of the end user.                                                                                                                 |
+| user_traits   | `object` - An optional, recommended, object containing user information, such as `email` and `registered_at`.                                             |
+| properties    | `object` - An optional object containing custom information.                                                                                              |
+| created_at    | `string` - An optional ISO date string indicating when the event occurred, in cases where this might be different from the time when the request is made. |
+| context       | `object` - The request context information. See information below.                                                                                        |
 
-## Events
-
-These are the events Available through Castle.Events
-
-| Code                             | Description     |Default    |
-|:---------------------------------|:----------------|:----------|
-|   LOGIN_SUCCEEDED           | $login.succeeded | Record when a user attempts to log in|
-|   LOGIN_FAILED              | $login.failed | Record when a user logs out|
-|   LOGOUT_SUCCEEDED          | $logout.succeeded | Record when a user logs out|
-|   REGISTRATION_SUCCEEDED    | $registration.succeeded | Capture account creation, both when a user signs up as well as when created manually by an administrator|
-|   REGISTRATION_FAILED       | $registration.failed | Record when an account failed to be created|
-|   EMAIL_CHANGE_REQUESTED    | $email_change.requested | An attempt was made to change a user’s email|
-|   EMAIL_CHANGE_SUCCEEDED    | $email_change.succeeded | The user completed all of the steps in the email address change process and the email was successfully changed|
-|   EMAIL_CHANGE_FAILED       | $email_change.failed | Use to record when a user failed to change their email address|
-|   PASSWORD_RESET_REQUESTED  | $password_reset.requested | An attempt was made to reset a user’s password|
-|   PASSWORD_RESET_SUCCEEDED  | $password_reset.succeeded | The user completed all of the steps in the password reset process and the password was successfully reset. Password resets do not required knowledge of the current password|
-|   PASSWORD_RESET_FAILED     | $password_reset.failed | Use to record when a user failed to reset their password|
-|   PASSWORD_CHANGE_SUCCEEDED | $password_change.succeeded |Use to record when a user changed their password. This event is only logged when users change their own password|
-|   PASSWORD_CHANGE_FAILED    | $password_change.failed | Use to record when a user failed to change their password|
-|   CHALLENGE_REQUESTED       | $challenge.requested | Record when a user is prompted with additional verification, such as two-factor authentication or a captcha|
-|   CHALLENGE_SUCCEEDED       | $challenge.succeeded | Record when additional verification was successful|
-|   CHALLENGE_FAILED          | $challenge.failed |Record when additional verification failed|
-
-## Errors
-Whenever something unexpected happens, a error is created and returned. Here's a list of errors
-that we're shamefully created
-
-| Code                             | Description     |
-|:---------------------------------|:----------------|
-|MISSING_EVENT_NAME|You've missed the event parameter for the trackEvent function|
-|INVALID_HTTP_STATUS_CODE|The HTTP Code returned by the Castle API was unexpected|
+| Context option | Explanation                                                                                                                                                                                  |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ip             | `string` - The IP address of the request. Note that this needs to be the original request IP, not the IP of an internal proxy, such as nginx.                                                |
+| client_id      | `string` - The client ID, generated by the `c.js` integration on the front end. Commonly found in the `__cid` cookie in `request.cookies`, or in some cases the `X-CASTLE-CLIENT-ID` header. |
+| headers        | `object` - The headers object on the request, commonly `request.headers`.                                                                                                                    |
