@@ -53,7 +53,7 @@ describe('Castle', () => {
       });
       castle.track(sampleRequestData);
 
-      const lastOptions = fetch.lastOptions();
+      const lastOptions: any = fetch.lastOptions();
       const payload = JSON.parse(lastOptions.body.toString());
       // Ensure the client set the sent_at property.
       expect(payload).to.have.property('sent_at', new Date().toISOString());
@@ -114,7 +114,7 @@ describe('Castle', () => {
         },
       });
 
-      const lastOptions = fetch.lastOptions();
+      const lastOptions: any = fetch.lastOptions();
       const payload = JSON.parse(lastOptions.body.toString());
 
       expect(payload).to.have.property('context');
@@ -150,7 +150,7 @@ describe('Castle', () => {
         },
       });
 
-      const lastOptions = fetch.lastOptions();
+      const lastOptions: any = fetch.lastOptions();
       const payload = JSON.parse(lastOptions.body.toString());
 
       expect(payload).to.have.property('context');
@@ -199,7 +199,7 @@ describe('Castle', () => {
       expect(response).to.have.property('device_token', 'device_token');
       expect(response).to.have.property('user_id', 'user_id');
 
-      const lastOptions = fetch.lastOptions();
+      const lastOptions: any = fetch.lastOptions();
       const payload = JSON.parse(lastOptions.body.toString());
       // Ensure the client set the sent_at property.
       expect(payload).to.have.property('sent_at', new Date().toISOString());
