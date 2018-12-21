@@ -166,7 +166,7 @@ export class Castle {
       this.handleLogging({ requestUrl, requestOptions, err });
 
       if (isTimeout(err)) {
-        return this.handleFailover(params, err);
+        return this.handleFailover(params, 'timeout', err);
       } else {
         throw err;
       }
@@ -181,12 +181,12 @@ export class Castle {
 
     this.handleLogging({ requestUrl, requestOptions, response });
 
+    if (response.status >= 500) {
+      return this.handleFailover(params, 'internal server error');
+    }
+
     this.handleUnauthorized(response);
     this.handleBadResponse(response);
-
-    if (response.status >= 500) {
-      return this.handleFailover(params);
-    }
 
     return body;
   }
@@ -330,6 +330,7 @@ export class Castle {
 
   private handleFailover(
     params: ActionParameters,
+    reason: string,
     err?: Error
   ): AuthenticateResult {
     // Have to check it this way to make sure TS understands
@@ -339,7 +340,7 @@ export class Castle {
       return {
         action: this.failoverStrategy,
         failover: true,
-        failover_reason: 'timeout',
+        failover_reason: reason,
         user_id: params.user_id,
       };
     }

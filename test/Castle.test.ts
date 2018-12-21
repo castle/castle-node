@@ -257,6 +257,27 @@ describe('Castle', () => {
       expect(response).to.have.property('user_id', 'userid');
     });
 
+    it('should failover on 500', async () => {
+      const fetch = fetchMock.sandbox().post('*', 500);
+      const castle = new Castle({
+        apiSecret: 'some secret',
+        overrideFetch: fetch,
+        failoverStrategy: 'deny',
+        // This test causes an error level log event, so increase
+        // logLevel to fatal to prevent clouding the test output.
+        logLevel: 'fatal',
+      });
+
+      const response = await castle.authenticate(sampleRequestData);
+      expect(response).to.have.property('action', 'deny');
+      expect(response).to.have.property('failover', true);
+      expect(response).to.have.property(
+        'failover_reason',
+        'internal server error'
+      );
+      expect(response).to.have.property('user_id', 'userid');
+    });
+
     it('should fail on unauthorized', async () => {
       const fetch = fetchMock.sandbox().post('*', 401);
       const castle = new Castle({
