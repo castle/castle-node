@@ -2178,17 +2178,15 @@ pino-std-serializers@^2.3.0:
   resolved "https://registry.yarnpkg.com/pino-std-serializers/-/pino-std-serializers-2.3.0.tgz#34eeaab97c055c28e22c0542ae55978e7e427786"
   integrity sha512-klfGoOsP6sJH7ON796G4xoUSx2fkpFgKHO4YVVO2zmz31jR+etzc/QzGJILaOIiCD6HTCFgkPx+XN8nk+ruqPw==
 
-pino@^5.10.1:
-  version "5.10.2"
-  resolved "https://registry.yarnpkg.com/pino/-/pino-5.10.2.tgz#6daa2176ff7a62c2c6d0e1a6c8124e6d12be4b6d"
-  integrity sha512-EXpD/W4v3JNysmkgrYDUb1sax1M2nd+C9/EexmZvOnMwflJlEII4wfIEEzkEwLRUcpCA0avzsRZohB5n0+G5fw==
+pino@^5.10.5:
+  version "5.10.5"
+  resolved "https://registry.yarnpkg.com/pino/-/pino-5.10.5.tgz#ffecb4f745d633f0d67028cdf8d9bfa69ed24c4b"
+  integrity sha512-WtrALBJSaFgAAwEOCIime51KesWuPgXHTCFWtJRjhEcOg72OEsNlmYLaE4MJONgPvwV8xWuJx1JtXkqb9VD4ig==
   dependencies:
-    fast-json-parse "^1.0.3"
     fast-redact "^1.4.2"
     fast-safe-stringify "^2.0.6"
     flatstr "^1.0.9"
     pino-std-serializers "^2.3.0"
-    pump "^3.0.0"
     quick-format-unescaped "^3.0.0"
     sonic-boom "^0.7.1"
 
