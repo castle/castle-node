@@ -7,6 +7,18 @@ import pino from 'pino';
 
 const defaultApiUrl = 'https://api.castle.io';
 
+type CastleConstructorParameters = {
+  apiSecret: string;
+  apiUrl?: string;
+  timeout?: number;
+  allowedHeaders?: string[];
+  disallowedHeaders?: string[];
+  overrideFetch?: any;
+  failoverStrategy?: FailoverStrategyType;
+  logLevel?: pino.Level;
+  doNotTrack?: boolean;
+};
+
 type ActionParameters = {
   event: string;
   user_id: string;
@@ -96,6 +108,7 @@ export class Castle {
   private overrideFetch: any;
   private failoverStrategy: FailoverStrategyType;
   private logger: pino.Logger;
+  private doNotTrack: boolean;
 
   constructor({
     apiSecret,
@@ -106,16 +119,8 @@ export class Castle {
     overrideFetch = fetch,
     failoverStrategy = 'allow',
     logLevel = 'error',
-  }: {
-    apiSecret: string;
-    apiUrl?: string;
-    timeout?: number;
-    allowedHeaders?: string[];
-    disallowedHeaders?: string[];
-    overrideFetch?: any;
-    failoverStrategy?: FailoverStrategyType;
-    logLevel?: pino.Level;
-  }) {
+    doNotTrack = false,
+  }: CastleConstructorParameters) {
     if (!apiSecret) {
       throw new Error(
         'Castle: Unable to instantiate Castle client, API secret is missing.'
@@ -131,13 +136,13 @@ export class Castle {
       .map(x => x.toLowerCase());
     this.overrideFetch = overrideFetch;
     this.failoverStrategy = failoverStrategy;
-
     this.logger = pino({
       prettyPrint: {
         levelFirst: true,
       },
     });
     this.logger.level = logLevel;
+    this.doNotTrack = doNotTrack;
   }
 
   public async authenticate(
@@ -145,6 +150,10 @@ export class Castle {
   ): Promise<AuthenticateResult> {
     if (!params.event) {
       throw new Error('Castle: event is required when calling authenticate.');
+    }
+
+    if (this.doNotTrack) {
+      return this.generateFailoverBody(params, 'do not track');
     }
 
     let response: Response;
@@ -182,7 +191,7 @@ export class Castle {
     this.handleLogging({ requestUrl, requestOptions, response });
 
     if (response.status >= 500) {
-      return this.handleFailover(params, 'internal server error');
+      return this.handleFailover(params, 'server error');
     }
 
     this.handleUnauthorized(response);
@@ -194,6 +203,10 @@ export class Castle {
   public async track(params: ActionParameters): Promise<void> {
     if (!params.event) {
       throw new Error('Castle: event is required when calling track.');
+    }
+
+    if (this.doNotTrack) {
+      return;
     }
 
     let response: Response;
@@ -328,6 +341,21 @@ export class Castle {
     });
   }
 
+  private generateFailoverBody(
+    params: ActionParameters,
+    reason: string
+  ): AuthenticateResult {
+    return {
+      action:
+        // This is just for the type system, asurring it that failOverStrategy
+        // can not be 'none'.
+        this.failoverStrategy === 'none' ? 'allow' : this.failoverStrategy,
+      failover: true,
+      failover_reason: reason,
+      user_id: params.user_id,
+    };
+  }
+
   private handleFailover(
     params: ActionParameters,
     reason: string,
@@ -337,12 +365,7 @@ export class Castle {
     // that this.failoverStrategy is of type ActionType,
     // not FailoverStrategyType.
     if (this.failoverStrategy !== 'none') {
-      return {
-        action: this.failoverStrategy,
-        failover: true,
-        failover_reason: reason,
-        user_id: params.user_id,
-      };
+      return this.generateFailoverBody(params, reason);
     }
 
     if (this.failoverStrategy === 'none') {

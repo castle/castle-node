@@ -162,6 +162,23 @@ describe('Castle', () => {
       expect(payload.context.headers).to.have.property('X-SUPER-SECRET', true);
     });
 
+    it('should not do requests when do not track is set', async () => {
+      const fetch = fetchMock.sandbox().post('*', 500);
+      const castle = new Castle({
+        apiSecret: 'some secret',
+        overrideFetch: fetch,
+        doNotTrack: true,
+        failoverStrategy: 'deny',
+      });
+
+      await castle.track(sampleRequestData);
+
+      // Ensure that fetch was never called. When do not track
+      // is on, the SDK should generate no outbound requests.
+      // tslint:disable-next-line:no-unused-expression
+      expect(fetch.called()).to.be.false;
+    });
+
     it('should fail on unauthorized', async () => {
       const fetch = fetchMock.sandbox().post('*', 401);
       const castle = new Castle({
@@ -271,11 +288,29 @@ describe('Castle', () => {
       const response = await castle.authenticate(sampleRequestData);
       expect(response).to.have.property('action', 'deny');
       expect(response).to.have.property('failover', true);
-      expect(response).to.have.property(
-        'failover_reason',
-        'internal server error'
-      );
+      expect(response).to.have.property('failover_reason', 'server error');
       expect(response).to.have.property('user_id', 'userid');
+    });
+
+    it('should failover when do not track is set', async () => {
+      const fetch = fetchMock.sandbox().post('*', 500);
+      const castle = new Castle({
+        apiSecret: 'some secret',
+        overrideFetch: fetch,
+        doNotTrack: true,
+        failoverStrategy: 'deny',
+      });
+
+      const response = await castle.authenticate(sampleRequestData);
+      expect(response).to.have.property('action', 'deny');
+      expect(response).to.have.property('failover', true);
+      expect(response).to.have.property('failover_reason', 'do not track');
+      expect(response).to.have.property('user_id', 'userid');
+
+      // Ensure that fetch was never called. When do not track
+      // is on, the SDK should generate no outbound requests.
+      // tslint:disable-next-line:no-unused-expression
+      expect(fetch.called()).to.be.false;
     });
 
     it('should fail on unauthorized', async () => {
