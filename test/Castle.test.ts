@@ -26,6 +26,10 @@ const sampleRequestData = {
 };
 
 describe('Castle', () => {
+  it('should have some static methods', () => {
+    expect(Castle).to.have.property('getContextFromExpressRequest');
+  });
+
   it('should have some public methods', () => {
     const castle = new Castle({ apiSecret: 'some secret' });
     expect(castle).to.have.property('authenticate');
@@ -36,6 +40,91 @@ describe('Castle', () => {
     // @ts-ignore
     const castleFactory = () => new Castle({});
     expect(castleFactory).to.throw();
+  });
+
+  describe('getContextFromExpressRequest', () => {
+    const expressRequest = {
+      ip: '8.8.8.8',
+      cookies: {
+        __cid: '321',
+      },
+      headers: {
+        'user-agent': 'something',
+      },
+    };
+
+    it('should get properties from request object', () => {
+      // @ts-ignore
+      const context = Castle.getContextFromExpressRequest(expressRequest);
+
+      expect(context).to.have.property('ip', expressRequest.ip);
+      expect(context).to.have.property(
+        'client_id',
+        expressRequest.cookies.__cid
+      );
+      expect(context).to.have.property('headers', expressRequest.headers);
+    });
+
+    it('should parse x-forwarded-for if it exists', () => {
+      const ipHeadersRequest = {
+        ...expressRequest,
+        headers: {
+          ...expressRequest.headers,
+          'x-forwarded-for': '4.4.4.4, 2.2.2.2',
+        },
+      };
+
+      // @ts-ignore
+      const context = Castle.getContextFromExpressRequest(ipHeadersRequest);
+
+      expect(context).to.have.property('ip', '4.4.4.4');
+    });
+
+    it('should use cf-connecting-ip if it exists', () => {
+      const ipHeadersRequest = {
+        ...expressRequest,
+        headers: {
+          ...expressRequest.headers,
+          'cf-connecting-ip': '1.1.1.1',
+        },
+      };
+
+      // @ts-ignore
+      const context = Castle.getContextFromExpressRequest(ipHeadersRequest);
+
+      expect(context).to.have.property('ip', '1.1.1.1');
+    });
+
+    it('should prefer x-forwarded-for over cf-connecting-ip', () => {
+      const ipHeadersRequest = {
+        ...expressRequest,
+        headers: {
+          ...expressRequest.headers,
+          'x-forwarded-for': '4.4.4.4, 2.2.2.2',
+          'cf-connecting-ip': '1.1.1.1',
+        },
+      };
+
+      // @ts-ignore
+      const context = Castle.getContextFromExpressRequest(ipHeadersRequest);
+
+      expect(context).to.have.property('ip', '4.4.4.4');
+    });
+
+    it('should prefer client id header over cookie if it exists', () => {
+      const ipHeadersRequest = {
+        ...expressRequest,
+        headers: {
+          ...expressRequest.headers,
+          'x-castle-client-id': '123',
+        },
+      };
+
+      // @ts-ignore
+      const context = Castle.getContextFromExpressRequest(ipHeadersRequest);
+
+      expect(context).to.have.property('client_id', '123');
+    });
   });
 
   describe('track', () => {

@@ -1,9 +1,13 @@
-import fetch from 'node-fetch';
+import fetch, { Request, Response } from 'node-fetch';
 import { reduce } from 'lodash';
 import { IncomingHttpHeaders } from 'http2';
 import AbortController from 'abort-controller';
 import packageJson from '../package.json';
 import pino from 'pino';
+import {
+  Response as ExpressResponse,
+  Request as ExpressRequest,
+} from 'express';
 
 const defaultApiUrl = 'https://api.castle.io';
 
@@ -19,6 +23,12 @@ type CastleConstructorParameters = {
   doNotTrack?: boolean;
 };
 
+type RequestContext = {
+  ip: string;
+  client_id: string;
+  headers: IncomingHttpHeaders;
+};
+
 type ActionParameters = {
   event: string;
   user_id: string;
@@ -26,11 +36,7 @@ type ActionParameters = {
   properties?: object;
   created_at?: string;
   device_token?: string;
-  context: {
-    ip: string;
-    client_id: string;
-    headers: IncomingHttpHeaders;
-  };
+  context: RequestContext;
 };
 
 type ActionType = 'allow' | 'deny' | 'challenge';
@@ -99,7 +105,37 @@ Request: ${JSON.stringify(requestOptions)}
 ${response ? responseFormatter(response, body) : errorFormatter(err)}
 `;
 
+// Although headers are technically typed `string | string[]`
+// the only header that exists as an `array` is 'set-cookie'.
+// It is safe to cast all other headers to strings.
+const getCfConnectingIp = (request: ExpressRequest) =>
+  request.headers['cf-connecting-ip'] as string;
+const getForwardedFor = (request: ExpressRequest): string => {
+  const rf = request.headers['x-forwarded-for'] as string;
+  return rf && rf.split(',')[0].trim();
+};
+const getCidHeader = (request: ExpressRequest) =>
+  request.headers['x-castle-client-id'] as string;
+const getCidCookie = (request: ExpressRequest): string => request.cookies.__cid;
+
 export class Castle {
+  // Constructs context from an Express request object.
+  // Requires cookie-parser middleware.
+  public static getContextFromExpressRequest(
+    request: ExpressRequest
+  ): RequestContext {
+    const ip =
+      getForwardedFor(request) || getCfConnectingIp(request) || request.ip;
+    // tslint:disable-next-line:variable-name
+    const client_id = getCidHeader(request) || getCidCookie(request);
+
+    return {
+      ip,
+      client_id,
+      headers: request.headers,
+    };
+  }
+
   private apiSecret: string;
   private apiUrl: string;
   private timeout: number;
