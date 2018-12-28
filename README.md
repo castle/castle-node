@@ -36,13 +36,15 @@ const castle = Castle({ apiSecret: 'YOUR SECRET HERE' });
 
 #### Config options
 
-| Config option     | Explanation                                                                                                                                                                           |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| apiSecret         | `string` - This can be found in the castle dashboard.                                                                                                                                 |
-| timeout           | `number` - Time before returning the failover strategy. Default value is 500.                                                                                                         |
-| allowedHeaders    | `string[]` - An array of strings matching the headers you want to pass fully to the service.                                                                                          |
-| disallowedHeaders | `string[]` An array of of strings matching the headers you do not want to pass fully to the service.                                                                                  |
-| failoverStrategy  | `string` If the request to our service would for some reason time out, this is where you select the automatic response from `authenticate`. Options are `allow`, `deny`, `challenge`. |
+| Config option     | Explanation                                                                                                                                                                             |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| apiSecret         | `string` - This can be found in the castle dashboard.                                                                                                                                   |
+| timeout           | `number` - Time before returning the failover strategy. Default value is 500.                                                                                                           |
+| allowedHeaders    | `string[]` - An array of strings matching the headers you want to pass fully to the service.                                                                                            |
+| disallowedHeaders | `string[]` - An array of of strings matching the headers you do not want to pass fully to the service.                                                                                  |
+| failoverStrategy  | `string` - If the request to our service would for some reason time out, this is where you select the automatic response from `authenticate`. Options are `allow`, `deny`, `challenge`. |
+| logLevel          | `string` - Corresponds to standard log levels: `trace`, `debug`, `info`, `warn`, `error`, `fatal`. Useful levels are `info` and `error`.                                                |
+| doNotTrack        | `boolean` - False by default, setting it to true turns off all requests and triggers automatic failover on `authenticate`. Used for development and testing.                            |
 
 ## Actions
 
@@ -118,10 +120,11 @@ Response format
 | user_traits   | `object` - An optional, recommended, object containing user information, such as `email` and `registered_at`.                                             |
 | properties    | `object` - An optional object containing custom information.                                                                                              |
 | created_at    | `string` - An optional ISO date string indicating when the event occurred, in cases where this might be different from the time when the request is made. |
+| device_token  | `string` - The optional device token, used for mitigating or escalating.                                                                                  |
 | context       | `object` - The request context information. See information below.                                                                                        |
 
-| Context option | Explanation                                                                                                                                                                                  |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ip             | `string` - The IP address of the request. Note that this needs to be the original request IP, not the IP of an internal proxy, such as nginx.                                                |
-| client_id      | `string` - The client ID, generated by the `c.js` integration on the front end. Commonly found in the `__cid` cookie in `request.cookies`, or in some cases the `X-CASTLE-CLIENT-ID` header. |
-| headers        | `object` - The headers object on the request, commonly `request.headers`.                                                                                                                    |
+| Context option | Explanation                                                                                                                                                                                                      |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ip             | `string` - The IP address of the request. Note that this needs to be the original request IP, not the IP of an internal proxy, such as nginx.                                                                    |
+| client_id      | `string` - The client ID, generated by the `c.js` integration on the front end. Commonly found in the `__cid` cookie in `request.cookies` or `request.cookie`, or in some cases the `X-CASTLE-CLIENT-ID` header. |
+| headers        | `object` - The headers object on the request, commonly `request.headers`.                                                                                                                                        |
