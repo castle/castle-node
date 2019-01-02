@@ -75,10 +75,10 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
-"@types/fetch-mock@^7.2.0":
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/@types/fetch-mock/-/fetch-mock-7.2.0.tgz#5f0310e03177d452eeebe9b07975c1fed2a41dba"
-  integrity sha512-p73N4iZbQSEToxVY86R9CHVI4THKM+I9UsFxN10c2EuguSygzDdXXNkicRL/45oIF80u2XE6XDKuCo2NNikDqA==
+"@types/fetch-mock@^7.2.1":
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/@types/fetch-mock/-/fetch-mock-7.2.1.tgz#5630999aa75532e00af42a54cbe05e1651f4a080"
+  integrity sha512-zuLhLEK4gOPxhkiUhqbG4p0lKY2ePEE//5NHTTn/vjYl0XWpfk2x0Fw7EWKtCjlggEsuc1GvpasD46X9PSZFaA==
 
 "@types/lodash@^4.14.118":
   version "4.14.119"
