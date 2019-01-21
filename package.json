@@ -52,7 +52,7 @@
     "abort-controller": "^2.0.0",
     "lodash": "^4.17.11",
     "node-fetch": "^2.3.0",
-    "pino": "^5.10.7",
+    "pino": "^5.10.8",
     "pino-pretty": "^2.5.0"
   }
 }
