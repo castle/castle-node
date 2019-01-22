@@ -140,12 +140,12 @@
   dependencies:
     "@types/node" "*"
 
-abort-controller@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/abort-controller/-/abort-controller-2.0.0.tgz#649f2e9793e3510e8a4c7f97f0bf2f5652286620"
-  integrity sha512-+4RmySoSV9PRMNqFOQSNfEt9jmXZnETmtBCH7oWBWhHxVPBqVSyYf57K7FK2s/eZC1LSmg421mettynmCDX45g==
+abort-controller@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/abort-controller/-/abort-controller-2.0.2.tgz#f0c059173ac7fdc4dba73e3833102def407a6a29"
+  integrity sha512-JXEYGxxMwiNl9EUdLysK0K0DwB7ENw6KeeaLHgofijTfJYPB/vOer3Mb+IcP913dCfWiQsd05MmVNl0H5PanrQ==
   dependencies:
-    event-target-shim "^4.0.3"
+    event-target-shim "^5.0.0"
 
 ansi-regex@^2.0.0:
   version "2.1.1"
@@ -442,10 +442,10 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
   integrity sha1-Cr9PHKpbyx96nYrMbepPqqBLrJs=
 
-event-target-shim@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-4.0.3.tgz#758cd632cd4241f5a73ceec64f93f0d7b0ae77d6"
-  integrity sha512-YXVJDPGzU0yhSzrXGoEFAByEaLnZXSlJDHXkq4Hp6WrlnV66tADiZugYf1utTaCP/dsYRcLndAhecbq9mnbbqg==
+event-target-shim@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.0.tgz#8fabe06975219af64c36ceed4771cf1ad1c3455c"
+  integrity sha512-vu4tlY5xqMEGj/rzuDHxfvm9Kk2562O5h58i8xwnkMkv/yqmBqBcDJt/vGBrOBbCKuVc5eV3ghYxAX9YUhyi0w==
 
 execa@^1.0.0:
   version "1.0.0"
