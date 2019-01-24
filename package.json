@@ -15,7 +15,7 @@
     "test": "mocha -r ts-node/register test/**/*.ts",
     "prettier": "prettier --write --parser typescript src/**/*.ts",
     "prepush": "yarn build && yarn lint && yarn prettier && git diff --quiet",
-    "prepare": "yarn build"
+    "prepublishOnly": "yarn build"
   },
   "husky": {
     "hooks": {
