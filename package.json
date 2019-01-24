@@ -14,7 +14,8 @@
     "start": "tsc -w",
     "test": "mocha -r ts-node/register test/**/*.ts",
     "prettier": "prettier --write --parser typescript src/**/*.ts",
-    "prepush": "yarn build && yarn lint && yarn prettier && git diff --quiet",
+    "prettier-check": "yarn prettier --list-different --parser typescript src/**/*.ts",
+    "prepush": "yarn build && yarn lint && yarn prettier-check",
     "prepublishOnly": "yarn build"
   },
   "husky": {
