@@ -50,7 +50,7 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
-    "abort-controller": "^2.0.3",
+    "abort-controller": "^3.0.0",
     "lodash": "^4.17.11",
     "node-fetch": "^2.3.0",
     "pino": "^5.12.0",
