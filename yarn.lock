@@ -1637,10 +1637,10 @@ pify@^3.0.0:
   resolved "https://registry.yarnpkg.com/pify/-/pify-3.0.0.tgz#e5a4acd2c101fdf3d9a4d07f0dbc4db49dd28176"
   integrity sha1-5aSs0sEB/fPZpNB/DbxNtJ3SgXY=
 
-pino-pretty@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/pino-pretty/-/pino-pretty-2.5.0.tgz#fade5b6d2acbdbf2c7e77adf220e7b7d89d04437"
-  integrity sha512-odR4SKdyubhe4aFts0/mBau2/mJLG23Ghyo86a+GZ2/Cev3CRr5nYv2+82V7v1hQL93yRSO004ASrrF7278TNQ==
+pino-pretty@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/pino-pretty/-/pino-pretty-2.6.0.tgz#05e69e5d458e8b304936e0097045c38c382e7c27"
+  integrity sha512-0mrKDOCI35tb8Wjrg793ZE+AyFZYivUH7ekJdcd41RJik32BT7cgLsq/Kjh8+lvQa+Mx2PghptN1x0tsO2Trvw==
   dependencies:
     args "^5.0.0"
     chalk "^2.3.2"
