@@ -37,12 +37,21 @@ type ActionType = 'allow' | 'deny' | 'challenge';
 
 type FailoverStrategyType = ActionType | 'none';
 
+type RiskPolicyResult = {
+  id: string;
+  revision_id: string;
+  name: string;
+  type: string;
+}
+
 type AuthenticateResult = {
   action: ActionType;
   user_id?: string;
+  user?: {email?: string, username?: string};
   device_token?: string;
   failover?: boolean;
   failover_reason?: string;
+  risk_policy?: RiskPolicyResult;
 };
 
 type LoggingParameters = {
