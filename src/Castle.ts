@@ -42,12 +42,12 @@ type RiskPolicyResult = {
   revision_id: string;
   name: string;
   type: string;
-}
+};
 
 type AuthenticateResult = {
   action: ActionType;
   user_id?: string;
-  user?: {email?: string, username?: string};
+  user?: { email?: string; username?: string };
   device_token?: string;
   failover?: boolean;
   failover_reason?: string;
@@ -139,10 +139,10 @@ export class Castle {
     this.apiSecret = apiSecret;
     this.apiUrl = apiUrl || defaultApiUrl;
     this.timeout = timeout;
-    this.allowedHeaders = allowedHeaders.map(x => x.toLowerCase());
+    this.allowedHeaders = allowedHeaders.map((x) => x.toLowerCase());
     this.disallowedHeaders = disallowedHeaders
       .concat(['cookie'])
-      .map(x => x.toLowerCase());
+      .map((x) => x.toLowerCase());
     this.overrideFetch = overrideFetch;
     this.failoverStrategy = failoverStrategy;
     this.logger = pino({

@@ -27,7 +27,7 @@ jobs:
     steps:
       - checkout
       - restore_cache: *yarn-restore
-      - run: yarn lint && yarn prettier
+      - run: yarn lint-verify && yarn prettier-verify
   test:
     <<: *job-defaults
     steps:

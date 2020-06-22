@@ -9,13 +9,14 @@
   "private": false,
   "scripts": {
     "clean": "rimraf dist",
-    "lint": "tslint -c tslint.json --fix 'src/**/*.ts'",
+    "lint-verify": "tslint -c tslint.json 'src/**/*.ts'",
+    "lint-fix": "tslint -c tslint.json --fix '{src,test}/**/*.ts'",
     "build": "tsc",
     "start": "tsc -w",
     "test": "mocha -r ts-node/register test/**/*.ts",
-    "prettier": "prettier --write --parser typescript src/**/*.ts",
-    "prettier-check": "yarn prettier --list-different --parser typescript src/**/*.ts",
-    "prepush": "yarn build && yarn lint && yarn prettier-check",
+    "prettier-fix": "prettier --write --parser typescript '{src,test}/**/*.ts'",
+    "prettier-verify": "yarn prettier --list-different --parser typescript src/**/*.ts",
+    "prepush": "yarn build && yarn lint-fix && yarn prettier-verify",
     "prepublishOnly": "yarn build"
   },
   "husky": {
