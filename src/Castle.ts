@@ -35,13 +35,15 @@ type ActionParameters = {
 
 type ActionType = 'allow' | 'deny' | 'challenge';
 
+type RiskPolicyType = 'bot' | 'authentication';
+
 type FailoverStrategyType = ActionType | 'none';
 
 type RiskPolicyResult = {
   id: string;
   revision_id: string;
   name: string;
-  type: string;
+  type: RiskPolicyType;
 };
 
 type AuthenticateResult = {
