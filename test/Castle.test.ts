@@ -201,7 +201,17 @@ describe('Castle', () => {
       const fetch = fetchMock.sandbox().mock(
         '*',
         // Mimic an allow response from authenticate.
-        { action: 'allow', device_token: 'device_token', user_id: 'user_id' }
+        {
+          action: 'allow',
+          device_token: 'device_token',
+          user_id: 'user_id',
+          risk_policy: {
+            id: 'q-rbeMzBTdW2Fd09sbz55A',
+            revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
+            name: 'Block Users from X',
+            type: 'bot',
+          },
+        }
       );
       const clock = sinon.useFakeTimers(new Date(2011, 9, 1).getTime());
       const castle = new Castle({
@@ -215,6 +225,19 @@ describe('Castle', () => {
       expect(response).to.have.property('action', 'allow');
       expect(response).to.have.property('device_token', 'device_token');
       expect(response).to.have.property('user_id', 'user_id');
+      expect(response.risk_policy).to.have.property(
+        'id',
+        'q-rbeMzBTdW2Fd09sbz55A'
+      );
+      expect(response.risk_policy).to.have.property(
+        'revision_id',
+        'pke4zqO2TnqVr-NHJOAHEg'
+      );
+      expect(response.risk_policy).to.have.property('type', 'bot');
+      expect(response.risk_policy).to.have.property(
+        'name',
+        'Block Users from X'
+      );
 
       const lastOptions: any = fetch.lastOptions();
       const payload = JSON.parse(lastOptions.body.toString());
