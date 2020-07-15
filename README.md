@@ -103,13 +103,14 @@ console.log(response); // { "action": "allow", "user_id": 123, "device_token": "
 
 Response format
 
-| Response key    | value                                                                                          |
-| --------------- | ---------------------------------------------------------------------------------------------- |
-| action          | `string` - The recommended action for the given event. Options: `allow`, `challenge`, `deny`.  |
-| user_id         | `string` - The `user_id` of the end user.                                                      |
-| device_token    | `string` - Our token for the device that generated the event.                                  |
-| failover        | `boolean` - An optional property indicating the request failed and the response is a failover. |
-| failover_reason | `string` - A message indicating why the request failed.                                        |
+| Response key    | value                                                                                               |
+| --------------- | --------------------------------------------------------------------------------------------------- |
+| action          | `string` - The recommended action for the given event. Options: `allow`, `challenge`, `deny`.       |
+| user_id         | `string` - The `user_id` of the end user.                                                           |
+| risk_policy     | `object` - object containing risk policy information, such as `id`,`revision_id`, `name` and `type` |
+| device_token    | `string` - Our token for the device that generated the event.                                       |
+| failover        | `boolean` - An optional property indicating the request failed and the response is a failover.      |
+| failover_reason | `string` - A message indicating why the request failed.                                             |
 
 ### All config options for `track` and `authenticate`
 
