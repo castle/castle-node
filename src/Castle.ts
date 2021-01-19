@@ -5,27 +5,11 @@ import { IncomingHttpHeaders } from 'http2';
 import packageJson from '../package.json';
 import pino from 'pino';
 
-import { Payload, LoggingParameters } from './models'
+import { Configuration, FailoverStrategy, LoggingParameters, Payload, Verdict } from './models'
 
 const defaultApiUrl = 'https://api.castle.io';
 
-type CastleConstructorParameters = {
-  apiSecret: string;
-  apiUrl?: string;
-  timeout?: number;
-  allowedHeaders?: string[];
-  disallowedHeaders?: string[];
-  overrideFetch?: any;
-  failoverStrategy?: FailoverStrategyType;
-  logLevel?: pino.Level;
-  doNotTrack?: boolean;
-};
-
-type ActionType = 'allow' | 'deny' | 'challenge';
-
 type RiskPolicyType = 'bot' | 'authentication';
-
-type FailoverStrategyType = ActionType | 'none';
 
 type RiskPolicyResult = {
   id: string;
@@ -35,7 +19,7 @@ type RiskPolicyResult = {
 };
 
 type AuthenticateResult = {
-  action: ActionType;
+  action: Verdict;
   user_id?: string;
   user?: { email?: string; username?: string };
   device_token?: string;
@@ -97,7 +81,7 @@ export class Castle {
   private allowedHeaders: string[];
   private disallowedHeaders: string[];
   private overrideFetch: any;
-  private failoverStrategy: FailoverStrategyType;
+  private failoverStrategy: FailoverStrategy;
   private logger: pino.Logger;
   private doNotTrack: boolean;
 
@@ -111,7 +95,7 @@ export class Castle {
     failoverStrategy = 'allow',
     logLevel = 'error',
     doNotTrack = false,
-  }: CastleConstructorParameters) {
+  }: Configuration) {
     if (!apiSecret) {
       throw new Error(
         'Castle: Unable to instantiate Castle client, API secret is missing.'
@@ -353,7 +337,7 @@ export class Castle {
     err?: Error
   ): AuthenticateResult {
     // Have to check it this way to make sure TS understands
-    // that this.failoverStrategy is of type ActionType,
+    // that this.failoverStrategy is of type Verdict,
     // not FailoverStrategyType.
     if (this.failoverStrategy !== 'none') {
       return this.generateFailoverBody(params, reason);
