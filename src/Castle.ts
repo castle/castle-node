@@ -5,28 +5,15 @@ import { IncomingHttpHeaders } from 'http2';
 import packageJson from '../package.json';
 import pino from 'pino';
 
-import { Configuration, FailoverStrategy, LoggingParameters, Payload, Verdict } from './models'
+import {
+  AuthenticateResult,
+  Configuration,
+  FailoverStrategy,
+  LoggingParameters,
+  Payload,
+} from './models';
 
 const defaultApiUrl = 'https://api.castle.io';
-
-type RiskPolicyType = 'bot' | 'authentication';
-
-type RiskPolicyResult = {
-  id: string;
-  revision_id: string;
-  name: string;
-  type: RiskPolicyType;
-};
-
-type AuthenticateResult = {
-  action: Verdict;
-  user_id?: string;
-  user?: { email?: string; username?: string };
-  device_token?: string;
-  failover?: boolean;
-  failover_reason?: string;
-  risk_policy?: RiskPolicyResult;
-};
 
 // The body on the request is a stream and can only be
 // read once, by default. This is a workaround so that the
@@ -120,9 +107,7 @@ export class Castle {
     this.doNotTrack = doNotTrack;
   }
 
-  public async authenticate(
-    params: Payload
-  ): Promise<AuthenticateResult> {
+  public async authenticate(params: Payload): Promise<AuthenticateResult> {
     if (!params.event) {
       throw new Error('Castle: event is required when calling authenticate.');
     }
