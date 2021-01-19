@@ -1,9 +1,11 @@
 import fetch from 'node-fetch';
 import { reduce } from 'lodash';
-import { IncomingHttpHeaders } from 'http2';
 import AbortController from 'abort-controller';
+import { IncomingHttpHeaders } from 'http2';
 import packageJson from '../package.json';
 import pino from 'pino';
+
+import { Payload, LoggingParameters } from './models'
 
 const defaultApiUrl = 'https://api.castle.io';
 
@@ -17,20 +19,6 @@ type CastleConstructorParameters = {
   failoverStrategy?: FailoverStrategyType;
   logLevel?: pino.Level;
   doNotTrack?: boolean;
-};
-
-type ActionParameters = {
-  event: string;
-  user_id: string;
-  user_traits?: object;
-  properties?: object;
-  created_at?: string;
-  device_token?: string;
-  context: {
-    ip: string;
-    client_id: string;
-    headers: IncomingHttpHeaders;
-  };
 };
 
 type ActionType = 'allow' | 'deny' | 'challenge';
@@ -54,14 +42,6 @@ type AuthenticateResult = {
   failover?: boolean;
   failover_reason?: string;
   risk_policy?: RiskPolicyResult;
-};
-
-type LoggingParameters = {
-  requestUrl: string;
-  requestOptions: any;
-  response?: Response;
-  err?: Error;
-  body?: any;
 };
 
 // The body on the request is a stream and can only be
@@ -157,7 +137,7 @@ export class Castle {
   }
 
   public async authenticate(
-    params: ActionParameters
+    params: Payload
   ): Promise<AuthenticateResult> {
     if (!params.event) {
       throw new Error('Castle: event is required when calling authenticate.');
@@ -211,7 +191,7 @@ export class Castle {
     return body;
   }
 
-  public async track(params: ActionParameters): Promise<void> {
+  public async track(params: Payload): Promise<void> {
     if (!params.event) {
       throw new Error('Castle: event is required when calling track.');
     }
@@ -331,7 +311,7 @@ export class Castle {
     context,
     created_at,
     device_token,
-  }: ActionParameters) {
+  }: Payload) {
     return JSON.stringify({
       sent_at: new Date().toISOString(),
       created_at,
@@ -353,7 +333,7 @@ export class Castle {
   }
 
   private generateFailoverBody(
-    params: ActionParameters,
+    params: Payload,
     reason: string
   ): AuthenticateResult {
     return {
@@ -368,7 +348,7 @@ export class Castle {
   }
 
   private handleFailover(
-    params: ActionParameters,
+    params: Payload,
     reason: string,
     err?: Error
   ): AuthenticateResult {
