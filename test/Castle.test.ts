@@ -3,9 +3,6 @@ import fetchMock from 'fetch-mock';
 import { EVENTS } from '../src/events';
 import sinon from 'sinon';
 
-// chai.use(chaiAsPromised);
-// const expect = chai.expect;
-
 const sampleRequestData = {
   event: EVENTS.LOGIN_SUCCEEDED,
   created_at: 'now',
