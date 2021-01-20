@@ -1,68 +1,19 @@
 import fetch from 'node-fetch';
 import { reduce } from 'lodash';
-import { IncomingHttpHeaders } from 'http2';
 import AbortController from 'abort-controller';
+import { IncomingHttpHeaders } from 'http2';
 import packageJson from '../package.json';
 import pino from 'pino';
 
+import {
+  AuthenticateResult,
+  Configuration,
+  FailoverStrategy,
+  LoggingParameters,
+  Payload,
+} from './models';
+
 const defaultApiUrl = 'https://api.castle.io';
-
-type CastleConstructorParameters = {
-  apiSecret: string;
-  apiUrl?: string;
-  timeout?: number;
-  allowedHeaders?: string[];
-  disallowedHeaders?: string[];
-  overrideFetch?: any;
-  failoverStrategy?: FailoverStrategyType;
-  logLevel?: pino.Level;
-  doNotTrack?: boolean;
-};
-
-type ActionParameters = {
-  event: string;
-  user_id: string;
-  user_traits?: object;
-  properties?: object;
-  created_at?: string;
-  device_token?: string;
-  context: {
-    ip: string;
-    client_id: string;
-    headers: IncomingHttpHeaders;
-  };
-};
-
-type ActionType = 'allow' | 'deny' | 'challenge';
-
-type RiskPolicyType = 'bot' | 'authentication';
-
-type FailoverStrategyType = ActionType | 'none';
-
-type RiskPolicyResult = {
-  id: string;
-  revision_id: string;
-  name: string;
-  type: RiskPolicyType;
-};
-
-type AuthenticateResult = {
-  action: ActionType;
-  user_id?: string;
-  user?: { email?: string; username?: string };
-  device_token?: string;
-  failover?: boolean;
-  failover_reason?: string;
-  risk_policy?: RiskPolicyResult;
-};
-
-type LoggingParameters = {
-  requestUrl: string;
-  requestOptions: any;
-  response?: Response;
-  err?: Error;
-  body?: any;
-};
 
 // The body on the request is a stream and can only be
 // read once, by default. This is a workaround so that the
@@ -117,7 +68,7 @@ export class Castle {
   private allowedHeaders: string[];
   private disallowedHeaders: string[];
   private overrideFetch: any;
-  private failoverStrategy: FailoverStrategyType;
+  private failoverStrategy: FailoverStrategy;
   private logger: pino.Logger;
   private doNotTrack: boolean;
 
@@ -131,7 +82,7 @@ export class Castle {
     failoverStrategy = 'allow',
     logLevel = 'error',
     doNotTrack = false,
-  }: CastleConstructorParameters) {
+  }: Configuration) {
     if (!apiSecret) {
       throw new Error(
         'Castle: Unable to instantiate Castle client, API secret is missing.'
@@ -156,9 +107,7 @@ export class Castle {
     this.doNotTrack = doNotTrack;
   }
 
-  public async authenticate(
-    params: ActionParameters
-  ): Promise<AuthenticateResult> {
+  public async authenticate(params: Payload): Promise<AuthenticateResult> {
     if (!params.event) {
       throw new Error('Castle: event is required when calling authenticate.');
     }
@@ -211,7 +160,7 @@ export class Castle {
     return body;
   }
 
-  public async track(params: ActionParameters): Promise<void> {
+  public async track(params: Payload): Promise<void> {
     if (!params.event) {
       throw new Error('Castle: event is required when calling track.');
     }
@@ -331,7 +280,7 @@ export class Castle {
     context,
     created_at,
     device_token,
-  }: ActionParameters) {
+  }: Payload) {
     return JSON.stringify({
       sent_at: new Date().toISOString(),
       created_at,
@@ -353,7 +302,7 @@ export class Castle {
   }
 
   private generateFailoverBody(
-    params: ActionParameters,
+    params: Payload,
     reason: string
   ): AuthenticateResult {
     return {
@@ -368,12 +317,12 @@ export class Castle {
   }
 
   private handleFailover(
-    params: ActionParameters,
+    params: Payload,
     reason: string,
     err?: Error
   ): AuthenticateResult {
     // Have to check it this way to make sure TS understands
-    // that this.failoverStrategy is of type ActionType,
+    // that this.failoverStrategy is of type Verdict,
     // not FailoverStrategyType.
     if (this.failoverStrategy !== 'none') {
       return this.generateFailoverBody(params, reason);
