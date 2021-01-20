@@ -1,12 +1,10 @@
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import { Castle } from '../index';
 import fetchMock from 'fetch-mock';
 import { EVENTS } from '../src/events';
 import sinon from 'sinon';
 
-chai.use(chaiAsPromised);
-const expect = chai.expect;
+// chai.use(chaiAsPromised);
+// const expect = chai.expect;
 
 const sampleRequestData = {
   event: EVENTS.LOGIN_SUCCEEDED,
@@ -28,14 +26,14 @@ const sampleRequestData = {
 describe('Castle', () => {
   it('should have some public methods', () => {
     const castle = new Castle({ apiSecret: 'some secret' });
-    expect(castle).to.have.property('authenticate');
-    expect(castle).to.have.property('track');
+    expect(castle).toHaveProperty('authenticate');
+    expect(castle).toHaveProperty('track');
   });
 
   it('should throw if API secret is missing', () => {
     // @ts-ignore
     const castleFactory = () => new Castle({});
-    expect(castleFactory).to.throw();
+    expect(castleFactory).toThrow();
   });
 
   describe('track', () => {
@@ -56,36 +54,36 @@ describe('Castle', () => {
       const lastOptions: any = fetch.lastOptions();
       const payload = JSON.parse(lastOptions.body.toString());
       // Ensure the client set the sent_at property.
-      expect(payload).to.have.property('sent_at', new Date().toISOString());
+      expect(payload).toHaveProperty('sent_at', new Date().toISOString());
       // Verify that the passed in properties are passed on.
-      expect(payload).to.have.property('event', sampleRequestData.event);
-      expect(payload).to.have.property(
+      expect(payload).toHaveProperty('event', sampleRequestData.event);
+      expect(payload).toHaveProperty(
         'created_at',
         sampleRequestData.created_at
       );
-      expect(payload).to.have.property('event', sampleRequestData.event);
-      expect(payload).to.have.property('user_id', sampleRequestData.user_id);
-      expect(payload).to.have.property('user_traits');
-      expect(payload.user_traits).to.have.property(
+      expect(payload).toHaveProperty('event', sampleRequestData.event);
+      expect(payload).toHaveProperty('user_id', sampleRequestData.user_id);
+      expect(payload).toHaveProperty('user_traits');
+      expect(payload.user_traits).toHaveProperty(
         'email',
         sampleRequestData.user_traits.email
       );
-      expect(payload.user_traits).to.have.property(
+      expect(payload.user_traits).toHaveProperty(
         'registered_at',
         sampleRequestData.user_traits.registered_at
       );
-      expect(payload).to.have.property('context');
-      expect(payload.context).to.have.property(
+      expect(payload).toHaveProperty('context');
+      expect(payload.context).toHaveProperty(
         'ip',
         sampleRequestData.context.ip
       );
-      expect(payload.context).to.have.property(
+      expect(payload.context).toHaveProperty(
         'client_id',
         sampleRequestData.context.client_id
       );
-      expect(payload.context).to.have.property('headers');
+      expect(payload.context).toHaveProperty('headers');
       // Ensure that cookie header property is scrubbed.
-      expect(payload.context.headers).to.have.property('Cookie', true);
+      expect(payload.context.headers).toHaveProperty('Cookie', true);
 
       clock.restore();
     });
@@ -117,13 +115,13 @@ describe('Castle', () => {
       const lastOptions: any = fetch.lastOptions();
       const payload = JSON.parse(lastOptions.body.toString());
 
-      expect(payload).to.have.property('context');
-      expect(payload.context).to.have.property('headers');
-      expect(payload.context.headers).to.have.property(
+      expect(payload).toHaveProperty('context');
+      expect(payload.context).toHaveProperty('headers');
+      expect(payload.context.headers).toHaveProperty(
         'X-NOT-A-SECRET',
         'not secret!'
       );
-      expect(payload.context.headers).to.have.property('X-SUPER-SECRET', true);
+      expect(payload.context.headers).toHaveProperty('X-SUPER-SECRET', true);
     });
 
     it('should not allow blacklisted headers', () => {
@@ -153,13 +151,13 @@ describe('Castle', () => {
       const lastOptions: any = fetch.lastOptions();
       const payload = JSON.parse(lastOptions.body.toString());
 
-      expect(payload).to.have.property('context');
-      expect(payload.context).to.have.property('headers');
-      expect(payload.context.headers).to.have.property(
+      expect(payload).toHaveProperty('context');
+      expect(payload.context).toHaveProperty('headers');
+      expect(payload.context.headers).toHaveProperty(
         'X-NOT-A-SECRET',
         'not secret!'
       );
-      expect(payload.context.headers).to.have.property('X-SUPER-SECRET', true);
+      expect(payload.context.headers).toHaveProperty('X-SUPER-SECRET', true);
     });
 
     it('should not do requests when do not track is set', async () => {
@@ -176,7 +174,7 @@ describe('Castle', () => {
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
       // tslint:disable-next-line:no-unused-expression
-      expect(fetch.called()).to.be.false;
+      expect(fetch.called()).toBeFalsy;
     });
 
     it('should fail on unauthorized', async () => {
@@ -188,9 +186,12 @@ describe('Castle', () => {
 
       // Promise based expectations have to be awaited to properly fail
       // tests, instead of just logging unhandled rejections.
-      await expect(castle.authenticate(sampleRequestData)).to.be.rejectedWith(
-        /Castle: Failed to authenticate with API, please verify the secret./
-      );
+      await expect(
+        castle.authenticate(sampleRequestData)
+      ).rejects.toMatchObject({
+        message:
+          'Castle: Failed to authenticate with API, please verify the secret.',
+      });
     });
   });
 
@@ -222,55 +223,52 @@ describe('Castle', () => {
       });
 
       const response = await castle.authenticate(sampleRequestData);
-      expect(response).to.have.property('action', 'allow');
-      expect(response).to.have.property('device_token', 'device_token');
-      expect(response).to.have.property('user_id', 'user_id');
-      expect(response.risk_policy).to.have.property(
+      expect(response).toHaveProperty('action', 'allow');
+      expect(response).toHaveProperty('device_token', 'device_token');
+      expect(response).toHaveProperty('user_id', 'user_id');
+      expect(response.risk_policy).toHaveProperty(
         'id',
         'q-rbeMzBTdW2Fd09sbz55A'
       );
-      expect(response.risk_policy).to.have.property(
+      expect(response.risk_policy).toHaveProperty(
         'revision_id',
         'pke4zqO2TnqVr-NHJOAHEg'
       );
-      expect(response.risk_policy).to.have.property('type', 'bot');
-      expect(response.risk_policy).to.have.property(
-        'name',
-        'Block Users from X'
-      );
+      expect(response.risk_policy).toHaveProperty('type', 'bot');
+      expect(response.risk_policy).toHaveProperty('name', 'Block Users from X');
 
       const lastOptions: any = fetch.lastOptions();
       const payload = JSON.parse(lastOptions.body.toString());
       // Ensure the client set the sent_at property.
-      expect(payload).to.have.property('sent_at', new Date().toISOString());
+      expect(payload).toHaveProperty('sent_at', new Date().toISOString());
       // Verify that the passed in properties are passed on.
-      expect(payload).to.have.property('event', sampleRequestData.event);
-      expect(payload).to.have.property(
+      expect(payload).toHaveProperty('event', sampleRequestData.event);
+      expect(payload).toHaveProperty(
         'created_at',
         sampleRequestData.created_at
       );
-      expect(payload).to.have.property('user_id', sampleRequestData.user_id);
-      expect(payload).to.have.property('user_traits');
-      expect(payload.user_traits).to.have.property(
+      expect(payload).toHaveProperty('user_id', sampleRequestData.user_id);
+      expect(payload).toHaveProperty('user_traits');
+      expect(payload.user_traits).toHaveProperty(
         'email',
         sampleRequestData.user_traits.email
       );
-      expect(payload.user_traits).to.have.property(
+      expect(payload.user_traits).toHaveProperty(
         'registered_at',
         sampleRequestData.user_traits.registered_at
       );
-      expect(payload).to.have.property('context');
-      expect(payload.context).to.have.property(
+      expect(payload).toHaveProperty('context');
+      expect(payload.context).toHaveProperty(
         'ip',
         sampleRequestData.context.ip
       );
-      expect(payload.context).to.have.property(
+      expect(payload.context).toHaveProperty(
         'client_id',
         sampleRequestData.context.client_id
       );
-      expect(payload.context).to.have.property('headers');
+      expect(payload.context).toHaveProperty('headers');
       // Ensure that cookie header property is scrubbed.
-      expect(payload.context.headers).to.have.property('Cookie', true);
+      expect(payload.context.headers).toHaveProperty('Cookie', true);
       clock.restore();
     });
 
@@ -291,10 +289,10 @@ describe('Castle', () => {
       });
 
       const response = await castle.authenticate(sampleRequestData);
-      expect(response).to.have.property('action', 'deny');
-      expect(response).to.have.property('failover', true);
-      expect(response).to.have.property('failover_reason', 'timeout');
-      expect(response).to.have.property('user_id', 'userid');
+      expect(response).toHaveProperty('action', 'deny');
+      expect(response).toHaveProperty('failover', true);
+      expect(response).toHaveProperty('failover_reason', 'timeout');
+      expect(response).toHaveProperty('user_id', 'userid');
     });
 
     it('should failover on 500', async () => {
@@ -309,10 +307,10 @@ describe('Castle', () => {
       });
 
       const response = await castle.authenticate(sampleRequestData);
-      expect(response).to.have.property('action', 'deny');
-      expect(response).to.have.property('failover', true);
-      expect(response).to.have.property('failover_reason', 'server error');
-      expect(response).to.have.property('user_id', 'userid');
+      expect(response).toHaveProperty('action', 'deny');
+      expect(response).toHaveProperty('failover', true);
+      expect(response).toHaveProperty('failover_reason', 'server error');
+      expect(response).toHaveProperty('user_id', 'userid');
     });
 
     it('should failover when do not track is set', async () => {
@@ -325,15 +323,15 @@ describe('Castle', () => {
       });
 
       const response = await castle.authenticate(sampleRequestData);
-      expect(response).to.have.property('action', 'deny');
-      expect(response).to.have.property('failover', true);
-      expect(response).to.have.property('failover_reason', 'do not track');
-      expect(response).to.have.property('user_id', 'userid');
+      expect(response).toHaveProperty('action', 'deny');
+      expect(response).toHaveProperty('failover', true);
+      expect(response).toHaveProperty('failover_reason', 'do not track');
+      expect(response).toHaveProperty('user_id', 'userid');
 
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
       // tslint:disable-next-line:no-unused-expression
-      expect(fetch.called()).to.be.false;
+      expect(fetch.called()).toBeFalsy;
     });
 
     it('should fail on unauthorized', async () => {
@@ -345,9 +343,12 @@ describe('Castle', () => {
 
       // Promise based expectations have to be awaited to properly fail
       // tests, instead of just logging unhandled rejections.
-      await expect(castle.authenticate(sampleRequestData)).to.be.rejectedWith(
-        /Castle: Failed to authenticate with API, please verify the secret./
-      );
+      await expect(
+        castle.authenticate(sampleRequestData)
+      ).rejects.toMatchObject({
+        message:
+          'Castle: Failed to authenticate with API, please verify the secret.',
+      });
     });
   });
 });
