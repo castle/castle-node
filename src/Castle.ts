@@ -9,9 +9,10 @@ import {
   AuthenticateResult,
   Configuration,
   FailoverStrategy,
-  LoggingParameters,
   Payload,
 } from './models';
+
+import { LoggerService } from './logger/logger.module';
 
 const defaultApiUrl = 'https://api.castle.io';
 
@@ -34,32 +35,6 @@ const getBody = async (response: any) => {
 };
 
 const isTimeout = (e: Error) => e.name === 'AbortError';
-
-const errorFormatter = (err: Error) =>
-  `
-Error name: ${err.name}
-Error message: ${err.message}
-`.trim();
-
-const responseFormatter = (response: Response, body: any) =>
-  `
-Response status: ${response.status}
-Response body: ${JSON.stringify(body)}
-`.trim();
-
-const requestFormatter = ({
-  requestUrl,
-  requestOptions,
-  response,
-  err,
-  body,
-}: LoggingParameters) => `
--- Castle request
-URL: ${requestUrl}
-Request: ${JSON.stringify(requestOptions)}
--- Castle response
-${response ? responseFormatter(response, body) : errorFormatter(err)}
-`;
 
 export class Castle {
   private apiSecret: string;
@@ -132,7 +107,7 @@ export class Castle {
     try {
       response = await this.getFetch()(requestUrl, requestOptions);
     } catch (err) {
-      this.handleLogging({ requestUrl, requestOptions, err });
+      LoggerService.call({ requestUrl, requestOptions, err }, this.logger);
 
       if (isTimeout(err)) {
         return this.handleFailover(params, 'timeout', err);
@@ -148,7 +123,10 @@ export class Castle {
     // multiple places.
     const body = await getBody(response);
 
-    this.handleLogging({ requestUrl, requestOptions, response });
+    LoggerService.call(
+      { requestUrl, requestOptions, response, body },
+      this.logger
+    );
 
     if (response.status >= 500) {
       return this.handleFailover(params, 'server error');
@@ -186,48 +164,18 @@ export class Castle {
       response = await this.getFetch()(requestUrl, requestOptions);
     } catch (err) {
       if (isTimeout(err)) {
-        return this.handleLogging({ requestUrl, requestOptions, err });
+        return LoggerService.call(
+          { requestUrl, requestOptions, err },
+          this.logger
+        );
       }
     } finally {
       clearTimeout(timeout);
     }
 
-    this.handleLogging({ requestUrl, requestOptions, response });
+    LoggerService.call({ requestUrl, requestOptions, response }, this.logger);
     this.handleUnauthorized(response);
     this.handleBadResponse(response);
-  }
-
-  private async handleLogging({
-    requestUrl,
-    requestOptions,
-    response,
-    err,
-  }: LoggingParameters) {
-    if (err) {
-      return this.logger.error(
-        requestFormatter({ requestUrl, requestOptions, err })
-      );
-    }
-
-    let body;
-    // Don't get body if status is NO CONTENT.
-    if (response.status !== 204) {
-      body = await getBody(response);
-    }
-
-    let log: pino.LogFn;
-
-    if (response.ok) {
-      log = this.logger.info.bind(this.logger);
-    } else if (response.status < 500 && response.status >= 400) {
-      log = this.logger.warn.bind(this.logger);
-    } else {
-      log = this.logger.error.bind(this.logger);
-    }
-
-    return log(
-      requestFormatter({ requestUrl, requestOptions, response, err, body })
-    );
   }
 
   private getFetch() {
