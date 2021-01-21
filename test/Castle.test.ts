@@ -131,6 +131,7 @@ describe('Castle', () => {
         // Pass the sandboxed instance to Castle constructor
         // using the optional property `overrideFetch`
         overrideFetch: fetch,
+        allowlisted: ['X-NOT-A-SECRET'],
         denylisted: ['X-SUPER-SECRET'],
       });
 

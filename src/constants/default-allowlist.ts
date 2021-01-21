@@ -16,10 +16,10 @@ export const DEFAULT_ALLOWLIST = [
   'sec-fetch-dest',
   'sec-fetch-mode',
   'sec-fetch-site',
-  'sec-fetch-user' ,
+  'sec-fetch-user',
   'te',
   'upgrade-insecure-requests',
   'user-agent',
   'x-castle-client-id',
-  'x-requested-with'
-]
+  'x-requested-with',
+];
