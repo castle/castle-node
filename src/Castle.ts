@@ -210,7 +210,11 @@ export class Castle {
       context: {
         ...context,
         client_id: context.client_id || false,
-        headers: HeadersExtractorService.call(context.headers, this.allowlisted, this.denylisted),
+        headers: HeadersExtractorService.call(
+          context.headers,
+          this.allowlisted,
+          this.denylisted
+        ),
         library: {
           name: 'castle-node',
           version: packageJson.version,

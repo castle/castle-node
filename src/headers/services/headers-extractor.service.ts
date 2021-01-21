@@ -7,22 +7,34 @@ const ALWAYS_DENYLISTED = ['cookie', 'authorization'];
 export const HeadersExtractorService = {
   call: (
     headers: IncomingHttpHeaders,
-    allowedHeaders: string[],
-    disallowedHeaders: string[]
+    allowlisted: string[],
+    denylisted: string[]
   ) => {
     return reduce(
       headers,
       (accumulator: object, value: string, key: string) => {
-        if (disallowedHeaders.includes(key.toLowerCase())) {
+        if (ALWAYS_DENYLISTED.includes(key.toLowerCase())) {
           return {
             ...accumulator,
             [key]: true,
           };
         }
-        if (
-          allowedHeaders.length &&
-          !allowedHeaders.includes(key.toLowerCase())
-        ) {
+
+        if (ALWAYS_ALLOWLISTED.includes(key.toLowerCase())) {
+          return {
+            ...accumulator,
+            [key]: value,
+          };
+        }
+
+        if (denylisted.includes(key.toLowerCase())) {
+          return {
+            ...accumulator,
+            [key]: true,
+          };
+        }
+
+        if (allowlisted.length && !allowlisted.includes(key.toLowerCase())) {
           return {
             ...accumulator,
             [key]: true,
