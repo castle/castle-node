@@ -12,6 +12,7 @@ import {
   Payload,
 } from './models';
 
+import { HeadersExtractorService } from './headers/headers.module';
 import { LoggerService } from './logger/logger.module';
 
 const defaultApiUrl = 'https://api.castle.io';
@@ -40,8 +41,8 @@ export class Castle {
   private apiSecret: string;
   private apiUrl: string;
   private timeout: number;
-  private allowedHeaders: string[];
-  private disallowedHeaders: string[];
+  private allowlisted: string[];
+  private denylisted: string[];
   private overrideFetch: any;
   private failoverStrategy: FailoverStrategy;
   private logger: pino.Logger;
@@ -51,8 +52,8 @@ export class Castle {
     apiSecret,
     apiUrl,
     timeout = 750,
-    allowedHeaders = [],
-    disallowedHeaders = [],
+    allowlisted = [],
+    denylisted = [],
     overrideFetch = fetch,
     failoverStrategy = 'allow',
     logLevel = 'error',
@@ -67,10 +68,8 @@ export class Castle {
     this.apiSecret = apiSecret;
     this.apiUrl = apiUrl || defaultApiUrl;
     this.timeout = timeout;
-    this.allowedHeaders = allowedHeaders.map((x) => x.toLowerCase());
-    this.disallowedHeaders = disallowedHeaders
-      .concat(['cookie'])
-      .map((x) => x.toLowerCase());
+    this.allowlisted = allowlisted.map((x) => x.toLowerCase());
+    this.denylisted = denylisted.map((x) => x.toLowerCase());
     this.overrideFetch = overrideFetch;
     this.failoverStrategy = failoverStrategy;
     this.logger = pino({
@@ -182,35 +181,6 @@ export class Castle {
     return this.overrideFetch || fetch;
   }
 
-  private scrubHeaders(headers: IncomingHttpHeaders) {
-    return reduce(
-      headers,
-      (accumulator: object, value: string, key: string) => {
-        if (this.disallowedHeaders.includes(key.toLowerCase())) {
-          return {
-            ...accumulator,
-            [key]: true,
-          };
-        }
-        if (
-          this.allowedHeaders.length &&
-          !this.allowedHeaders.includes(key.toLowerCase())
-        ) {
-          return {
-            ...accumulator,
-            [key]: true,
-          };
-        }
-
-        return {
-          ...accumulator,
-          [key]: value,
-        };
-      },
-      {}
-    );
-  }
-
   private generateDefaultRequestHeaders() {
     return {
       Authorization: `Basic ${Buffer.from(`:${this.apiSecret}`).toString(
@@ -240,7 +210,7 @@ export class Castle {
       context: {
         ...context,
         client_id: context.client_id || false,
-        headers: this.scrubHeaders(context.headers),
+        headers: HeadersExtractorService.call(context.headers, this.allowlisted, this.denylisted),
         library: {
           name: 'castle-node',
           version: packageJson.version,
