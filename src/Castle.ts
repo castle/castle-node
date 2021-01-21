@@ -1,7 +1,5 @@
 import fetch from 'node-fetch';
-import { reduce } from 'lodash';
 import AbortController from 'abort-controller';
-import { IncomingHttpHeaders } from 'http2';
 import packageJson from '../package.json';
 import pino from 'pino';
 
@@ -11,6 +9,10 @@ import {
   FailoverStrategy,
   Payload,
 } from './models';
+
+import {
+  DEFAULT_ALLOWLIST
+} from './constants';
 
 import { HeadersExtractorService } from './headers/headers.module';
 import { LoggerService } from './logger/logger.module';
@@ -68,7 +70,7 @@ export class Castle {
     this.apiSecret = apiSecret;
     this.apiUrl = apiUrl || defaultApiUrl;
     this.timeout = timeout;
-    this.allowlisted = allowlisted.map((x) => x.toLowerCase());
+    this.allowlisted = allowlisted.length ? allowlisted.map((x) => x.toLowerCase()) : DEFAULT_ALLOWLIST;
     this.denylisted = denylisted.map((x) => x.toLowerCase());
     this.overrideFetch = overrideFetch;
     this.failoverStrategy = failoverStrategy;
