@@ -95,7 +95,7 @@ describe('Castle', () => {
         // Pass the sandboxed instance to Castle constructor
         // using the optional property `overrideFetch`
         overrideFetch: fetch,
-        allowedHeaders: ['X-NOT-A-SECRET'],
+        allowlisted: ['X-NOT-A-SECRET'],
       });
 
       castle.track({
@@ -131,7 +131,8 @@ describe('Castle', () => {
         // Pass the sandboxed instance to Castle constructor
         // using the optional property `overrideFetch`
         overrideFetch: fetch,
-        disallowedHeaders: ['X-SUPER-SECRET'],
+        allowlisted: ['X-NOT-A-SECRET'],
+        denylisted: ['X-SUPER-SECRET'],
       });
 
       castle.track({

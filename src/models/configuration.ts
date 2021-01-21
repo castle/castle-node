@@ -5,8 +5,8 @@ export type Configuration = {
   apiSecret: string;
   apiUrl?: string;
   timeout?: number;
-  allowedHeaders?: string[];
-  disallowedHeaders?: string[];
+  allowlisted?: string[];
+  denylisted?: string[];
   overrideFetch?: any;
   failoverStrategy?: FailoverStrategy;
   logLevel?: pino.Level;
