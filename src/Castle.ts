@@ -12,6 +12,7 @@ import {
   Payload,
 } from './models';
 
+import { FailoverResponsePreparerService } from './faliover/failover.module';
 import { HeadersExtractorService } from './headers/headers.module';
 import { LoggerService } from './logger/logger.module';
 
@@ -89,7 +90,11 @@ export class Castle {
     }
 
     if (this.doNotTrack) {
-      return this.generateFailoverBody(params, 'do not track');
+      return FailoverResponsePreparerService.call(
+        params.user_id,
+        'do not track',
+        this.failoverStrategy
+      );
     }
 
     let response: Response;
@@ -249,7 +254,11 @@ export class Castle {
     // that this.failoverStrategy is of type Verdict,
     // not FailoverStrategyType.
     if (this.failoverStrategy !== 'none') {
-      return this.generateFailoverBody(params, reason);
+      return FailoverResponsePreparerService.call(
+        params.user_id,
+        reason,
+        this.failoverStrategy
+      );
     }
 
     if (this.failoverStrategy === 'none') {
