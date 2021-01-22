@@ -58,7 +58,7 @@ export class Castle {
     }
 
     this.configuration = {
-      apiSecret: apiSecret,
+      apiSecret,
       apiUrl: apiUrl || defaultApiUrl,
       timeout,
       allowlisted: allowlisted.length
@@ -213,8 +213,7 @@ export class Castle {
         client_id: context.client_id || false,
         headers: HeadersExtractService.call(
           context.headers,
-          this.configuration.allowlisted,
-          this.configuration.denylisted
+          this.configuration
         ),
         library: {
           name: 'castle-node',

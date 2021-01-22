@@ -1,5 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 import { reduce } from 'lodash';
+import { Configuration } from '../../models';
 
 const ALWAYS_ALLOWLISTED = ['user-agent'];
 const ALWAYS_DENYLISTED = ['cookie', 'authorization'];
@@ -7,8 +8,7 @@ const ALWAYS_DENYLISTED = ['cookie', 'authorization'];
 export const HeadersExtractService = {
   call: (
     headers: IncomingHttpHeaders,
-    allowlisted: string[],
-    denylisted: string[]
+    { allowlisted, denylisted }: Configuration
   ) => {
     return reduce(
       headers,
