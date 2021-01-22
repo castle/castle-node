@@ -1,1 +1,6 @@
-export type FailoverStrategy = 'allow' | 'deny' | 'challenge' | 'none';
+export enum FailoverStrategy {
+  allow = 'allow',
+  deny = 'deny',
+  challenge = 'challenge',
+  throw = 'throw',
+}

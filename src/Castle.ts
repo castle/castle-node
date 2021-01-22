@@ -54,7 +54,7 @@ export class Castle {
     allowlisted = [],
     denylisted = [],
     overrideFetch = fetch,
-    failoverStrategy = 'allow',
+    failoverStrategy = FailoverStrategy.allow,
     logLevel = 'error',
     doNotTrack = false,
   }: Configuration) {
@@ -236,17 +236,15 @@ export class Castle {
     // Have to check it this way to make sure TS understands
     // that this.failoverStrategy is of type Verdict,
     // not FailoverStrategyType.
-    if (this.failoverStrategy !== 'none') {
-      return FailoverResponsePreparerService.call(
-        user_id,
-        reason,
-        this.failoverStrategy
-      );
-    }
-
-    if (this.failoverStrategy === 'none') {
+    if (this.failoverStrategy === FailoverStrategy.throw) {
       throw err;
     }
+
+    return FailoverResponsePreparerService.call(
+      user_id,
+      reason,
+      this.failoverStrategy
+    );
   }
 
   private handleUnauthorized(response: Response) {

@@ -1,1 +1,5 @@
-export type Verdict = 'allow' | 'deny' | 'challenge';
+export enum Verdict {
+  allow = 'allow',
+  deny = 'deny',
+  challenge = 'challenge',
+}

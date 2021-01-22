@@ -1,17 +1,13 @@
-import { AuthenticateResult } from '../../models';
-import { FailoverStrategy } from '../models';
+import { AuthenticateResult, Verdict } from '../../models';
 
 export const FailoverResponsePreparerService = {
   call: (
     user_id: string,
     reason: string,
-    strategy: FailoverStrategy
+    strategy: Verdict
   ): AuthenticateResult => {
     return {
-      action:
-        // This is just for the type system, asurring it that failOverStrategy
-        // can not be 'none'.
-        strategy === 'none' ? 'allow' : strategy,
+      action: strategy,
       user_id,
       failover: true,
       failover_reason: reason,
