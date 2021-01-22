@@ -5,6 +5,7 @@ import pino from 'pino';
 import { DEFAULT_ALLOWLIST } from './constants';
 import { AuthenticateResult, Configuration, Payload } from './models';
 import { ContextGetDefaultService } from './context/context.module';
+import { CoreGenerateDefaultHeadersService } from './core/core.module';
 import {
   FailoverResponsePrepareService,
   FailoverStrategy,
@@ -97,7 +98,7 @@ export class Castle {
     const requestOptions = {
       signal: controller.signal,
       method: 'POST',
-      headers: this.generateDefaultRequestHeaders(),
+      headers: CoreGenerateDefaultHeadersService.call(this.configuration),
       body: this.generateRequestBody(params),
     };
 
@@ -153,7 +154,7 @@ export class Castle {
     const requestOptions = {
       signal: controller.signal,
       method: 'POST',
-      headers: this.generateDefaultRequestHeaders(),
+      headers: CoreGenerateDefaultHeadersService.call(this.configuration),
       body: this.generateRequestBody(params),
     };
 
@@ -177,15 +178,6 @@ export class Castle {
 
   private getFetch() {
     return this.configuration.overrideFetch || fetch;
-  }
-
-  private generateDefaultRequestHeaders() {
-    return {
-      Authorization: `Basic ${Buffer.from(
-        `:${this.configuration.apiSecret}`
-      ).toString('base64')}`,
-      'Content-Type': 'application/json',
-    };
   }
 
   private generateRequestBody({
