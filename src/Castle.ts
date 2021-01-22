@@ -1,21 +1,21 @@
 import fetch from 'node-fetch';
 import AbortController from 'abort-controller';
-import packageJson from '../package.json';
 import pino from 'pino';
 
 import { DEFAULT_ALLOWLIST } from './constants';
-
+import { AuthenticateResult, Configuration, Payload } from './models';
 import {
-  AuthenticateResult,
-  Configuration,
+  CommandAuthenticateService,
+  CommandTrackService,
+} from './command/command.module';
+import {
+  FailoverResponsePrepareService,
   FailoverStrategy,
-  Payload,
-} from './models';
-
-import { HeadersExtractorService } from './headers/headers.module';
+} from './faliover/failover.module';
 import { LoggerService } from './logger/logger.module';
 
-const defaultApiUrl = 'https://api.castle.io';
+const DEFAULT_API_URL = 'https://api.castle.io/v1';
+const DEFAULT_TIMEOUT = 1000;
 
 // The body on the request is a stream and can only be
 // read once, by default. This is a workaround so that the
@@ -38,24 +38,17 @@ const getBody = async (response: any) => {
 const isTimeout = (e: Error) => e.name === 'AbortError';
 
 export class Castle {
-  private apiSecret: string;
-  private apiUrl: string;
-  private timeout: number;
-  private allowlisted: string[];
-  private denylisted: string[];
-  private overrideFetch: any;
-  private failoverStrategy: FailoverStrategy;
   private logger: pino.Logger;
-  private doNotTrack: boolean;
+  private configuration: Configuration;
 
   constructor({
     apiSecret,
     apiUrl,
-    timeout = 750,
+    timeout = DEFAULT_TIMEOUT,
     allowlisted = [],
     denylisted = [],
     overrideFetch = fetch,
-    failoverStrategy = 'allow',
+    failoverStrategy = FailoverStrategy.allow,
     logLevel = 'error',
     doNotTrack = false,
   }: Configuration) {
@@ -65,22 +58,25 @@ export class Castle {
       );
     }
 
-    this.apiSecret = apiSecret;
-    this.apiUrl = apiUrl || defaultApiUrl;
-    this.timeout = timeout;
-    this.allowlisted = allowlisted.length
-      ? allowlisted.map((x) => x.toLowerCase())
-      : DEFAULT_ALLOWLIST;
-    this.denylisted = denylisted.map((x) => x.toLowerCase());
-    this.overrideFetch = overrideFetch;
-    this.failoverStrategy = failoverStrategy;
+    this.configuration = {
+      apiSecret,
+      apiUrl: apiUrl || DEFAULT_API_URL,
+      timeout,
+      allowlisted: allowlisted.length
+        ? allowlisted.map((x) => x.toLowerCase())
+        : DEFAULT_ALLOWLIST,
+      denylisted: denylisted.map((x) => x.toLowerCase()),
+      overrideFetch,
+      failoverStrategy,
+      logLevel,
+      doNotTrack,
+    };
     this.logger = pino({
       prettyPrint: {
         levelFirst: true,
       },
     });
     this.logger.level = logLevel;
-    this.doNotTrack = doNotTrack;
   }
 
   public async authenticate(params: Payload): Promise<AuthenticateResult> {
@@ -88,22 +84,24 @@ export class Castle {
       throw new Error('Castle: event is required when calling authenticate.');
     }
 
-    if (this.doNotTrack) {
-      return this.generateFailoverBody(params, 'do not track');
+    if (this.configuration.doNotTrack) {
+      return FailoverResponsePrepareService.call(
+        params.user_id,
+        'do not track',
+        this.configuration.failoverStrategy
+      );
     }
 
     let response: Response;
     const controller = new AbortController();
     const timeout = setTimeout(() => {
       controller.abort();
-    }, this.timeout);
-    const requestUrl = `${this.apiUrl}/v1/authenticate`;
-    const requestOptions = {
-      signal: controller.signal,
-      method: 'POST',
-      headers: this.generateDefaultRequestHeaders(),
-      body: this.generateRequestBody(params),
-    };
+    }, this.configuration.timeout);
+    const { requestUrl, requestOptions } = CommandAuthenticateService.call(
+      controller,
+      params,
+      this.configuration
+    );
 
     try {
       response = await this.getFetch()(requestUrl, requestOptions);
@@ -111,7 +109,7 @@ export class Castle {
       LoggerService.call({ requestUrl, requestOptions, err }, this.logger);
 
       if (isTimeout(err)) {
-        return this.handleFailover(params, 'timeout', err);
+        return this.handleFailover(params.user_id, 'timeout', err);
       } else {
         throw err;
       }
@@ -130,7 +128,7 @@ export class Castle {
     );
 
     if (response.status >= 500) {
-      return this.handleFailover(params, 'server error');
+      return this.handleFailover(params.user_id, 'server error');
     }
 
     this.handleUnauthorized(response);
@@ -144,7 +142,7 @@ export class Castle {
       throw new Error('Castle: event is required when calling track.');
     }
 
-    if (this.doNotTrack) {
+    if (this.configuration.doNotTrack) {
       return;
     }
 
@@ -152,14 +150,12 @@ export class Castle {
     const controller = new AbortController();
     const timeout = setTimeout(() => {
       controller.abort();
-    }, this.timeout);
-    const requestUrl = `${this.apiUrl}/v1/track`;
-    const requestOptions = {
-      signal: controller.signal,
-      method: 'POST',
-      headers: this.generateDefaultRequestHeaders(),
-      body: this.generateRequestBody(params),
-    };
+    }, this.configuration.timeout);
+    const { requestUrl, requestOptions } = CommandTrackService.call(
+      controller,
+      params,
+      this.configuration
+    );
 
     try {
       response = await this.getFetch()(requestUrl, requestOptions);
@@ -180,81 +176,26 @@ export class Castle {
   }
 
   private getFetch() {
-    return this.overrideFetch || fetch;
-  }
-
-  private generateDefaultRequestHeaders() {
-    return {
-      Authorization: `Basic ${Buffer.from(`:${this.apiSecret}`).toString(
-        'base64'
-      )}`,
-      'Content-Type': 'application/json',
-    };
-  }
-
-  private generateRequestBody({
-    event,
-    user_id,
-    user_traits,
-    properties,
-    context,
-    created_at,
-    device_token,
-  }: Payload) {
-    return JSON.stringify({
-      sent_at: new Date().toISOString(),
-      created_at,
-      event,
-      user_id,
-      user_traits,
-      properties,
-      device_token,
-      context: {
-        ...context,
-        client_id: context.client_id || false,
-        headers: HeadersExtractorService.call(
-          context.headers,
-          this.allowlisted,
-          this.denylisted
-        ),
-        library: {
-          name: 'castle-node',
-          version: packageJson.version,
-        },
-      },
-    });
-  }
-
-  private generateFailoverBody(
-    params: Payload,
-    reason: string
-  ): AuthenticateResult {
-    return {
-      action:
-        // This is just for the type system, asurring it that failOverStrategy
-        // can not be 'none'.
-        this.failoverStrategy === 'none' ? 'allow' : this.failoverStrategy,
-      failover: true,
-      failover_reason: reason,
-      user_id: params.user_id,
-    };
+    return this.configuration.overrideFetch || fetch;
   }
 
   private handleFailover(
-    params: Payload,
+    userId: string,
     reason: string,
     err?: Error
   ): AuthenticateResult {
     // Have to check it this way to make sure TS understands
     // that this.failoverStrategy is of type Verdict,
     // not FailoverStrategyType.
-    if (this.failoverStrategy !== 'none') {
-      return this.generateFailoverBody(params, reason);
-    }
-
-    if (this.failoverStrategy === 'none') {
+    if (this.configuration.failoverStrategy === FailoverStrategy.throw) {
       throw err;
     }
+
+    return FailoverResponsePrepareService.call(
+      userId,
+      reason,
+      this.configuration.failoverStrategy
+    );
   }
 
   private handleUnauthorized(response: Response) {

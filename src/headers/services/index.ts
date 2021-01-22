@@ -1,1 +1,1 @@
-export * from './headers-extractor.service';
+export * from './headers-extract.service';

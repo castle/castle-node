@@ -1,6 +1,6 @@
-import { HeadersExtractorService } from '../../../src/headers/headers.module';
+import { HeadersExtractService } from '../../../src/headers/headers.module';
 
-describe('HeadersExtractorService', () => {
+describe('HeadersExtractService', () => {
   describe('call', () => {
     const formattedHeaders = {
       'content-length': '0',
@@ -23,8 +23,14 @@ describe('HeadersExtractorService', () => {
         'x-forwarded-for': '1.2.3.4',
       };
 
+      const config = {
+        apiSecret: 'test',
+        allowlisted: [],
+        denylisted: [],
+      };
+
       it('scrubs authorization and cookie headers', () => {
-        expect(HeadersExtractorService.call(formattedHeaders, [], [])).toEqual(
+        expect(HeadersExtractService.call(formattedHeaders, config)).toEqual(
           result
         );
       });
@@ -41,10 +47,16 @@ describe('HeadersExtractorService', () => {
         'x-forwarded-for': true,
       };
 
+      const config = {
+        apiSecret: 'test',
+        allowlisted: ['accept', 'ok'],
+        denylisted: [],
+      };
+
       it('scrubs authorization and cookie headers', () => {
-        expect(
-          HeadersExtractorService.call(formattedHeaders, ['accept', 'ok'], [])
-        ).toEqual(result);
+        expect(HeadersExtractService.call(formattedHeaders, config)).toEqual(
+          result
+        );
       });
     });
 
@@ -60,10 +72,16 @@ describe('HeadersExtractorService', () => {
           'x-forwarded-for': '1.2.3.4',
         };
 
+        const config = {
+          apiSecret: 'test',
+          allowlisted: [],
+          denylisted: ['user-agent'],
+        };
+
         it('scrubs authorization and cookie headers', () => {
-          expect(
-            HeadersExtractorService.call(formattedHeaders, [], ['user-agent'])
-          ).toEqual(result);
+          expect(HeadersExtractService.call(formattedHeaders, config)).toEqual(
+            result
+          );
         });
       });
 
@@ -78,10 +96,16 @@ describe('HeadersExtractorService', () => {
           'x-forwarded-for': '1.2.3.4',
         };
 
+        const config = {
+          apiSecret: 'test',
+          allowlisted: [],
+          denylisted: ['accept'],
+        };
+
         it('scrubs authorization and cookie headers', () => {
-          expect(
-            HeadersExtractorService.call(formattedHeaders, [], ['accept'])
-          ).toEqual(result);
+          expect(HeadersExtractService.call(formattedHeaders, config)).toEqual(
+            result
+          );
         });
       });
     });
@@ -91,13 +115,15 @@ describe('HeadersExtractorService', () => {
         accept: true,
       };
 
+      const config = {
+        apiSecret: 'test',
+        allowlisted: ['accept'],
+        denylisted: ['accept'],
+      };
+
       it('scrubs authorization and cookie headers', () => {
         expect(
-          HeadersExtractorService.call(
-            { accept: 'application/json' },
-            ['accept'],
-            ['accept']
-          )
+          HeadersExtractService.call({ accept: 'application/json' }, config)
         ).toEqual(result);
       });
     });

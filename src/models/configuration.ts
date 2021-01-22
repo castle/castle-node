@@ -1,5 +1,5 @@
 import pino from 'pino';
-import { FailoverStrategy } from './failover-strategy';
+import { FailoverStrategy } from '../faliover/models/failover-strategy';
 
 export type Configuration = {
   apiSecret: string;
