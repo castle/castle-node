@@ -4,15 +4,18 @@ import pino from 'pino';
 
 import { DEFAULT_ALLOWLIST } from './constants';
 import { AuthenticateResult, Configuration, Payload } from './models';
-import { ContextGetDefaultService } from './context/context.module';
-import { CoreGenerateDefaultHeadersService } from './core/core.module';
+import {
+  CommandAuthenticateService,
+  CommandTrackService,
+} from './command/command.module';
 import {
   FailoverResponsePrepareService,
   FailoverStrategy,
 } from './faliover/failover.module';
 import { LoggerService } from './logger/logger.module';
 
-const defaultApiUrl = 'https://api.castle.io';
+const DEFAULT_API_URL = 'https://api.castle.io/v1';
+const DEFAULT_TIMEOUT = 1000;
 
 // The body on the request is a stream and can only be
 // read once, by default. This is a workaround so that the
@@ -41,7 +44,7 @@ export class Castle {
   constructor({
     apiSecret,
     apiUrl,
-    timeout = 750,
+    timeout = DEFAULT_TIMEOUT,
     allowlisted = [],
     denylisted = [],
     overrideFetch = fetch,
@@ -57,7 +60,7 @@ export class Castle {
 
     this.configuration = {
       apiSecret,
-      apiUrl: apiUrl || defaultApiUrl,
+      apiUrl: apiUrl || DEFAULT_API_URL,
       timeout,
       allowlisted: allowlisted.length
         ? allowlisted.map((x) => x.toLowerCase())
@@ -94,13 +97,11 @@ export class Castle {
     const timeout = setTimeout(() => {
       controller.abort();
     }, this.configuration.timeout);
-    const requestUrl = `${this.configuration.apiUrl}/v1/authenticate`;
-    const requestOptions = {
-      signal: controller.signal,
-      method: 'POST',
-      headers: CoreGenerateDefaultHeadersService.call(this.configuration),
-      body: this.generateRequestBody(params),
-    };
+    const { requestUrl, requestOptions } = CommandAuthenticateService.call(
+      controller,
+      params,
+      this.configuration
+    );
 
     try {
       response = await this.getFetch()(requestUrl, requestOptions);
@@ -150,13 +151,11 @@ export class Castle {
     const timeout = setTimeout(() => {
       controller.abort();
     }, this.configuration.timeout);
-    const requestUrl = `${this.configuration.apiUrl}/v1/track`;
-    const requestOptions = {
-      signal: controller.signal,
-      method: 'POST',
-      headers: CoreGenerateDefaultHeadersService.call(this.configuration),
-      body: this.generateRequestBody(params),
-    };
+    const { requestUrl, requestOptions } = CommandTrackService.call(
+      controller,
+      params,
+      this.configuration
+    );
 
     try {
       response = await this.getFetch()(requestUrl, requestOptions);
@@ -178,34 +177,6 @@ export class Castle {
 
   private getFetch() {
     return this.configuration.overrideFetch || fetch;
-  }
-
-  private generateRequestBody({
-    event,
-    user_id,
-    user_traits,
-    properties,
-    context,
-    created_at,
-    device_token,
-  }: Payload) {
-    const defaultContext = ContextGetDefaultService.call(
-      context,
-      this.configuration
-    );
-    return JSON.stringify({
-      sent_at: new Date().toISOString(),
-      created_at,
-      event,
-      user_id,
-      user_traits,
-      properties,
-      device_token,
-      context: {
-        ...context,
-        ...defaultContext,
-      },
-    });
   }
 
   private handleFailover(
