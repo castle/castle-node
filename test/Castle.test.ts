@@ -2,6 +2,7 @@ import { Castle } from '../index';
 import fetchMock from 'fetch-mock';
 import { EVENTS } from '../src/events';
 import sinon from 'sinon';
+import { FailoverStrategy } from '../src/faliover/models';
 
 const sampleRequestData = {
   event: EVENTS.LOGIN_SUCCEEDED,
@@ -164,7 +165,7 @@ describe('Castle', () => {
         apiSecret: 'some secret',
         overrideFetch: fetch,
         doNotTrack: true,
-        failoverStrategy: 'deny',
+        failoverStrategy: FailoverStrategy.deny,
       });
 
       await castle.track(sampleRequestData);
@@ -280,7 +281,7 @@ describe('Castle', () => {
       const castle = new Castle({
         apiSecret: 'some secret',
         overrideFetch: fetch,
-        failoverStrategy: 'deny',
+        failoverStrategy: FailoverStrategy.deny,
         // This test causes an error level log event, so increase
         // logLevel to fatal to prevent clouding the test output.
         logLevel: 'fatal',
@@ -298,7 +299,7 @@ describe('Castle', () => {
       const castle = new Castle({
         apiSecret: 'some secret',
         overrideFetch: fetch,
-        failoverStrategy: 'deny',
+        failoverStrategy: FailoverStrategy.deny,
         // This test causes an error level log event, so increase
         // logLevel to fatal to prevent clouding the test output.
         logLevel: 'fatal',
@@ -317,7 +318,7 @@ describe('Castle', () => {
         apiSecret: 'some secret',
         overrideFetch: fetch,
         doNotTrack: true,
-        failoverStrategy: 'deny',
+        failoverStrategy: FailoverStrategy.deny,
       });
 
       const response = await castle.authenticate(sampleRequestData);
