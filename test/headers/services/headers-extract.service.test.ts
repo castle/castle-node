@@ -1,6 +1,6 @@
-import { HeadersExtractorService } from '../../../src/headers/headers.module';
+import { HeadersExtractService } from '../../../src/headers/headers.module';
 
-describe('HeadersExtractorService', () => {
+describe('HeadersExtractService', () => {
   describe('call', () => {
     const formattedHeaders = {
       'content-length': '0',
@@ -24,7 +24,7 @@ describe('HeadersExtractorService', () => {
       };
 
       it('scrubs authorization and cookie headers', () => {
-        expect(HeadersExtractorService.call(formattedHeaders, [], [])).toEqual(
+        expect(HeadersExtractService.call(formattedHeaders, [], [])).toEqual(
           result
         );
       });
@@ -43,7 +43,7 @@ describe('HeadersExtractorService', () => {
 
       it('scrubs authorization and cookie headers', () => {
         expect(
-          HeadersExtractorService.call(formattedHeaders, ['accept', 'ok'], [])
+          HeadersExtractService.call(formattedHeaders, ['accept', 'ok'], [])
         ).toEqual(result);
       });
     });
@@ -62,7 +62,7 @@ describe('HeadersExtractorService', () => {
 
         it('scrubs authorization and cookie headers', () => {
           expect(
-            HeadersExtractorService.call(formattedHeaders, [], ['user-agent'])
+            HeadersExtractService.call(formattedHeaders, [], ['user-agent'])
           ).toEqual(result);
         });
       });
@@ -80,7 +80,7 @@ describe('HeadersExtractorService', () => {
 
         it('scrubs authorization and cookie headers', () => {
           expect(
-            HeadersExtractorService.call(formattedHeaders, [], ['accept'])
+            HeadersExtractService.call(formattedHeaders, [], ['accept'])
           ).toEqual(result);
         });
       });
@@ -93,7 +93,7 @@ describe('HeadersExtractorService', () => {
 
       it('scrubs authorization and cookie headers', () => {
         expect(
-          HeadersExtractorService.call(
+          HeadersExtractService.call(
             { accept: 'application/json' },
             ['accept'],
             ['accept']

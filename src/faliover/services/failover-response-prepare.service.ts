@@ -1,10 +1,10 @@
 import { AuthenticateResult, Verdict } from '../../models';
 
-export const FailoverResponsePreparerService = {
+export const FailoverResponsePrepareService = {
   call: (
     user_id: string,
     reason: string,
-    strategy: Verdict
+    strategy: Verdict | string
   ): AuthenticateResult => {
     return {
       action: strategy,

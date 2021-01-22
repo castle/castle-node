@@ -4,7 +4,7 @@ import { reduce } from 'lodash';
 const ALWAYS_ALLOWLISTED = ['user-agent'];
 const ALWAYS_DENYLISTED = ['cookie', 'authorization'];
 
-export const HeadersExtractorService = {
+export const HeadersExtractService = {
   call: (
     headers: IncomingHttpHeaders,
     allowlisted: string[],

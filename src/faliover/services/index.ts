@@ -1,1 +1,1 @@
-export * from './failover-response-preparer.service';
+export * from './failover-response-prepare.service';

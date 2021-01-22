@@ -8,10 +8,10 @@ import { DEFAULT_ALLOWLIST } from './constants';
 import { AuthenticateResult, Configuration, Payload } from './models';
 
 import {
-  FailoverResponsePreparerService,
+  FailoverResponsePrepareService,
   FailoverStrategy,
 } from './faliover/failover.module';
-import { HeadersExtractorService } from './headers/headers.module';
+import { HeadersExtractService } from './headers/headers.module';
 import { LoggerService } from './logger/logger.module';
 
 const defaultApiUrl = 'https://api.castle.io';
@@ -88,7 +88,7 @@ export class Castle {
     }
 
     if (this.doNotTrack) {
-      return FailoverResponsePreparerService.call(
+      return FailoverResponsePrepareService.call(
         params.user_id,
         'do not track',
         this.failoverStrategy
@@ -215,7 +215,7 @@ export class Castle {
       context: {
         ...context,
         client_id: context.client_id || false,
-        headers: HeadersExtractorService.call(
+        headers: HeadersExtractService.call(
           context.headers,
           this.allowlisted,
           this.denylisted
@@ -240,7 +240,7 @@ export class Castle {
       throw err;
     }
 
-    return FailoverResponsePreparerService.call(
+    return FailoverResponsePrepareService.call(
       user_id,
       reason,
       this.failoverStrategy
