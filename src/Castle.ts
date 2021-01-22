@@ -5,14 +5,12 @@ import pino from 'pino';
 
 import { DEFAULT_ALLOWLIST } from './constants';
 
-import {
-  AuthenticateResult,
-  Configuration,
-  FailoverStrategy,
-  Payload,
-} from './models';
+import { AuthenticateResult, Configuration, Payload } from './models';
 
-import { FailoverResponsePreparerService } from './faliover/failover.module';
+import {
+  FailoverResponsePreparerService,
+  FailoverStrategy,
+} from './faliover/failover.module';
 import { HeadersExtractorService } from './headers/headers.module';
 import { LoggerService } from './logger/logger.module';
 
@@ -116,7 +114,7 @@ export class Castle {
       LoggerService.call({ requestUrl, requestOptions, err }, this.logger);
 
       if (isTimeout(err)) {
-        return this.handleFailover(params, 'timeout', err);
+        return this.handleFailover(params.user_id, 'timeout', err);
       } else {
         throw err;
       }
@@ -135,7 +133,7 @@ export class Castle {
     );
 
     if (response.status >= 500) {
-      return this.handleFailover(params, 'server error');
+      return this.handleFailover(params.user_id, 'server error');
     }
 
     this.handleUnauthorized(response);
@@ -230,23 +228,8 @@ export class Castle {
     });
   }
 
-  private generateFailoverBody(
-    params: Payload,
-    reason: string
-  ): AuthenticateResult {
-    return {
-      action:
-        // This is just for the type system, asurring it that failOverStrategy
-        // can not be 'none'.
-        this.failoverStrategy === 'none' ? 'allow' : this.failoverStrategy,
-      failover: true,
-      failover_reason: reason,
-      user_id: params.user_id,
-    };
-  }
-
   private handleFailover(
-    params: Payload,
+    user_id: string,
     reason: string,
     err?: Error
   ): AuthenticateResult {
@@ -255,7 +238,7 @@ export class Castle {
     // not FailoverStrategyType.
     if (this.failoverStrategy !== 'none') {
       return FailoverResponsePreparerService.call(
-        params.user_id,
+        user_id,
         reason,
         this.failoverStrategy
       );

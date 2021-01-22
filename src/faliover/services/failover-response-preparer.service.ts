@@ -1,4 +1,5 @@
-import { AuthenticateResult, FailoverStrategy } from '../../models';
+import { AuthenticateResult } from '../../models';
+import { FailoverStrategy } from '../models';
 
 export const FailoverResponsePreparerService = {
   call: (
