@@ -1,17 +1,14 @@
 import fetch from 'node-fetch';
 import AbortController from 'abort-controller';
-import packageJson from '../package.json';
 import pino from 'pino';
 
 import { DEFAULT_ALLOWLIST } from './constants';
-
 import { AuthenticateResult, Configuration, Payload } from './models';
-
+import { ContextGetDefaultService } from './context/context.module';
 import {
   FailoverResponsePrepareService,
   FailoverStrategy,
 } from './faliover/failover.module';
-import { HeadersExtractService } from './headers/headers.module';
 import { LoggerService } from './logger/logger.module';
 
 const defaultApiUrl = 'https://api.castle.io';
@@ -200,6 +197,10 @@ export class Castle {
     created_at,
     device_token,
   }: Payload) {
+    const defaultContext = ContextGetDefaultService.call(
+      context,
+      this.configuration
+    );
     return JSON.stringify({
       sent_at: new Date().toISOString(),
       created_at,
@@ -210,15 +211,7 @@ export class Castle {
       device_token,
       context: {
         ...context,
-        client_id: context.client_id || false,
-        headers: HeadersExtractService.call(
-          context.headers,
-          this.configuration
-        ),
-        library: {
-          name: 'castle-node',
-          version: packageJson.version,
-        },
+        ...defaultContext,
       },
     });
   }
