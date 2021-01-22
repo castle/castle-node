@@ -229,7 +229,7 @@ export class Castle {
   }
 
   private handleFailover(
-    user_id: string,
+    userId: string,
     reason: string,
     err?: Error
   ): AuthenticateResult {
@@ -241,7 +241,7 @@ export class Castle {
     }
 
     return FailoverResponsePrepareService.call(
-      user_id,
+      userId,
       reason,
       this.failoverStrategy
     );
