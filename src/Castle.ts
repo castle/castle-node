@@ -37,15 +37,8 @@ const getBody = async (response: any) => {
 const isTimeout = (e: Error) => e.name === 'AbortError';
 
 export class Castle {
-  private apiSecret: string;
-  private apiUrl: string;
-  private timeout: number;
-  private allowlisted: string[];
-  private denylisted: string[];
-  private overrideFetch: any;
-  private failoverStrategy: FailoverStrategy;
   private logger: pino.Logger;
-  private doNotTrack: boolean;
+  private configuration: Configuration;
 
   constructor({
     apiSecret,
@@ -64,22 +57,25 @@ export class Castle {
       );
     }
 
-    this.apiSecret = apiSecret;
-    this.apiUrl = apiUrl || defaultApiUrl;
-    this.timeout = timeout;
-    this.allowlisted = allowlisted.length
-      ? allowlisted.map((x) => x.toLowerCase())
-      : DEFAULT_ALLOWLIST;
-    this.denylisted = denylisted.map((x) => x.toLowerCase());
-    this.overrideFetch = overrideFetch;
-    this.failoverStrategy = failoverStrategy;
+    this.configuration = {
+      apiSecret: apiSecret,
+      apiUrl: apiUrl || defaultApiUrl,
+      timeout,
+      allowlisted: allowlisted.length
+        ? allowlisted.map((x) => x.toLowerCase())
+        : DEFAULT_ALLOWLIST,
+      denylisted: denylisted.map((x) => x.toLowerCase()),
+      overrideFetch,
+      failoverStrategy,
+      logLevel,
+      doNotTrack,
+    };
     this.logger = pino({
       prettyPrint: {
         levelFirst: true,
       },
     });
     this.logger.level = logLevel;
-    this.doNotTrack = doNotTrack;
   }
 
   public async authenticate(params: Payload): Promise<AuthenticateResult> {
@@ -87,11 +83,11 @@ export class Castle {
       throw new Error('Castle: event is required when calling authenticate.');
     }
 
-    if (this.doNotTrack) {
+    if (this.configuration.doNotTrack) {
       return FailoverResponsePrepareService.call(
         params.user_id,
         'do not track',
-        this.failoverStrategy
+        this.configuration.failoverStrategy
       );
     }
 
@@ -99,8 +95,8 @@ export class Castle {
     const controller = new AbortController();
     const timeout = setTimeout(() => {
       controller.abort();
-    }, this.timeout);
-    const requestUrl = `${this.apiUrl}/v1/authenticate`;
+    }, this.configuration.timeout);
+    const requestUrl = `${this.configuration.apiUrl}/v1/authenticate`;
     const requestOptions = {
       signal: controller.signal,
       method: 'POST',
@@ -147,7 +143,7 @@ export class Castle {
       throw new Error('Castle: event is required when calling track.');
     }
 
-    if (this.doNotTrack) {
+    if (this.configuration.doNotTrack) {
       return;
     }
 
@@ -155,8 +151,8 @@ export class Castle {
     const controller = new AbortController();
     const timeout = setTimeout(() => {
       controller.abort();
-    }, this.timeout);
-    const requestUrl = `${this.apiUrl}/v1/track`;
+    }, this.configuration.timeout);
+    const requestUrl = `${this.configuration.apiUrl}/v1/track`;
     const requestOptions = {
       signal: controller.signal,
       method: 'POST',
@@ -183,14 +179,14 @@ export class Castle {
   }
 
   private getFetch() {
-    return this.overrideFetch || fetch;
+    return this.configuration.overrideFetch || fetch;
   }
 
   private generateDefaultRequestHeaders() {
     return {
-      Authorization: `Basic ${Buffer.from(`:${this.apiSecret}`).toString(
-        'base64'
-      )}`,
+      Authorization: `Basic ${Buffer.from(
+        `:${this.configuration.apiSecret}`
+      ).toString('base64')}`,
       'Content-Type': 'application/json',
     };
   }
@@ -217,8 +213,8 @@ export class Castle {
         client_id: context.client_id || false,
         headers: HeadersExtractService.call(
           context.headers,
-          this.allowlisted,
-          this.denylisted
+          this.configuration.allowlisted,
+          this.configuration.denylisted
         ),
         library: {
           name: 'castle-node',
@@ -236,14 +232,14 @@ export class Castle {
     // Have to check it this way to make sure TS understands
     // that this.failoverStrategy is of type Verdict,
     // not FailoverStrategyType.
-    if (this.failoverStrategy === FailoverStrategy.throw) {
+    if (this.configuration.failoverStrategy === FailoverStrategy.throw) {
       throw err;
     }
 
     return FailoverResponsePrepareService.call(
       userId,
       reason,
-      this.failoverStrategy
+      this.configuration.failoverStrategy
     );
   }
 
