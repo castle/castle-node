@@ -1,8 +1,8 @@
 import { Castle } from '../index';
 import fetchMock from 'fetch-mock';
 import { EVENTS } from '../src/events';
-import sinon from 'sinon';
 import { FailoverStrategy } from '../src/failover/models';
+import MockDate from 'mockdate';
 
 const sampleRequestData = {
   event: EVENTS.LOGIN_SUCCEEDED,
@@ -35,11 +35,18 @@ describe('Castle', () => {
   });
 
   describe('track', () => {
+    beforeEach(() => {
+      MockDate.set(new Date(2011, 9, 1));
+    });
+
+    afterEach(() => {
+      MockDate.reset();
+    });
+
     it('should make a network request with some basic information', () => {
       // Because we don't use a global fetch we have to create a
       // sandboxed instance of it here.
       const fetch = fetchMock.sandbox().post('*', 204);
-      const clock = sinon.useFakeTimers(new Date(2011, 9, 1).getTime());
 
       const castle = new Castle({
         apiSecret: 'some secret',
@@ -82,8 +89,6 @@ describe('Castle', () => {
       expect(payload.context).toHaveProperty('headers');
       // Ensure that cookie header property is scrubbed.
       expect(payload.context.headers).toHaveProperty('Cookie', true);
-
-      clock.restore();
     });
 
     it('should only allow whitelisted headers', () => {
@@ -195,6 +200,13 @@ describe('Castle', () => {
   });
 
   describe('authenticate', () => {
+    beforeEach(() => {
+      MockDate.set(new Date(2011, 9, 1));
+    });
+
+    afterEach(() => {
+      MockDate.reset();
+    });
     it('should make a network request with some basic information', async () => {
       // Because we don't use a global fetch we have to create a
       // sandboxed instance of it here.
@@ -213,7 +225,6 @@ describe('Castle', () => {
           },
         }
       );
-      const clock = sinon.useFakeTimers(new Date(2011, 9, 1).getTime());
       const castle = new Castle({
         apiSecret: 'some secret',
         // Pass the sandboxed instance to Castle constructor
@@ -268,7 +279,6 @@ describe('Castle', () => {
       expect(payload.context).toHaveProperty('headers');
       // Ensure that cookie header property is scrubbed.
       expect(payload.context.headers).toHaveProperty('Cookie', true);
-      clock.restore();
     });
 
     it('should handle timeout', async () => {

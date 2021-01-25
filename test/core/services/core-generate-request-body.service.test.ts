@@ -1,15 +1,15 @@
 import { CoreGenerateRequestBody } from '../../../src/core/core.module';
 import { version } from '../../../package.json';
-import MockDate from 'mockdate'
+import MockDate from 'mockdate';
 
 describe('CoreGenerateRequestBody', () => {
   beforeEach(() => {
-    MockDate.set(new Date('2021-01-25T00:00:00.000Z'))
+    MockDate.set(new Date('2021-01-25T00:00:00.000Z'));
   });
 
   afterEach(() => {
     MockDate.reset();
-  })
+  });
 
   describe('call', () => {
     const result = JSON.stringify({
