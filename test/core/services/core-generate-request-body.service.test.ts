@@ -1,14 +1,15 @@
 import { CoreGenerateRequestBody } from '../../../src/core/core.module';
 import { version } from '../../../package.json';
+import MockDate from 'mockdate'
 
 describe('CoreGenerateRequestBody', () => {
   beforeEach(() => {
-    jest
-      .spyOn(global.Date, 'now')
-      .mockImplementationOnce(() =>
-        new Date('2021-01-25T00:00:00.000Z').valueOf()
-      );
+    MockDate.set(new Date('2021-01-25T00:00:00.000Z'))
   });
+
+  afterEach(() => {
+    MockDate.reset();
+  })
 
   describe('call', () => {
     const result = JSON.stringify({
