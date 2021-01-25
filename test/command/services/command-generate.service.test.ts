@@ -20,17 +20,17 @@ describe('CommandGenerateService', () => {
           Authorization: 'Basic OnRlc3Q=',
           'Content-Type': 'application/json',
         },
-        body: {
+        body: JSON.stringify({
           sent_at: '2021-01-25T00:00:00.000Z',
-          context: JSON.stringify({
+          context: {
             client_id: 'client_id',
             headers: {},
             library: {
               name: 'castle-node',
               version,
             },
-          }),
-        },
+          },
+        }),
       },
     };
 
@@ -51,7 +51,7 @@ describe('CommandGenerateService', () => {
         'GET',
         config
       );
-      console.log(expected, received);
+      expect(received).toMatchObject(expected);
     });
   });
 });
