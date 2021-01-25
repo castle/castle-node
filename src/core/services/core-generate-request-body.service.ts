@@ -19,7 +19,7 @@ export const CoreGenerateRequestBody = {
       configuration
     );
     return JSON.stringify({
-      sent_at: new Date().toISOString(),
+      sent_at: new Date(Date.now()).toISOString(),
       created_at,
       event,
       user_id,
