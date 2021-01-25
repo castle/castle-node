@@ -2,7 +2,7 @@ import { Castle } from '../index';
 import fetchMock from 'fetch-mock';
 import { EVENTS } from '../src/events';
 import sinon from 'sinon';
-import { FailoverStrategy } from '../src/faliover/models';
+import { FailoverStrategy } from '../src/failover/models';
 
 const sampleRequestData = {
   event: EVENTS.LOGIN_SUCCEEDED,

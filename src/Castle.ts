@@ -11,7 +11,7 @@ import {
 import {
   FailoverResponsePrepareService,
   FailoverStrategy,
-} from './faliover/failover.module';
+} from './failover/failover.module';
 import { LoggerService } from './logger/logger.module';
 
 const DEFAULT_API_URL = 'https://api.castle.io/v1';
