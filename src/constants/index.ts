@@ -1,1 +1,1 @@
-export * from './default-allowlist';
+export * from './configuration';

@@ -12,7 +12,7 @@ export type Configuration = {
   logLevel?: pino.Level;
   doNotTrack?: boolean;
   ipHeaders?: string[];
-  trustedProxies?: string[];
+  trustedProxies?: RegExp[];
   trustProxyChain?: boolean;
   trustedProxyDepth?: number;
 };

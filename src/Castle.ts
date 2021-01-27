@@ -2,7 +2,11 @@ import fetch from 'node-fetch';
 import AbortController from 'abort-controller';
 import pino from 'pino';
 
-import { DEFAULT_ALLOWLIST } from './constants';
+import {
+  DEFAULT_ALLOWLIST,
+  DEFAULT_API_URL,
+  DEFAULT_TIMEOUT,
+} from './constants';
 import { AuthenticateResult, Configuration, Payload } from './models';
 import {
   CommandAuthenticateService,
@@ -13,9 +17,6 @@ import {
   FailoverStrategy,
 } from './failover/failover.module';
 import { LoggerService } from './logger/logger.module';
-
-const DEFAULT_API_URL = 'https://api.castle.io/v1';
-const DEFAULT_TIMEOUT = 1000;
 
 // The body on the request is a stream and can only be
 // read once, by default. This is a workaround so that the
@@ -54,7 +55,7 @@ export class Castle {
     ipHeaders = [],
     trustedProxies = [],
     trustProxyChain = false,
-    trustedProxyDepth = 0
+    trustedProxyDepth = 0,
   }: Configuration) {
     if (!apiSecret) {
       throw new Error(
@@ -75,9 +76,11 @@ export class Castle {
       logLevel,
       doNotTrack,
       ipHeaders,
-      trustedProxies,
+      trustedProxies: trustedProxies.length
+        ? trustedProxies.map((proxy) => new RegExp(proxy))
+        : [],
       trustProxyChain,
-      trustedProxyDepth
+      trustedProxyDepth,
     };
     this.logger = pino({
       prettyPrint: {
