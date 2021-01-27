@@ -51,6 +51,10 @@ export class Castle {
     failoverStrategy = FailoverStrategy.allow,
     logLevel = 'error',
     doNotTrack = false,
+    ipHeaders = [],
+    trustedProxies = [],
+    trustProxyChain = false,
+    trustedProxyDepth = 0
   }: Configuration) {
     if (!apiSecret) {
       throw new Error(
@@ -70,6 +74,10 @@ export class Castle {
       failoverStrategy,
       logLevel,
       doNotTrack,
+      ipHeaders,
+      trustedProxies,
+      trustProxyChain,
+      trustedProxyDepth
     };
     this.logger = pino({
       prettyPrint: {

@@ -11,4 +11,8 @@ export type Configuration = {
   failoverStrategy?: FailoverStrategy;
   logLevel?: pino.Level;
   doNotTrack?: boolean;
+  ipHeaders?: string[];
+  trustedProxies?: string[];
+  trustProxyChain?: boolean;
+  trustedProxyDepth?: number;
 };
