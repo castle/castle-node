@@ -7,7 +7,7 @@ const DEFAULT = ['X-Forwarded-For', 'Remote-Addr'];
 // list of header which are used with proxy depth setting
 const DEPTH_RELATED = ['X-Forwarded-For'];
 
-const checkInternal = (ipAddress: string, proxies: Array<any>) => {
+const checkInternal = (ipAddress: string, proxies: any[]) => {
   return proxies.some((proxyRegexp) => proxyRegexp.test(ipAddress));
 };
 
@@ -48,7 +48,7 @@ export const IPsExtractService = {
   ) => {
     const ipHeadersList = ipHeaders.length ? ipHeaders : DEFAULT;
     const proxiesList = trustedProxies.concat(TRUSTED_PROXIES);
-    let allIPs = [];
+    const allIPs = [];
 
     for (const ipHeader of ipHeadersList) {
       const IPs = IPsFrom(ipHeader, headers, trustedProxyDepth);
