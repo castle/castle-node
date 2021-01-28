@@ -17,6 +17,7 @@ const sampleRequestData = {
     client_id: 'clientid',
     headers: {
       Cookie: 'SECRET=pleasedontbehere',
+      'x-forwarded-for': '8.8.8.8',
     },
   },
 };

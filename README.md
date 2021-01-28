@@ -36,15 +36,19 @@ const castle = Castle({ apiSecret: 'YOUR SECRET HERE' });
 
 #### Config options
 
-| Config option     | Explanation                                                                                                                                                                             |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| apiSecret         | `string` - This can be found in the castle dashboard.                                                                                                                                   |
-| timeout           | `number` - Time before returning the failover strategy. Default value is 500.                                                                                                           |
-| allowlisted    | `string[]` - An array of strings matching the headers you want to pass fully to the service.                                                                                            |
-| denylisted | `string[]` - An array of of strings matching the headers you do not want to pass fully to the service.                                                                                  |
+| Config option     | Explanation |
+| ----------------- | ----------- |
+| apiSecret         | `string` - This can be found in the castle dashboard. |
+| timeout           | `number` - Time before returning the failover strategy. Default value is 500. |
+| allowlisted       | `string[]` - An array of strings matching the headers you want to pass fully to the service. |
+| denylisted        | `string[]` - An array of of strings matching the headers you do not want to pass fully to the service. |
 | failoverStrategy  | `string` - If the request to our service would for some reason time out, this is where you select the automatic response from `authenticate`. Options are `allow`, `deny`, `challenge`. |
-| logLevel          | `string` - Corresponds to standard log levels: `trace`, `debug`, `info`, `warn`, `error`, `fatal`. Useful levels are `info` and `error`.                                                |
-| doNotTrack        | `boolean` - False by default, setting it to true turns off all requests and triggers automatic failover on `authenticate`. Used for development and testing.                            |
+| logLevel          | `string` - Corresponds to standard log levels: `trace`, `debug`, `info`, `warn`, `error`, `fatal`. Useful levels are `info` and `error`. |
+| doNotTrack        | `boolean` - False by default, setting it to true turns off all requests and triggers automatic failover on `authenticate`. Used for development and testing. |
+| ipHeaders         | `string[]` - IP Headers to look for a client IP address. |
+| trustedProxies    | `string[]` - Trusted public proxies list. |
+| trustProxyChain   | `boolean` - False by default, defines if trusting all of the proxy IPs in X-Forwarded-For is enabled. |
+| trustedProxyDepth | `number` - Number of trusted proxies used in the chain. |
 
 ## Actions
 
