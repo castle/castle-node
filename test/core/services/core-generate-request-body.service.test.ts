@@ -19,7 +19,9 @@ describe('CoreGenerateRequestBody', () => {
       context: {
         ip: '127.0.0.1',
         client_id: 'client_id',
-        headers: {},
+        headers: {
+          'x-forwarded-for': '127.0.0.1',
+        },
         library: {
           name: 'castle-node',
           version,
@@ -37,7 +39,9 @@ describe('CoreGenerateRequestBody', () => {
       context: {
         ip: '127.0.0.1',
         client_id: 'client_id',
-        headers: {},
+        headers: {
+          'x-forwarded-for': '127.0.0.1',
+        },
       },
     };
 

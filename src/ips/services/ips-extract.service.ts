@@ -19,6 +19,9 @@ const limitProxyDepth = (ips, ipHeader, trustedProxyDepth) => {
 };
 
 const IPsFrom = (ipHeader, headers, trustedProxyDepth) => {
+  if (!headers) {
+    return [];
+  }
   const headerValue = headers[ipHeader];
 
   if (!headerValue) {
@@ -40,10 +43,10 @@ export const IPsExtractService = {
   call: (
     headers: IncomingHttpHeaders,
     {
-      ipHeaders,
-      trustedProxies,
-      trustProxyChain,
-      trustedProxyDepth,
+      ipHeaders = [],
+      trustedProxies = [],
+      trustProxyChain = false,
+      trustedProxyDepth = 0,
     }: Configuration
   ) => {
     const ipHeadersList = ipHeaders.length ? ipHeaders : DEFAULT;
