@@ -3,9 +3,9 @@ import { Configuration } from '../../models';
 import { TRUSTED_PROXIES } from '../../constants';
 
 // ordered list of ip headers for ip extraction
-const DEFAULT = ['X-Forwarded-For', 'Remote-Addr'];
+const DEFAULT = ['x-forwarded-for', 'remote-addr'];
 // list of header which are used with proxy depth setting
-const DEPTH_RELATED = ['X-Forwarded-For'];
+const DEPTH_RELATED = ['x-forwarded-for'];
 
 const checkInternal = (ipAddress: string, proxies: any[]) => {
   return proxies.some((proxyRegexp) => proxyRegexp.test(ipAddress));
@@ -13,19 +13,19 @@ const checkInternal = (ipAddress: string, proxies: any[]) => {
 
 const limitProxyDepth = (ips, ipHeader, trustedProxyDepth) => {
   if (DEPTH_RELATED.includes(ipHeader)) {
-    ips.pop(trustedProxyDepth);
+    ips.splice(ips.length - 1, trustedProxyDepth);
   }
   return ips;
 };
 
 const IPsFrom = (ipHeader, headers, trustedProxyDepth) => {
-  const headerValue = headers.get(ipHeader);
+  const headerValue = headers[ipHeader];
 
   if (!headerValue) {
     return [];
   }
-  const ips = headerValue.strip().split(/[,\s]+/);
-  limitProxyDepth(ips, ipHeader, trustedProxyDepth);
+  const ips = headerValue.trim().split(/[,\s]+/);
+  return limitProxyDepth(ips, ipHeader, trustedProxyDepth);
 };
 
 const removeProxies = (ips, trustProxyChain, proxiesList) => {
@@ -48,17 +48,14 @@ export const IPsExtractService = {
   ) => {
     const ipHeadersList = ipHeaders.length ? ipHeaders : DEFAULT;
     const proxiesList = trustedProxies.concat(TRUSTED_PROXIES);
-    const allIPs = [];
-
+    let allIPs = [];
     for (const ipHeader of ipHeadersList) {
-      const IPs = IPsFrom(ipHeader, headers, trustedProxyDepth);
+      const IPs = IPsFrom(ipHeader, headers, ~~trustedProxyDepth);
       const IPValue = removeProxies(IPs, trustProxyChain, proxiesList);
-
       if (IPValue) {
         return IPValue;
       }
-
-      allIPs.push(IPs);
+      allIPs = [...allIPs, ...IPs];
     }
 
     // fallback to first listed ip
