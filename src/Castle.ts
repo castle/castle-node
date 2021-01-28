@@ -76,9 +76,7 @@ export class Castle {
       logLevel,
       doNotTrack,
       ipHeaders,
-      trustedProxies: trustedProxies.length
-        ? trustedProxies.map((proxy) => new RegExp(proxy))
-        : [],
+      trustedProxies: trustedProxies.map((proxy) => new RegExp(proxy)),
       trustProxyChain,
       trustedProxyDepth,
     };
