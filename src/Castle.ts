@@ -17,6 +17,7 @@ import {
   FailoverStrategy,
 } from './failover/failover.module';
 import { LoggerService } from './logger/logger.module';
+// import { Configuration } from './configuraton';
 
 // The body on the request is a stream and can only be
 // read once, by default. This is a workaround so that the
