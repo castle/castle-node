@@ -15,7 +15,7 @@ describe('CommandTrackService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: 'castle.io/track',
+      requestUrl: new URL('https://castle.io/track'),
       requestOptions: {
         signal: controller.signal,
         method: 'POST',
@@ -39,7 +39,7 @@ describe('CommandTrackService', () => {
 
     const config = new Configuration({
       apiSecret: 'test',
-      baseUrl: 'castle.io',
+      baseUrl: 'https://castle.io',
     });
 
     const context = {
