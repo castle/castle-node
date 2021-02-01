@@ -1,4 +1,5 @@
 import { CoreGenerateDefaultHeadersService } from '../../../src/core/core.module';
+import { Configuration } from '../../../src/configuraton';
 
 describe('CoreGenerateDefaultHeadersService', () => {
   describe('call', () => {
@@ -7,9 +8,9 @@ describe('CoreGenerateDefaultHeadersService', () => {
       'Content-Type': 'application/json',
     };
 
-    const config = {
+    const config = new Configuration({
       apiSecret: 'test',
-    };
+    });
 
     it('generates default headers', () => {
       expect(CoreGenerateDefaultHeadersService.call(config)).toMatchObject(

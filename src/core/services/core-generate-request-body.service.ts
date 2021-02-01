@@ -1,4 +1,5 @@
-import { Configuration, Payload } from '../../models';
+import { Payload } from '../../models';
+import { Configuration } from '../../configuraton';
 import { ContextGetDefaultService } from '../../context/context.module';
 
 export const CoreGenerateRequestBody = {

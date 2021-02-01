@@ -1,4 +1,4 @@
-import { Configuration } from '../../models';
+import { Configuration } from '../../configuraton';
 import { CommandGenerateService } from './command-generate.service';
 
 export const CommandAuthenticateService = {

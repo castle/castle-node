@@ -1,4 +1,5 @@
 import { ContextGetDefaultService } from '../../../src/context/context.module';
+import { Configuration } from '../../../src/configuraton';
 import { version } from '../../../package.json';
 
 describe('ContextGetDefaultService', () => {
@@ -15,12 +16,12 @@ describe('ContextGetDefaultService', () => {
       ip: '1.2.3.4',
     };
 
-    const config = {
+    const config = new Configuration({
       apiSecret: 'test',
       apiUrl: 'castle.io',
       denylisted: [],
       allowlisted: [],
-    };
+    });
 
     const context = {
       client_id: 'client_id',

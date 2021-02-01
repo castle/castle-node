@@ -1,4 +1,5 @@
 import { HeadersExtractService } from '../../../src/headers/headers.module';
+import { Configuration } from '../../../src/configuraton';
 
 describe('HeadersExtractService', () => {
   describe('call', () => {
@@ -23,11 +24,11 @@ describe('HeadersExtractService', () => {
         'x-forwarded-for': '1.2.3.4',
       };
 
-      const config = {
+      const config = new Configuration({
         apiSecret: 'test',
         allowlisted: [],
         denylisted: [],
-      };
+      });
 
       it('scrubs authorization and cookie headers', () => {
         expect(HeadersExtractService.call(formattedHeaders, config)).toEqual(
@@ -47,11 +48,11 @@ describe('HeadersExtractService', () => {
         'x-forwarded-for': true,
       };
 
-      const config = {
+      const config = new Configuration({
         apiSecret: 'test',
         allowlisted: ['accept', 'ok'],
         denylisted: [],
-      };
+      });
 
       it('scrubs authorization and cookie headers', () => {
         expect(HeadersExtractService.call(formattedHeaders, config)).toEqual(
@@ -72,11 +73,11 @@ describe('HeadersExtractService', () => {
           'x-forwarded-for': '1.2.3.4',
         };
 
-        const config = {
+        const config = new Configuration({
           apiSecret: 'test',
           allowlisted: [],
           denylisted: ['user-agent'],
-        };
+        });
 
         it('scrubs authorization and cookie headers', () => {
           expect(HeadersExtractService.call(formattedHeaders, config)).toEqual(
@@ -96,11 +97,11 @@ describe('HeadersExtractService', () => {
           'x-forwarded-for': '1.2.3.4',
         };
 
-        const config = {
+        const config = new Configuration({
           apiSecret: 'test',
           allowlisted: [],
           denylisted: ['accept'],
-        };
+        });
 
         it('scrubs authorization and cookie headers', () => {
           expect(HeadersExtractService.call(formattedHeaders, config)).toEqual(
@@ -115,11 +116,11 @@ describe('HeadersExtractService', () => {
         accept: true,
       };
 
-      const config = {
+      const config = new Configuration({
         apiSecret: 'test',
         allowlisted: ['accept'],
         denylisted: ['accept'],
-      };
+      });
 
       it('scrubs authorization and cookie headers', () => {
         expect(

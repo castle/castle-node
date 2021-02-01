@@ -2,12 +2,7 @@ import fetch from 'node-fetch';
 import AbortController from 'abort-controller';
 import pino from 'pino';
 
-import {
-  DEFAULT_ALLOWLIST,
-  DEFAULT_API_URL,
-  DEFAULT_TIMEOUT,
-} from './constants';
-import { AuthenticateResult, Configuration, Payload } from './models';
+import { AuthenticateResult, Payload } from './models';
 import {
   CommandAuthenticateService,
   CommandTrackService,
@@ -17,7 +12,7 @@ import {
   FailoverStrategy,
 } from './failover/failover.module';
 import { LoggerService } from './logger/logger.module';
-// import { Configuration } from './configuraton';
+import { Configuration } from './configuraton';
 
 // The body on the request is a stream and can only be
 // read once, by default. This is a workaround so that the
@@ -43,50 +38,14 @@ export class Castle {
   private logger: pino.Logger;
   private configuration: Configuration;
 
-  constructor({
-    apiSecret,
-    apiUrl,
-    timeout = DEFAULT_TIMEOUT,
-    allowlisted = [],
-    denylisted = [],
-    overrideFetch = fetch,
-    failoverStrategy = FailoverStrategy.allow,
-    logLevel = 'error',
-    doNotTrack = false,
-    ipHeaders = [],
-    trustedProxies = [],
-    trustProxyChain = false,
-    trustedProxyDepth = 0,
-  }: Configuration) {
-    if (!apiSecret) {
-      throw new Error(
-        'Castle: Unable to instantiate Castle client, API secret is missing.'
-      );
-    }
-
-    this.configuration = {
-      apiSecret,
-      apiUrl: apiUrl || DEFAULT_API_URL,
-      timeout,
-      allowlisted: allowlisted.length
-        ? allowlisted.map((x) => x.toLowerCase())
-        : DEFAULT_ALLOWLIST,
-      denylisted: denylisted.map((x) => x.toLowerCase()),
-      overrideFetch,
-      failoverStrategy,
-      logLevel,
-      doNotTrack,
-      ipHeaders,
-      trustedProxies: trustedProxies.map((proxy) => new RegExp(proxy)),
-      trustProxyChain,
-      trustedProxyDepth,
-    };
+  constructor(configAttributes) {
+    this.configuration = new Configuration(configAttributes);
     this.logger = pino({
       prettyPrint: {
         levelFirst: true,
       },
     });
-    this.logger.level = logLevel;
+    this.logger.level = this.configuration.logLevel;
   }
 
   public async authenticate(params: Payload): Promise<AuthenticateResult> {

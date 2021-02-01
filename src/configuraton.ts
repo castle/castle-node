@@ -1,12 +1,28 @@
 import pino from 'pino';
+import fetch from 'node-fetch';
 
 import {
   DEFAULT_ALLOWLIST,
   DEFAULT_API_URL,
   DEFAULT_TIMEOUT,
 } from './constants';
-import { Configuration as ConfiguratonAttributes } from './models';
 import { FailoverStrategy } from './failover/models/failover-strategy';
+
+interface ConfigurationProperties {
+  apiSecret: string;
+  apiUrl?: string;
+  timeout?: number;
+  allowlisted?: string[];
+  denylisted?: string[];
+  overrideFetch?: any;
+  failoverStrategy?: FailoverStrategy;
+  logLevel?: pino.Level;
+  doNotTrack?: boolean;
+  ipHeaders?: string[];
+  trustedProxies?: RegExp[];
+  trustProxyChain?: boolean;
+  trustedProxyDepth?: number;
+}
 
 export class Configuration {
   apiSecret: string;
@@ -25,7 +41,7 @@ export class Configuration {
 
   constructor({
     apiSecret,
-    apiUrl,
+    apiUrl = DEFAULT_API_URL,
     timeout = DEFAULT_TIMEOUT,
     allowlisted = [],
     denylisted = [],
@@ -37,7 +53,7 @@ export class Configuration {
     trustedProxies = [],
     trustProxyChain = false,
     trustedProxyDepth = 0,
-  }: ConfiguratonAttributes) {
+  }: ConfigurationProperties) {
     if (!apiSecret) {
       throw new Error(
         'Castle: Unable to instantiate Castle client, API secret is missing.'
@@ -45,7 +61,7 @@ export class Configuration {
     }
 
     this.apiSecret = apiSecret;
-    this.apiUrl = apiUrl || DEFAULT_API_URL;
+    this.apiUrl = apiUrl;
     this.timeout = timeout;
     this.allowlisted = allowlisted.length
       ? allowlisted.map((x) => x.toLowerCase())

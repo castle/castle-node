@@ -1,4 +1,5 @@
 import { CommandAuthenticateService } from '../../../src/command/command.module';
+import { Configuration } from '../../../src/configuraton';
 import { version } from '../../../package.json';
 import MockDate from 'mockdate';
 
@@ -36,10 +37,10 @@ describe('CommandAuthenticateService', () => {
       },
     };
 
-    const config = {
+    const config = new Configuration({
       apiSecret: 'test',
       apiUrl: 'castle.io',
-    };
+    });
 
     const context = {
       client_id: 'client_id',

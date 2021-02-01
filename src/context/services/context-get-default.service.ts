@@ -1,4 +1,4 @@
-import { Configuration } from '../../models';
+import { Configuration } from '../../configuraton';
 import { HeadersExtractService } from '../../headers/headers.module';
 import { IPsExtractService } from '../../ips/ips.module';
 import { version } from '../../../package.json';
