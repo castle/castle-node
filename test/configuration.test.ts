@@ -4,10 +4,8 @@ import { FailoverStrategy } from '../src/failover/models/failover-strategy';
 
 describe('Configration', () => {
   describe('initialization', () => {
-    let config;
-
     describe('timeout', () => {
-      config = new Configuration({
+      const config = new Configuration({
         apiSecret: 'test',
       });
 
@@ -16,19 +14,19 @@ describe('Configration', () => {
       });
 
       describe('with setter', () => {
-        config = new Configuration({
+        const cfg = new Configuration({
           apiSecret: 'test',
           timeout: 2000,
         });
 
         it('sets correct timeout', () => {
-          expect(config.timeout).toEqual(2000);
+          expect(cfg.timeout).toEqual(2000);
         });
       });
     });
 
     describe('allowlisted', () => {
-      config = new Configuration({
+      const config = new Configuration({
         apiSecret: 'test',
       });
 
@@ -37,19 +35,19 @@ describe('Configration', () => {
       });
 
       describe('with setter', () => {
-        config = new Configuration({
+        const cfg = new Configuration({
           apiSecret: 'test',
           allowlisted: ['header'],
         });
 
         it('sets correct allowlist', () => {
-          expect(config.allowlisted).toEqual(['header']);
+          expect(cfg.allowlisted).toEqual(['header']);
         });
       });
     });
 
     describe('denylisted', () => {
-      config = new Configuration({
+      const config = new Configuration({
         apiSecret: 'test',
       });
 
@@ -58,19 +56,19 @@ describe('Configration', () => {
       });
 
       describe('with setter', () => {
-        config = new Configuration({
+        const cfg = new Configuration({
           apiSecret: 'test',
           denylisted: ['header'],
         });
 
         it('sets correct denylist', () => {
-          expect(config.denylisted).toEqual(['header']);
+          expect(cfg.denylisted).toEqual(['header']);
         });
       });
     });
 
     describe('failoverStrategy', () => {
-      config = new Configuration({
+      const config = new Configuration({
         apiSecret: 'test',
       });
 
@@ -79,19 +77,19 @@ describe('Configration', () => {
       });
 
       describe('with setter', () => {
-        config = new Configuration({
+        const cfg = new Configuration({
           apiSecret: 'test',
           failoverStrategy: FailoverStrategy.challenge,
         });
 
         it('sets correct failoverStrategy', () => {
-          expect(config.failoverStrategy).toEqual(FailoverStrategy.challenge);
+          expect(cfg.failoverStrategy).toEqual(FailoverStrategy.challenge);
         });
       });
     });
 
     describe('apiSecret', () => {
-      config = new Configuration({
+      const config = new Configuration({
         apiSecret: 'test',
       });
 
