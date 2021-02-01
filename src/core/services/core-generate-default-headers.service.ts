@@ -1,9 +1,11 @@
 import { Configuration } from '../../configuraton';
 
 export const CoreGenerateDefaultHeadersService = {
-  call: ({ apiSecret }: Configuration) => {
+  call: (configuration: Configuration) => {
     return {
-      Authorization: `Basic ${Buffer.from(`:${apiSecret}`).toString('base64')}`,
+      Authorization: `Basic ${Buffer.from(
+        `:${configuration.apiSecret}`
+      ).toString('base64')}`,
       'Content-Type': 'application/json',
     };
   },
