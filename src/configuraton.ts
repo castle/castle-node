@@ -23,7 +23,7 @@ interface ConfigurationProperties {
 
 export class Configuration {
   apiSecret: string;
-  baseUrl?: string;
+  baseUrl?: URL;
   timeout?: number;
   allowlisted?: string[];
   denylisted?: string[];
@@ -58,7 +58,7 @@ export class Configuration {
     }
 
     this.apiSecret = apiSecret;
-    this.baseUrl = baseUrl;
+    this.baseUrl = new URL(baseUrl);
     this.timeout = timeout;
     this.allowlisted = allowlisted.map((x) => x.toLowerCase());
     this.denylisted = denylisted.map((x) => x.toLowerCase());
