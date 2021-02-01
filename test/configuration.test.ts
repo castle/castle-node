@@ -4,8 +4,10 @@ import { FailoverStrategy } from '../src/failover/models/failover-strategy';
 
 describe('Configration', () => {
   describe('initialization', () => {
+    let config;
+
     describe('timeout', () => {
-      const config = new Configuration({
+      config = new Configuration({
         apiSecret: 'test',
       });
 
@@ -14,7 +16,7 @@ describe('Configration', () => {
       });
 
       describe('with setter', () => {
-        const config = new Configuration({
+        config = new Configuration({
           apiSecret: 'test',
           timeout: 2000,
         });
@@ -26,7 +28,7 @@ describe('Configration', () => {
     });
 
     describe('allowlisted', () => {
-      const config = new Configuration({
+      config = new Configuration({
         apiSecret: 'test',
       });
 
@@ -35,7 +37,7 @@ describe('Configration', () => {
       });
 
       describe('with setter', () => {
-        const config = new Configuration({
+        config = new Configuration({
           apiSecret: 'test',
           allowlisted: ['header'],
         });
@@ -47,7 +49,7 @@ describe('Configration', () => {
     });
 
     describe('denylisted', () => {
-      const config = new Configuration({
+      config = new Configuration({
         apiSecret: 'test',
       });
 
@@ -56,7 +58,7 @@ describe('Configration', () => {
       });
 
       describe('with setter', () => {
-        const config = new Configuration({
+        config = new Configuration({
           apiSecret: 'test',
           denylisted: ['header'],
         });
@@ -68,7 +70,7 @@ describe('Configration', () => {
     });
 
     describe('failoverStrategy', () => {
-      const config = new Configuration({
+      config = new Configuration({
         apiSecret: 'test',
       });
 
@@ -77,7 +79,7 @@ describe('Configration', () => {
       });
 
       describe('with setter', () => {
-        const config = new Configuration({
+        config = new Configuration({
           apiSecret: 'test',
           failoverStrategy: FailoverStrategy.challenge,
         });
@@ -89,7 +91,7 @@ describe('Configration', () => {
     });
 
     describe('apiSecret', () => {
-      const config = new Configuration({
+      config = new Configuration({
         apiSecret: 'test',
       });
 
