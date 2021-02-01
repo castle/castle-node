@@ -39,7 +39,7 @@ describe('CommandAuthenticateService', () => {
 
     const config = new Configuration({
       apiSecret: 'test',
-      apiUrl: 'castle.io',
+      baseUrl: 'castle.io',
     });
 
     const context = {

@@ -31,14 +31,15 @@ Load and configure the library with your Castle API secret in an initializer or 
 ```js
 import { Castle } from '@castleio/sdk';
 
-const castle = Castle({ apiSecret: 'YOUR SECRET HERE' });
+const castle = new Castle({ apiSecret: 'YOUR SECRET HERE' });
 ```
 
 #### Config options
 
 | Config option     | Explanation |
 | ----------------- | ----------- |
-| apiSecret         | `string` - This can be found in the castle dashboard. |
+| apiSecret         | `string` - This can be found in the Castle dashboard. |
+| baseUrl           | `string` - Base Castle API url. |
 | timeout           | `number` - Time before returning the failover strategy. Default value is 500. |
 | allowlisted       | `string[]` - An array of strings matching the headers you want to pass fully to the service. We highly recommend using the DEFAULT_ALLOWLIST constant. |
 | denylisted        | `string[]` - An array of of strings matching the headers you do not want to pass fully to the service. |

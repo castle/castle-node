@@ -7,7 +7,7 @@ import { FailoverStrategy } from './failover/models/failover-strategy';
 
 interface ConfigurationProperties {
   apiSecret: string;
-  apiUrl?: string;
+  baseUrl?: string;
   timeout?: number;
   allowlisted?: string[];
   denylisted?: string[];
@@ -23,7 +23,7 @@ interface ConfigurationProperties {
 
 export class Configuration {
   apiSecret: string;
-  apiUrl?: string;
+  baseUrl?: string;
   timeout?: number;
   allowlisted?: string[];
   denylisted?: string[];
@@ -38,7 +38,7 @@ export class Configuration {
 
   constructor({
     apiSecret,
-    apiUrl = DEFAULT_API_URL,
+    baseUrl = DEFAULT_API_URL,
     timeout = DEFAULT_TIMEOUT,
     allowlisted = [],
     denylisted = [],
@@ -58,7 +58,7 @@ export class Configuration {
     }
 
     this.apiSecret = apiSecret;
-    this.apiUrl = apiUrl;
+    this.baseUrl = baseUrl;
     this.timeout = timeout;
     this.allowlisted = allowlisted.map((x) => x.toLowerCase());
     this.denylisted = denylisted.map((x) => x.toLowerCase());

@@ -13,7 +13,7 @@ export const CommandGenerateService = {
     configuration: Configuration
   ) => {
     return {
-      requestUrl: `${configuration.apiUrl}/${path}`,
+      requestUrl: `${configuration.baseUrl}/${path}`,
       requestOptions: {
         signal: controller.signal,
         method,
