@@ -1,4 +1,5 @@
 import { IPsExtractService } from '../../../src/ips/ips.module';
+import { Configuration } from '../../../src/configuraton';
 
 describe('IPsExtractService', () => {
   describe('call', () => {
@@ -7,11 +8,11 @@ describe('IPsExtractService', () => {
         'x-forwarded-for': '1.2.3.5',
       };
 
-      const config = {
+      const config = new Configuration({
         apiSecret: 'test',
         ipHeaders: [],
         trustedProxies: [],
-      };
+      });
 
       it('extracts correct IPs', () => {
         expect(IPsExtractService.call(headers, config)).toEqual('1.2.3.5');
@@ -25,11 +26,11 @@ describe('IPsExtractService', () => {
       };
 
       describe('regular format', () => {
-        const config = {
+        const config = new Configuration({
           apiSecret: 'test',
           ipHeaders: ['cf-connecting-ip', 'x-forwarded-for'],
           trustedProxies: [],
-        };
+        });
 
         it('extracts correct IPs', () => {
           expect(IPsExtractService.call(headers, config)).toEqual('1.2.3.4');
@@ -37,11 +38,11 @@ describe('IPsExtractService', () => {
       });
 
       describe('with value from trusted proxies it get seconds header', () => {
-        const config = {
+        const config = new Configuration({
           apiSecret: 'test',
           ipHeaders: ['cf-connecting-ip', 'x-forwarded-for'],
           trustedProxies: [new RegExp('1.2.3.4')],
-        };
+        });
 
         it('extracts correct IPs', () => {
           expect(IPsExtractService.call(headers, config)).toEqual('1.2.3.5');
@@ -55,11 +56,11 @@ describe('IPsExtractService', () => {
         'remote-addr': '127.0.0.1',
       };
 
-      const config = {
+      const config = new Configuration({
         apiSecret: 'test',
         ipHeaders: [],
         trustedProxies: [],
-      };
+      });
 
       it('fallbacks to first available header when all headers are marked trusted proxy', () => {
         expect(IPsExtractService.call(headers, config)).toEqual('127.0.0.1');
@@ -72,12 +73,12 @@ describe('IPsExtractService', () => {
         'remote-addr': '6.6.6.4',
       };
 
-      const config = {
+      const config = new Configuration({
         apiSecret: 'test',
         ipHeaders: [],
         trustedProxies: [],
         trustProxyChain: true,
-      };
+      });
 
       it('selects first available header', () => {
         expect(IPsExtractService.call(headers, config)).toEqual('6.6.6.6');
@@ -90,12 +91,12 @@ describe('IPsExtractService', () => {
         'remote-addr': '6.6.6.4',
       };
 
-      const config = {
+      const config = new Configuration({
         apiSecret: 'test',
         ipHeaders: [],
         trustedProxies: [],
         trustedProxyDepth: 1,
-      };
+      });
 
       it('selects first available header', () => {
         expect(IPsExtractService.call(headers, config)).toEqual('2.2.2.3');
@@ -108,11 +109,11 @@ describe('IPsExtractService', () => {
         'client-ip': '6.6.6.6',
       };
 
-      const config = {
+      const config = new Configuration({
         apiSecret: 'test',
         ipHeaders: [],
         trustedProxies: [],
-      };
+      });
 
       it('does not allow to spoof IP', () => {
         expect(IPsExtractService.call(headers, config)).toEqual('2.2.2.3');
@@ -125,11 +126,11 @@ describe('IPsExtractService', () => {
         'client-ip': '6.6.6.6',
       };
 
-      const config = {
+      const config = new Configuration({
         apiSecret: 'test',
         ipHeaders: [],
         trustedProxies: [new RegExp(/^2.2.2.\d$/)],
-      };
+      });
 
       it('does not allow to spoof IP', () => {
         expect(IPsExtractService.call(headers, config)).toEqual('6.6.6.6');

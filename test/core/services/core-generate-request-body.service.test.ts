@@ -1,6 +1,7 @@
 import { CoreGenerateRequestBody } from '../../../src/core/core.module';
 import { version } from '../../../package.json';
 import MockDate from 'mockdate';
+import { Configuration } from '../../../src/configuraton';
 
 describe('CoreGenerateRequestBody', () => {
   beforeEach(() => {
@@ -29,9 +30,9 @@ describe('CoreGenerateRequestBody', () => {
       },
     });
 
-    const config = {
+    const config = new Configuration({
       apiSecret: 'test',
-    };
+    });
 
     const payload = {
       event: '$login.succeeded',
