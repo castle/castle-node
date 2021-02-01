@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 import { reduce } from 'lodash';
-import { Configuration } from '../../models';
+import { Configuration } from '../../configuraton';
 
 const ALWAYS_ALLOWLISTED = ['user-agent'];
 const ALWAYS_DENYLISTED = ['cookie', 'authorization'];

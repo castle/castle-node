@@ -1,4 +1,4 @@
-import { Configuration } from '../../models';
+import { Configuration } from '../../configuraton';
 
 export const CoreGenerateDefaultHeadersService = {
   call: ({ apiSecret }: Configuration) => {
