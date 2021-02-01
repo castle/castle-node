@@ -18,7 +18,7 @@ describe('ContextGetDefaultService', () => {
 
     const config = new Configuration({
       apiSecret: 'test',
-      baseUrl: 'castle.io',
+      baseUrl: 'https://castle.io',
       denylisted: [],
       allowlisted: [],
     });

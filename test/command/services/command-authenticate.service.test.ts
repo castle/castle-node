@@ -15,7 +15,7 @@ describe('CommandAuthenticateService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: 'castle.io/authenticate',
+      requestUrl: new URL('https://castle.io/authenticate'),
       requestOptions: {
         signal: controller.signal,
         method: 'POST',
@@ -39,7 +39,7 @@ describe('CommandAuthenticateService', () => {
 
     const config = new Configuration({
       apiSecret: 'test',
-      baseUrl: 'castle.io',
+      baseUrl: 'https://castle.io',
     });
 
     const context = {
