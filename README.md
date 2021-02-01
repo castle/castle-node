@@ -42,7 +42,7 @@ const castle = Castle({ apiSecret: 'YOUR SECRET HERE' });
 | timeout           | `number` - Time before returning the failover strategy. Default value is 500. |
 | allowlisted       | `string[]` - An array of strings matching the headers you want to pass fully to the service. We highly recommend using the DEFAULT_ALLOWLIST constant. |
 | denylisted        | `string[]` - An array of of strings matching the headers you do not want to pass fully to the service. |
-| failoverStrategy  | `string` - If the request to our service would for some reason time out, this is where you select the automatic response from `authenticate`. Options are `allow`, `deny`, `challenge`. |
+| failoverStrategy  | `FailoverStrategy` - If the request to our service would for some reason time out, this is where you select the automatic response from `authenticate`. Options are `FailoverStrategy.allow`, `FailoverStrategy.deny`, `FailoverStrategy.challenge`. |
 | logLevel          | `string` - Corresponds to standard log levels: `trace`, `debug`, `info`, `warn`, `error`, `fatal`. Useful levels are `info` and `error`. |
 | doNotTrack        | `boolean` - False by default, setting it to true turns off all requests and triggers automatic failover on `authenticate`. Used for development and testing. |
 | ipHeaders         | `string[]` - IP Headers to look for a client IP address. |
