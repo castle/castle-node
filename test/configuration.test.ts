@@ -1,4 +1,5 @@
 import { Configuration } from '../src/configuraton';
+import { ConfigurationError } from '../src/errors';
 import { FailoverStrategy } from '../src/failover/models/failover-strategy';
 
 describe('Configration', () => {
@@ -83,6 +84,24 @@ describe('Configration', () => {
 
         it('sets correct failoverStrategy', () => {
           expect(config.failoverStrategy).toEqual(FailoverStrategy.challenge);
+        });
+      });
+    });
+
+    describe('apiSecret', () => {
+      const config = new Configuration({
+        apiSecret: 'test',
+      });
+
+      it('sets correct apiSecret', () => {
+        expect(config.apiSecret).toEqual('test');
+      });
+
+      describe('config without apiSecret', () => {
+        it('raises error', () => {
+          expect(() => new Configuration({ apiSecret: '' })).toThrow(
+            ConfigurationError
+          );
         });
       });
     });

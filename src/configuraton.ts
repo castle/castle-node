@@ -2,6 +2,7 @@ import pino from 'pino';
 import fetch from 'node-fetch';
 
 import { DEFAULT_API_URL, DEFAULT_TIMEOUT } from './constants';
+import { ConfigurationError } from './errors';
 import { FailoverStrategy } from './failover/models/failover-strategy';
 
 interface ConfigurationProperties {
@@ -51,7 +52,7 @@ export class Configuration {
     trustedProxyDepth = 0,
   }: ConfigurationProperties) {
     if (!apiSecret) {
-      throw new Error(
+      throw new ConfigurationError(
         'Castle: Unable to instantiate Castle client, API secret is missing.'
       );
     }
