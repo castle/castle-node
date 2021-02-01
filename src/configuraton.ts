@@ -63,9 +63,7 @@ export class Configuration {
     this.apiSecret = apiSecret;
     this.apiUrl = apiUrl;
     this.timeout = timeout;
-    this.allowlisted = allowlisted.length
-      ? allowlisted.map((x) => x.toLowerCase())
-      : DEFAULT_ALLOWLIST;
+    this.allowlisted = allowlisted.map((x) => x.toLowerCase());
     this.denylisted = denylisted.map((x) => x.toLowerCase());
     this.overrideFetch = overrideFetch;
     this.failoverStrategy = failoverStrategy;
