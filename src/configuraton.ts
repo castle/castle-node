@@ -1,11 +1,7 @@
 import pino from 'pino';
 import fetch from 'node-fetch';
 
-import {
-  DEFAULT_ALLOWLIST,
-  DEFAULT_API_URL,
-  DEFAULT_TIMEOUT,
-} from './constants';
+import { DEFAULT_API_URL, DEFAULT_TIMEOUT } from './constants';
 import { FailoverStrategy } from './failover/models/failover-strategy';
 
 interface ConfigurationProperties {
