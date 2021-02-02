@@ -6,18 +6,18 @@ import { IPsExtractService } from '../../ips/ips.module';
 import { version } from '../../../package.json';
 
 const optionalDefaults = (headers: IncomingHttpHeaders) => {
-  let opts = {};
+  const opts: { locale?: string; user_agent?: string } = {};
 
   if (!headers) {
     return opts;
   }
 
   if (headers['accept-language']) {
-    opts['locale'] = headers['accept-language'];
+    opts.locale = headers['accept-language'];
   }
 
   if (headers['user-agent']) {
-    opts['user_agent'] = headers['user-agent'];
+    opts.user_agent = headers['user-agent'];
   }
   return opts;
 };
