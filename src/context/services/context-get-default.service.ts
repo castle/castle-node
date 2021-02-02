@@ -7,6 +7,11 @@ import { version } from '../../../package.json';
 
 const optionalDefaults = (headers: IncomingHttpHeaders) => {
   let opts = {};
+
+  if (!headers) {
+    return opts;
+  }
+
   if (headers['accept-language']) {
     opts['locale'] = headers['accept-language'];
   }
