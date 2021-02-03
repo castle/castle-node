@@ -26,7 +26,8 @@ const optionalDefaults = (headers: IncomingHttpHeaders) => {
 export const ContextGetDefaultService = {
   call: (request: any, configuration: Configuration) => {
     return {
-      client_id: request.client_id || false,
+      client_id:
+        ClientIdExtractService.call(request.headers, request.cookies) || false,
       active: true,
       headers: HeadersExtractService.call(request.headers, configuration),
       ip: IPsExtractService.call(request.headers, configuration),

@@ -7,6 +7,7 @@ describe('ContextGetDefaultService', () => {
     const expected = {
       headers: {
         'x-forwarded-for': '1.2.3.4',
+        'x-castle-client-id': 'client_id',
       },
       library: {
         name: 'castle-node',
@@ -27,6 +28,7 @@ describe('ContextGetDefaultService', () => {
       client_id: 'client_id',
       headers: {
         'x-forwarded-for': '1.2.3.4',
+        'x-castle-client-id': 'client_id',
       },
     };
 

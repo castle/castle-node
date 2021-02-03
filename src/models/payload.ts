@@ -9,7 +9,6 @@ export type Payload = {
   device_token?: string;
   context: {
     ip: string;
-    client_id: string;
     headers: IncomingHttpHeaders;
   };
 };
