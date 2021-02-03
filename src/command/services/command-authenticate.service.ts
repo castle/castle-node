@@ -1,16 +1,18 @@
 import { Configuration } from '../../configuraton';
+import { ContextSanitizeService } from '../../context/context.module';
 import { CommandGenerateService } from './command-generate.service';
 
 export const CommandAuthenticateService = {
   call: (
     controller: AbortController,
-    data: any,
+    options: any,
     configuration: Configuration
   ) => {
+    const context = ContextSanitizeService.call(options.context);
     return CommandGenerateService.call(
       controller,
       'authenticate',
-      data,
+      { ...options, ...{ context } },
       'POST',
       configuration
     );

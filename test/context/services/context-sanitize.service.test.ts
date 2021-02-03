@@ -1,6 +1,6 @@
-import { ContextSanitize } from '../../../src/context/context.module';
+import { ContextSanitizeService } from '../../../src/context/context.module';
 
-describe('ContextSanitize', () => {
+describe('ContextSanitizeService', () => {
   describe('call', () => {
     const payload = {
       test: 'test',
@@ -9,7 +9,7 @@ describe('ContextSanitize', () => {
     describe('when active true', () => {
       it('returns full context', () => {
         const expected = { ...payload, ...{ active: true } };
-        const result = ContextSanitize.call(expected);
+        const result = ContextSanitizeService.call(expected);
         expect(result).toMatchObject(expected);
       });
     });
@@ -17,14 +17,14 @@ describe('ContextSanitize', () => {
     describe('when active false', () => {
       it('returns full context', () => {
         const expected = { ...payload, ...{ active: false } };
-        const result = ContextSanitize.call(expected);
+        const result = ContextSanitizeService.call(expected);
         expect(result).toMatchObject(expected);
       });
     });
 
     describe('when active is not boolean', () => {
       it('returns only payload', () => {
-        const result = ContextSanitize.call({
+        const result = ContextSanitizeService.call({
           ...payload,
           ...{ active: 'yes' },
         });
