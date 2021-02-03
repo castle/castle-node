@@ -23,17 +23,17 @@ const optionalDefaults = (headers: IncomingHttpHeaders) => {
 };
 
 export const ContextGetDefaultService = {
-  call: (context: any, configuration: Configuration) => {
+  call: (request: any, configuration: Configuration) => {
     return {
-      client_id: context.client_id || false,
+      client_id: request.client_id || false,
       active: true,
-      headers: HeadersExtractService.call(context.headers, configuration),
-      ip: IPsExtractService.call(context.headers, configuration),
+      headers: HeadersExtractService.call(request.headers, configuration),
+      ip: IPsExtractService.call(request.headers, configuration),
       library: {
         name: 'castle-node',
         version,
       },
-      ...optionalDefaults(context.headers),
+      ...optionalDefaults(request.headers),
     };
   },
 };
