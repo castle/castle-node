@@ -1,6 +1,6 @@
 import { Castle } from '../index';
-import fetchMock from 'fetch-mock';
 import { EVENTS } from '../src/events';
+import fetchMock from 'fetch-mock';
 import { FailoverStrategy } from '../src/failover/models';
 import MockDate from 'mockdate';
 

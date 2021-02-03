@@ -26,8 +26,11 @@ describe('CommandTrackService', () => {
         body: JSON.stringify({
           sent_at: '2021-01-25T00:00:00.000Z',
           context: {
+            headers: {
+              'x-castle-client-id': 'client_id',
+            },
             client_id: 'client_id',
-            headers: {},
+            active: true,
             library: {
               name: 'castle-node',
               version,
@@ -43,7 +46,9 @@ describe('CommandTrackService', () => {
     });
 
     const context = {
-      client_id: 'client_id',
+      headers: {
+        'x-castle-client-id': 'client_id',
+      },
     };
 
     it('generates payload', () => {

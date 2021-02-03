@@ -1,3 +1,4 @@
+import { merge } from 'lodash';
 import { Payload } from '../../models';
 import { Configuration } from '../../configuraton';
 import { ContextGetDefaultService } from '../../context/context.module';
@@ -27,10 +28,7 @@ export const CoreGenerateRequestBody = {
       user_traits,
       properties,
       device_token,
-      context: {
-        ...context,
-        ...defaultContext,
-      },
+      context: merge(context, defaultContext),
     });
   },
 };
