@@ -1,10 +1,11 @@
 import { Castle } from '../index';
+import { EVENTS } from '../src/events';
 import fetchMock from 'fetch-mock';
 import { FailoverStrategy } from '../src/failover/models';
 import MockDate from 'mockdate';
 
 const sampleRequestData = {
-  event: '$login.succeeded',
+  event: EVENTS.LOGIN_SUCCEEDED,
   created_at: 'now',
   user_id: 'userid',
   user_traits: {
