@@ -1,6 +1,7 @@
 import { IncomingHttpHeaders } from 'http';
 
 import { Configuration } from '../../configuraton';
+import { ClientIdExtractService } from '../../client-id/client-id.module';
 import { HeadersExtractService } from '../../headers/headers.module';
 import { IPsExtractService } from '../../ips/ips.module';
 import { version } from '../../../package.json';
