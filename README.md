@@ -62,17 +62,12 @@ This is the asynchronous version of the castle integration. This is for events w
 ```js
 import { EVENTS } from '@castleio/sdk';
 
-track({
+castle.track({
   event: EVENTS.EMAIL_CHANGE_SUCCEEDED,
   user_id: user.id,
   user_traits: {
     email: user.email,
     registered_at: user.registered_at,
-  },
-  context: {
-    ip: request.ip,
-    client_id: request.cookies['__cid'],
-    headers: request.cookies,
   },
 });
 ```
