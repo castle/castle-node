@@ -86,11 +86,6 @@ try {
       email: user.email,
       registered_at: user.registered_at,
     },
-    context: {
-      ip: request.ip,
-      client_id: request.cookies['__cid'],
-      headers: request.headers,
-    },
   });
 } catch (e) {
   console.error(e);
