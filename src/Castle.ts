@@ -3,10 +3,11 @@ import AbortController from 'abort-controller';
 import pino from 'pino';
 
 import { AuthenticateResult, Payload } from './models';
-import { APIAuthenticateService } from './api/api.module';
 import {
+  CommandAuthenticateService,
   CommandTrackService,
 } from './command/command.module';
+import { CoreProcessResponseService } from './core/core.module';
 import {
   FailoverResponsePrepareService,
   FailoverStrategy,
@@ -61,7 +62,49 @@ export class Castle {
       );
     }
 
-    return APIAuthenticateService.call(params, this.configuration, this.logger);
+    let response: Response;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, this.configuration.timeout);
+    const { requestUrl, requestOptions } = CommandAuthenticateService.call(
+      controller,
+      params,
+      this.configuration
+    );
+
+    try {
+      response = await this.getFetch()(requestUrl, requestOptions);
+    } catch (err) {
+      LoggerService.call({ requestUrl, requestOptions, err }, this.logger);
+
+      if (isTimeout(err)) {
+        return this.handleFailover(params.user_id, 'timeout', err);
+      } else {
+        throw err;
+      }
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    // Wait to get body here to prevent race conditions
+    // on `.json()` because we attempt to read it in
+    // multiple places.
+    const body = await getBody(response);
+
+    LoggerService.call(
+      { requestUrl, requestOptions, response, body },
+      this.logger
+    );
+
+    if (response.status >= 500) {
+      return this.handleFailover(params.user_id, 'server error');
+    }
+
+    this.handleUnauthorized(response);
+    this.handleBadResponse(response);
+
+    return body;
   }
 
   public async track(params: Payload): Promise<void> {
@@ -104,6 +147,25 @@ export class Castle {
 
   private getFetch() {
     return this.configuration.overrideFetch || fetch;
+  }
+
+  private handleFailover(
+    userId: string,
+    reason: string,
+    err?: Error
+  ): AuthenticateResult {
+    // Have to check it this way to make sure TS understands
+    // that this.failoverStrategy is of type Verdict,
+    // not FailoverStrategyType.
+    if (this.configuration.failoverStrategy === FailoverStrategy.throw) {
+      throw err;
+    }
+
+    return FailoverResponsePrepareService.call(
+      userId,
+      reason,
+      this.configuration.failoverStrategy
+    );
   }
 
   private handleUnauthorized(response: Response) {
