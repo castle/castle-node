@@ -9,33 +9,11 @@ import {
   CommandTrackService,
 } from './command/command.module';
 import { CoreProcessResponseService } from './core/core.module';
-import {
-  FailoverResponsePrepareService,
-  FailoverStrategy,
-} from './failover/failover.module';
+import { FailoverResponsePrepareService } from './failover/failover.module';
 import { LoggerService } from './logger/logger.module';
 import { Configuration } from './configuraton';
 
-// The body on the request is a stream and can only be
-// read once, by default. This is a workaround so that the
-// logging functions can read the body independently
-// of the handlers.
-const getBody = async (response: any) => {
-  if (response.cachedBody) {
-    return response.cachedBody;
-  }
-
-  try {
-    response.cachedBody = await response.json();
-  } catch (e) {
-    response.cachedBody = {};
-  }
-
-  return response.cachedBody;
-};
-
 const isTimeout = (e: Error) => e.name === 'AbortError';
-
 export class Castle {
   private logger: pino.Logger;
   private configuration: Configuration;
@@ -95,8 +73,12 @@ export class Castle {
       clearTimeout(timeout);
     }
 
-    LoggerService.call({ requestUrl, requestOptions, response }, this.logger);
-    CoreProcessResponseService.call(response);
+    CoreProcessResponseService.call(
+      requestUrl,
+      requestOptions,
+      response,
+      this.logger
+    );
   }
 
   private getFetch() {

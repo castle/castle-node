@@ -10,24 +10,6 @@ import { LoggerService } from '../../logger/logger.module';
 import fetch from 'node-fetch';
 import pino from 'pino';
 
-// The body on the request is a stream and can only be
-// read once, by default. This is a workaround so that the
-// logging functions can read the body independently
-// of the handlers.
-const getBody = async (response: any) => {
-  if (response.cachedBody) {
-    return response.cachedBody;
-  }
-
-  try {
-    response.cachedBody = await response.json();
-  } catch (e) {
-    response.cachedBody = {};
-  }
-
-  return response.cachedBody;
-};
-
 const isTimeout = (e: Error) => e.name === 'AbortError';
 
 const handleFailover = (
@@ -83,19 +65,17 @@ export const APIAuthenticateService = {
       clearTimeout(timeout);
     }
 
-    // Wait to get body here to prevent race conditions
-    // on `.json()` because we attempt to read it in
-    // multiple places.
-    const body = await getBody(response);
-
-    LoggerService.call({ requestUrl, requestOptions, response, body }, logger);
-
     if (response.status >= 500) {
       return handleFailover(params.user_id, 'server error', configuration);
     }
 
-    CoreProcessResponseService.call(response);
+    const processedResponse = await CoreProcessResponseService.call(
+      requestUrl,
+      requestOptions,
+      response,
+      logger
+    );
 
-    return body;
+    return processedResponse;
   },
 };
