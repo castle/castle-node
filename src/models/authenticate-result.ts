@@ -9,4 +9,5 @@ export type AuthenticateResult = {
   failover?: boolean;
   failover_reason?: string;
   risk_policy?: RiskPolicy;
+  internal?: string;
 };

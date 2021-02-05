@@ -1,19 +1,10 @@
-import fetch from 'node-fetch';
-import AbortController from 'abort-controller';
 import pino from 'pino';
 
 import { AuthenticateResult, Payload } from './models';
-import { APIAuthenticateService } from './api/api.module';
-import {
-  CommandAuthenticateService,
-  CommandTrackService,
-} from './command/command.module';
-import { CoreProcessResponseService } from './core/core.module';
+import { APIAuthenticateService, APITrackService } from './api/api.module';
 import { FailoverResponsePrepareService } from './failover/failover.module';
-import { LoggerService } from './logger/logger.module';
 import { Configuration } from './configuraton';
 
-const isTimeout = (e: Error) => e.name === 'AbortError';
 export class Castle {
   private logger: pino.Logger;
   private configuration: Configuration;
@@ -49,40 +40,7 @@ export class Castle {
       return;
     }
 
-    let response: Response;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, this.configuration.timeout);
-    const { requestUrl, requestOptions } = CommandTrackService.call(
-      controller,
-      params,
-      this.configuration
-    );
-
-    try {
-      response = await this.getFetch()(requestUrl, requestOptions);
-    } catch (err) {
-      if (isTimeout(err)) {
-        return LoggerService.call(
-          { requestUrl, requestOptions, err },
-          this.logger
-        );
-      }
-    } finally {
-      clearTimeout(timeout);
-    }
-
-    CoreProcessResponseService.call(
-      requestUrl,
-      requestOptions,
-      response,
-      this.logger
-    );
-  }
-
-  private getFetch() {
-    return this.configuration.overrideFetch || fetch;
+    return APITrackService.call(params, this.configuration, this.logger);
   }
 
   private generateDoNotTrackResponse(userId) {
