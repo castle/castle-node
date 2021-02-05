@@ -69,6 +69,11 @@ castle.track({
     email: user.email,
     registered_at: user.registered_at,
   },
+  context: {
+    ip: request.ip,
+    client_id: request.cookies['__cid'],
+    headers: request.headers,
+  },
 });
 ```
 
@@ -85,6 +90,11 @@ try {
     user_traits: {
       email: user.email,
       registered_at: user.registered_at,
+    },
+    context: {
+      ip: request.ip,
+      client_id: request.cookies['__cid'],
+      headers: request.headers,
     },
   });
 } catch (e) {
