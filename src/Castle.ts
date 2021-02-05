@@ -3,6 +3,7 @@ import AbortController from 'abort-controller';
 import pino from 'pino';
 
 import { AuthenticateResult, Payload } from './models';
+import { APIAuthenticateService } from './api/api.module';
 import {
   CommandAuthenticateService,
   CommandTrackService,
@@ -55,55 +56,10 @@ export class Castle {
     }
 
     if (this.configuration.doNotTrack) {
-      return FailoverResponsePrepareService.call(
-        params.user_id,
-        'do not track',
-        this.configuration.failoverStrategy
-      );
+      return this.generateDoNotTrackResponse(params.user_id);
     }
 
-    let response: Response;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, this.configuration.timeout);
-    const { requestUrl, requestOptions } = CommandAuthenticateService.call(
-      controller,
-      params,
-      this.configuration
-    );
-
-    try {
-      response = await this.getFetch()(requestUrl, requestOptions);
-    } catch (err) {
-      LoggerService.call({ requestUrl, requestOptions, err }, this.logger);
-
-      if (isTimeout(err)) {
-        return this.handleFailover(params.user_id, 'timeout', err);
-      } else {
-        throw err;
-      }
-    } finally {
-      clearTimeout(timeout);
-    }
-
-    // Wait to get body here to prevent race conditions
-    // on `.json()` because we attempt to read it in
-    // multiple places.
-    const body = await getBody(response);
-
-    LoggerService.call(
-      { requestUrl, requestOptions, response, body },
-      this.logger
-    );
-
-    if (response.status >= 500) {
-      return this.handleFailover(params.user_id, 'server error');
-    }
-
-    CoreProcessResponseService.call(response);
-
-    return body;
+    return APIAuthenticateService.call(params, this.configuration, this.logger);
   }
 
   public async track(params: Payload): Promise<void> {
@@ -147,21 +103,10 @@ export class Castle {
     return this.configuration.overrideFetch || fetch;
   }
 
-  private handleFailover(
-    userId: string,
-    reason: string,
-    err?: Error
-  ): AuthenticateResult {
-    // Have to check it this way to make sure TS understands
-    // that this.failoverStrategy is of type Verdict,
-    // not FailoverStrategyType.
-    if (this.configuration.failoverStrategy === FailoverStrategy.throw) {
-      throw err;
-    }
-
+  private generateDoNotTrackResponse(userId) {
     return FailoverResponsePrepareService.call(
       userId,
-      reason,
+      'do not track',
       this.configuration.failoverStrategy
     );
   }
