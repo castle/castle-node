@@ -191,12 +191,9 @@ describe('Castle', () => {
 
       // Promise based expectations have to be awaited to properly fail
       // tests, instead of just logging unhandled rejections.
-      await expect(
-        castle.authenticate(sampleRequestData)
-      ).rejects.toMatchObject({
-        message:
-          'Castle: Failed to authenticate with API, please verify the secret.',
-      });
+      await expect(castle.authenticate(sampleRequestData)).rejects.toThrowError(
+        'Castle: Responsed with 401 code'
+      );
     });
   });
 
@@ -353,12 +350,9 @@ describe('Castle', () => {
 
       // Promise based expectations have to be awaited to properly fail
       // tests, instead of just logging unhandled rejections.
-      await expect(
-        castle.authenticate(sampleRequestData)
-      ).rejects.toMatchObject({
-        message:
-          'Castle: Failed to authenticate with API, please verify the secret.',
-      });
+      await expect(castle.authenticate(sampleRequestData)).rejects.toThrowError(
+        'Castle: Responsed with 401 code'
+      );
     });
   });
 });
