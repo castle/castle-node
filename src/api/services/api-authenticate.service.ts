@@ -7,6 +7,7 @@ import {
   FailoverStrategy,
 } from '../../failover/failover.module';
 import { LoggerService } from '../../logger/logger.module';
+import AbortController from 'abort-controller';
 import fetch from 'node-fetch';
 import pino from 'pino';
 
