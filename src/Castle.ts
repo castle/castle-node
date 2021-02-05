@@ -101,8 +101,7 @@ export class Castle {
       return this.handleFailover(params.user_id, 'server error');
     }
 
-    this.handleUnauthorized(response);
-    this.handleBadResponse(response);
+    CoreProcessResponseService.call(response);
 
     return body;
   }
@@ -141,8 +140,7 @@ export class Castle {
     }
 
     LoggerService.call({ requestUrl, requestOptions, response }, this.logger);
-    this.handleUnauthorized(response);
-    this.handleBadResponse(response);
+    CoreProcessResponseService.call(response);
   }
 
   private getFetch() {
@@ -166,19 +164,5 @@ export class Castle {
       reason,
       this.configuration.failoverStrategy
     );
-  }
-
-  private handleUnauthorized(response: Response) {
-    if (response.status === 401) {
-      throw new Error(
-        'Castle: Failed to authenticate with API, please verify the secret.'
-      );
-    }
-  }
-
-  private handleBadResponse(response: Response) {
-    if (response.status >= 400 && response.status < 500) {
-      throw new Error(`Castle: API response not ok, got ${response.status}.`);
-    }
   }
 }
