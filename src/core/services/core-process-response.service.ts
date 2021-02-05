@@ -38,12 +38,7 @@ const getBody = async (response: any) => {
 };
 
 export const CoreProcessResponseService = {
-  call: async (
-    requestUrl,
-    requestOptions,
-    response: Response,
-    logger: pino.Logger
-  ) => {
+  call: async (requestUrl, requestOptions, response, logger: pino.Logger) => {
     const body = await getBody(response);
 
     LoggerService.call({ requestUrl, requestOptions, response, body }, logger);
