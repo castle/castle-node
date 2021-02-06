@@ -1,4 +1,5 @@
 import { CoreProcessResponseService } from '../../../src/core/core.module';
+import { APIError } from '../../../src/errors';
 import pino from 'pino';
 import { Response } from 'node-fetch';
 
@@ -121,29 +122,8 @@ describe('CoreProcessResponseService', () => {
       });
 
       describe('when response empty', () => {
-        const result = { };
-        const response = new Response(JSON.stringify(''), {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          status: 200,
-        });
-
-        it('generates empty request body', async () => {
-          expect(
-            await CoreProcessResponseService.call(
-              'authenticate',
-              {},
-              response,
-              pino({ enabled: false })
-            )
-          ).toEqual(result);
-        });
-      });
-
-      describe('when response undefined', () => {
-        const result = { };
-        const response = new Response(undefined, {
+        const result = {};
+        const response = new Response('', {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -163,7 +143,6 @@ describe('CoreProcessResponseService', () => {
       });
 
       describe('when JSON is malformed', () => {
-        const result = { };
         const response = new Response('{a', {
           headers: {
             'Content-Type': 'application/json',
@@ -172,14 +151,14 @@ describe('CoreProcessResponseService', () => {
         });
 
         it('generates request body', async () => {
-          expect(
-            await CoreProcessResponseService.call(
+          await expect(
+            CoreProcessResponseService.call(
               'authenticate',
               {},
               response,
               pino({ enabled: false })
             )
-          ).toEqual(result);
+          ).rejects.toThrowError('Castle: Malformed JSON response');
         });
       });
     });

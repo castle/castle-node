@@ -6,6 +6,7 @@ import {
   UserUnauthorizedError,
   InvalidParametersError,
   InternalServerError,
+  APIError,
 } from '../../errors';
 import { LoggerService } from '../../logger/logger.module';
 import pino from 'pino';
@@ -29,14 +30,14 @@ const getBody = async (response: any) => {
   }
 
   try {
-    const parsedResponse = await response.json();
-    if (parsedResponse) {
-      response.cachedBody = parsedResponse;
+    const preparsedResponse = await response.text();
+    if (preparsedResponse) {
+      response.cachedBody = await JSON.parse(preparsedResponse);
     } else {
       response.cachedBody = {};
     }
   } catch (e) {
-    response.cachedBody = {};
+    throw new APIError('Castle: Malformed JSON response');
   }
 
   return response.cachedBody;
