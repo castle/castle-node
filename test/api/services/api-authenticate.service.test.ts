@@ -34,6 +34,50 @@ describe('APIAuthenticateService', () => {
         action: 'allow',
         device_token: 'device_token',
         user_id: 'user_id',
+      });
+
+      const config = new Configuration({
+        apiSecret: 'test',
+        overrideFetch: fetch,
+      });
+
+      const response = await APIAuthenticateService.call(
+        sampleRequestData,
+        config,
+        pino({ enabled: false })
+      );
+      expect(response).toHaveProperty('action', 'allow');
+      expect(response).toHaveProperty('device_token', 'device_token');
+      expect(response).toHaveProperty('user_id', 'user_id');
+    });
+
+    it('handles deny response without risk policy', async () => {
+      const fetch = fetchMock.sandbox().mock('*', {
+        action: 'deny',
+        device_token: 'device_token',
+        user_id: 'user_id',
+      });
+
+      const config = new Configuration({
+        apiSecret: 'test',
+        overrideFetch: fetch,
+      });
+
+      const response = await APIAuthenticateService.call(
+        sampleRequestData,
+        config,
+        pino({ enabled: false })
+      );
+      expect(response).toHaveProperty('action', 'deny');
+      expect(response).toHaveProperty('device_token', 'device_token');
+      expect(response).toHaveProperty('user_id', 'user_id');
+    });
+
+    it('handles deny response with risk policy', async () => {
+      const fetch = fetchMock.sandbox().mock('*', {
+        action: 'deny',
+        device_token: 'device_token',
+        user_id: 'user_id',
         risk_policy: {
           id: 'q-rbeMzBTdW2Fd09sbz55A',
           revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
@@ -52,7 +96,7 @@ describe('APIAuthenticateService', () => {
         config,
         pino({ enabled: false })
       );
-      expect(response).toHaveProperty('action', 'allow');
+      expect(response).toHaveProperty('action', 'deny');
       expect(response).toHaveProperty('device_token', 'device_token');
       expect(response).toHaveProperty('user_id', 'user_id');
       expect(response.risk_policy).toHaveProperty(
