@@ -1,5 +1,4 @@
 import { CoreProcessResponseService } from '../../../src/core/core.module';
-import { APIError } from '../../../src/errors';
 import pino from 'pino';
 import { Response } from 'node-fetch';
 
@@ -159,6 +158,34 @@ describe('CoreProcessResponseService', () => {
               pino({ enabled: false })
             )
           ).rejects.toThrowError('Castle: Malformed JSON response');
+        });
+      });
+    });
+
+    describe('erroneous response statuses', () => {
+      const erroneousStatuses = [400, 401, 403, 404, 419, 422];
+
+      erroneousStatuses.forEach((errorStatus) => {
+        describe(`when ${errorStatus}`, () => {
+          const response = new Response(JSON.stringify({}), {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            status: errorStatus,
+          });
+
+          it('throws BadRequestError', async () => {
+            await expect(
+              CoreProcessResponseService.call(
+                'authenticate',
+                {},
+                response,
+                pino({ enabled: false })
+              )
+            ).rejects.toThrowError(
+              `Castle: Responded with ${errorStatus} code`
+            );
+          });
         });
       });
     });

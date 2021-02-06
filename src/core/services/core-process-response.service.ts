@@ -55,12 +55,12 @@ export const CoreProcessResponseService = {
 
     if (response.status >= 500 && response.status <= 599) {
       throw new InternalServerError(
-        `Castle: Responsed with ${response.status} code`
+        `Castle: Responded with ${response.status} code`
       );
     }
 
     const err = RESPONSE_ERRORS[response.status.toString()];
 
-    throw new err(`Castle: Responsed with ${response.status} code`);
+    throw new err(`Castle: Responded with ${response.status} code`);
   },
 };
