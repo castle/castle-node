@@ -119,6 +119,69 @@ describe('CoreProcessResponseService', () => {
           ).toEqual(result);
         });
       });
+
+      describe('when response empty', () => {
+        const result = { };
+        const response = new Response(JSON.stringify(''), {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          status: 200,
+        });
+
+        it('generates empty request body', async () => {
+          expect(
+            await CoreProcessResponseService.call(
+              'authenticate',
+              {},
+              response,
+              pino({ enabled: false })
+            )
+          ).toEqual(result);
+        });
+      });
+
+      describe('when response undefined', () => {
+        const result = { };
+        const response = new Response(undefined, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          status: 200,
+        });
+
+        it('generates empty request body', async () => {
+          expect(
+            await CoreProcessResponseService.call(
+              'authenticate',
+              {},
+              response,
+              pino({ enabled: false })
+            )
+          ).toEqual(result);
+        });
+      });
+
+      describe('when JSON is malformed', () => {
+        const result = { };
+        const response = new Response('{a', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          status: 200,
+        });
+
+        it('generates request body', async () => {
+          expect(
+            await CoreProcessResponseService.call(
+              'authenticate',
+              {},
+              response,
+              pino({ enabled: false })
+            )
+          ).toEqual(result);
+        });
+      });
     });
   });
 });

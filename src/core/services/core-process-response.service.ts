@@ -29,7 +29,12 @@ const getBody = async (response: any) => {
   }
 
   try {
-    response.cachedBody = await response.json();
+    const parsedResponse = await response.json();
+    if (parsedResponse) {
+      response.cachedBody = parsedResponse;
+    } else {
+      response.cachedBody = {};
+    }
   } catch (e) {
     response.cachedBody = {};
   }
