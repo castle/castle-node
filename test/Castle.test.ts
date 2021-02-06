@@ -192,7 +192,7 @@ describe('Castle', () => {
       // Promise based expectations have to be awaited to properly fail
       // tests, instead of just logging unhandled rejections.
       await expect(castle.authenticate(sampleRequestData)).rejects.toThrowError(
-        'Castle: Responsed with 401 code'
+        'Castle: Responded with 401 code'
       );
     });
   });
@@ -351,7 +351,7 @@ describe('Castle', () => {
       // Promise based expectations have to be awaited to properly fail
       // tests, instead of just logging unhandled rejections.
       await expect(castle.authenticate(sampleRequestData)).rejects.toThrowError(
-        'Castle: Responsed with 401 code'
+        'Castle: Responded with 401 code'
       );
     });
   });
