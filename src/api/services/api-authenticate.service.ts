@@ -1,4 +1,5 @@
 import { Configuration } from '../../configuraton';
+import { InternalServerError } from '../../errors';
 import { AuthenticateResult, Payload } from '../../models';
 import { CommandAuthenticateService } from '../../command/command.module';
 import { CoreProcessResponseService } from '../../core/core.module';
@@ -66,16 +67,21 @@ export const APIAuthenticateService = {
       clearTimeout(timeout);
     }
 
-    if (response.status >= 500) {
-      return handleFailover(params.user_id, 'server error', configuration);
+    let processedResponse;
+    try {
+      processedResponse = await CoreProcessResponseService.call(
+        requestUrl,
+        requestOptions,
+        response,
+        logger
+      );
+    } catch (e) {
+      if (e instanceof InternalServerError) {
+        return handleFailover(params.user_id, 'server error', configuration);
+      } else {
+        throw e;
+      }
     }
-
-    const processedResponse = await CoreProcessResponseService.call(
-      requestUrl,
-      requestOptions,
-      response,
-      logger
-    );
 
     return processedResponse;
   },
