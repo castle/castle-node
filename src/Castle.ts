@@ -1,38 +1,9 @@
-import fetch from 'node-fetch';
-import AbortController from 'abort-controller';
 import pino from 'pino';
 
 import { AuthenticateResult, Payload } from './models';
-import {
-  CommandAuthenticateService,
-  CommandTrackService,
-} from './command/command.module';
-import {
-  FailoverResponsePrepareService,
-  FailoverStrategy,
-} from './failover/failover.module';
-import { LoggerService } from './logger/logger.module';
+import { APIAuthenticateService, APITrackService } from './api/api.module';
+import { FailoverResponsePrepareService } from './failover/failover.module';
 import { Configuration } from './configuraton';
-
-// The body on the request is a stream and can only be
-// read once, by default. This is a workaround so that the
-// logging functions can read the body independently
-// of the handlers.
-const getBody = async (response: any) => {
-  if (response.cachedBody) {
-    return response.cachedBody;
-  }
-
-  try {
-    response.cachedBody = await response.json();
-  } catch (e) {
-    response.cachedBody = {};
-  }
-
-  return response.cachedBody;
-};
-
-const isTimeout = (e: Error) => e.name === 'AbortError';
 
 export class Castle {
   private logger: pino.Logger;
@@ -54,56 +25,10 @@ export class Castle {
     }
 
     if (this.configuration.doNotTrack) {
-      return FailoverResponsePrepareService.call(
-        params.user_id,
-        'do not track',
-        this.configuration.failoverStrategy
-      );
+      return this.generateDoNotTrackResponse(params.user_id);
     }
 
-    let response: Response;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, this.configuration.timeout);
-    const { requestUrl, requestOptions } = CommandAuthenticateService.call(
-      controller,
-      params,
-      this.configuration
-    );
-
-    try {
-      response = await this.getFetch()(requestUrl, requestOptions);
-    } catch (err) {
-      LoggerService.call({ requestUrl, requestOptions, err }, this.logger);
-
-      if (isTimeout(err)) {
-        return this.handleFailover(params.user_id, 'timeout', err);
-      } else {
-        throw err;
-      }
-    } finally {
-      clearTimeout(timeout);
-    }
-
-    // Wait to get body here to prevent race conditions
-    // on `.json()` because we attempt to read it in
-    // multiple places.
-    const body = await getBody(response);
-
-    LoggerService.call(
-      { requestUrl, requestOptions, response, body },
-      this.logger
-    );
-
-    if (response.status >= 500) {
-      return this.handleFailover(params.user_id, 'server error');
-    }
-
-    this.handleUnauthorized(response);
-    this.handleBadResponse(response);
-
-    return body;
+    return APIAuthenticateService.call(params, this.configuration, this.logger);
   }
 
   public async track(params: Payload): Promise<void> {
@@ -115,69 +40,14 @@ export class Castle {
       return;
     }
 
-    let response: Response;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, this.configuration.timeout);
-    const { requestUrl, requestOptions } = CommandTrackService.call(
-      controller,
-      params,
-      this.configuration
-    );
-
-    try {
-      response = await this.getFetch()(requestUrl, requestOptions);
-    } catch (err) {
-      if (isTimeout(err)) {
-        return LoggerService.call(
-          { requestUrl, requestOptions, err },
-          this.logger
-        );
-      }
-    } finally {
-      clearTimeout(timeout);
-    }
-
-    LoggerService.call({ requestUrl, requestOptions, response }, this.logger);
-    this.handleUnauthorized(response);
-    this.handleBadResponse(response);
+    return APITrackService.call(params, this.configuration, this.logger);
   }
 
-  private getFetch() {
-    return this.configuration.overrideFetch || fetch;
-  }
-
-  private handleFailover(
-    userId: string,
-    reason: string,
-    err?: Error
-  ): AuthenticateResult {
-    // Have to check it this way to make sure TS understands
-    // that this.failoverStrategy is of type Verdict,
-    // not FailoverStrategyType.
-    if (this.configuration.failoverStrategy === FailoverStrategy.throw) {
-      throw err;
-    }
-
+  private generateDoNotTrackResponse(userId) {
     return FailoverResponsePrepareService.call(
       userId,
-      reason,
+      'do not track',
       this.configuration.failoverStrategy
     );
-  }
-
-  private handleUnauthorized(response: Response) {
-    if (response.status === 401) {
-      throw new Error(
-        'Castle: Failed to authenticate with API, please verify the secret.'
-      );
-    }
-  }
-
-  private handleBadResponse(response: Response) {
-    if (response.status >= 400 && response.status < 500) {
-      throw new Error(`Castle: API response not ok, got ${response.status}.`);
-    }
   }
 }
