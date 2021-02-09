@@ -6,7 +6,6 @@ import AbortController from 'abort-controller';
 import fetch from 'node-fetch';
 import pino from 'pino';
 
-const isTimeout = (e: Error) => e.name === 'AbortError';
 export const APIService = {
   call: async (
     controller: AbortController,
@@ -24,11 +23,8 @@ export const APIService = {
     try {
       response = await fetcher(requestUrl, requestOptions);
     } catch (err) {
-      if (isTimeout(err)) {
-        return LoggerService.call({ requestUrl, requestOptions, err }, logger);
-      } else {
-        throw err;
-      }
+      LoggerService.call({ requestUrl, requestOptions, err }, logger);
+      throw err;
     } finally {
       clearTimeout(timeout);
     }
