@@ -60,5 +60,29 @@ describe('APIService', () => {
         ).rejects.toThrowError('The request was aborted.');
       });
     });
+
+    describe('when non-OK response', () => {
+      it('returns error', async () => {
+        const fetch = fetchMock.sandbox().mock('*', { status: 400 });
+        const configuration = new Configuration({
+          apiSecret: 'test',
+          overrideFetch: fetch,
+        });
+
+        const command = CommandAuthenticateService.call(
+          controller,
+          sampleRequestData,
+          configuration
+        );
+        await expect(
+          APIService.call(
+            controller,
+            command,
+            configuration,
+            pino({ enabled: false })
+          )
+        ).rejects.toThrowError('Castle: Responded with 400 code');
+      });
+    });
   });
 });
