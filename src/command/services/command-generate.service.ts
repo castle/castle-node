@@ -1,5 +1,4 @@
 import { Configuration } from '../../configuraton';
-
 import {
   CoreGenerateDefaultHeadersService,
   CoreGenerateRequestBody,
@@ -7,7 +6,7 @@ import {
 
 export const CommandGenerateService = {
   call: (
-    controller: AbortController,
+    controller,
     path: string,
     options: any,
     method: string,
