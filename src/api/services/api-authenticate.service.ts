@@ -8,7 +8,6 @@ import {
 } from '../../failover/failover.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
-import pino from 'pino';
 
 const handleFailover = (
   userId: string,

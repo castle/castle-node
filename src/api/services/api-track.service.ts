@@ -3,7 +3,6 @@ import { Payload } from '../../models';
 import { CommandTrackService } from '../../command/command.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
-import pino from 'pino';
 
 export const APITrackService = {
   call: async (
