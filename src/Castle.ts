@@ -1,22 +1,13 @@
-import pino from 'pino';
-
 import { AuthenticateResult, Payload } from './models';
 import { APIAuthenticateService, APITrackService } from './api/api.module';
 import { FailoverResponsePrepareService } from './failover/failover.module';
 import { Configuration } from './configuraton';
 
 export class Castle {
-  private logger: pino.Logger;
   private configuration: Configuration;
 
   constructor(configAttributes) {
     this.configuration = new Configuration(configAttributes);
-    this.logger = pino({
-      prettyPrint: {
-        levelFirst: true,
-      },
-    });
-    this.logger.level = this.configuration.logLevel;
   }
 
   public async authenticate(params: Payload): Promise<AuthenticateResult> {
@@ -28,7 +19,7 @@ export class Castle {
       return this.generateDoNotTrackResponse(params.user_id);
     }
 
-    return APIAuthenticateService.call(params, this.configuration, this.logger);
+    return APIAuthenticateService.call(params, this.configuration);
   }
 
   public async track(params: Payload): Promise<void> {
@@ -40,7 +31,7 @@ export class Castle {
       return;
     }
 
-    return APITrackService.call(params, this.configuration, this.logger);
+    return APITrackService.call(params, this.configuration);
   }
 
   private generateDoNotTrackResponse(userId) {

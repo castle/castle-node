@@ -19,6 +19,7 @@ interface ConfigurationProperties {
   trustedProxies?: RegExp[];
   trustProxyChain?: boolean;
   trustedProxyDepth?: number;
+  logger?: any;
 }
 
 export class Configuration {
@@ -35,6 +36,7 @@ export class Configuration {
   trustedProxies?: RegExp[];
   trustProxyChain?: boolean;
   trustedProxyDepth?: number;
+  logger?: any;
 
   constructor({
     apiSecret,
@@ -50,6 +52,11 @@ export class Configuration {
     trustedProxies = [],
     trustProxyChain = false,
     trustedProxyDepth = 0,
+    logger = pino({
+      prettyPrint: {
+        levelFirst: true,
+      },
+    }),
   }: ConfigurationProperties) {
     if (!apiSecret) {
       throw new ConfigurationError(
@@ -70,5 +77,7 @@ export class Configuration {
     this.trustedProxies = trustedProxies.map((proxy) => new RegExp(proxy));
     this.trustProxyChain = trustProxyChain;
     this.trustedProxyDepth = trustedProxyDepth;
+    this.logger = logger;
+    this.logger.level = logLevel;
   }
 }

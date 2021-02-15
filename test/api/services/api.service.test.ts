@@ -1,11 +1,11 @@
 import { APIService } from '../../../src/api/api.module';
 import { Configuration } from '../../../src/configuraton';
 import { EVENTS } from '../../../src/events';
+import { CommandAuthenticateService } from '../../../src/command/services';
 import MockDate from 'mockdate';
 import fetchMock from 'fetch-mock';
-import pino from 'pino';
-import { CommandAuthenticateService } from '../../../src/command/services';
 import AbortController from 'abort-controller';
+import pino from 'pino';
 
 describe('APIService', () => {
   beforeEach(() => {
@@ -43,6 +43,7 @@ describe('APIService', () => {
         const configuration = new Configuration({
           apiSecret: 'test',
           overrideFetch: fetch,
+          logger: pino({ enabled: false }),
         });
 
         const command = CommandAuthenticateService.call(
@@ -51,12 +52,7 @@ describe('APIService', () => {
           configuration
         );
         await expect(
-          APIService.call(
-            controller,
-            command,
-            configuration,
-            pino({ enabled: false })
-          )
+          APIService.call(controller, command, configuration)
         ).rejects.toThrowError('The request was aborted.');
       });
     });
@@ -67,6 +63,7 @@ describe('APIService', () => {
         const configuration = new Configuration({
           apiSecret: 'test',
           overrideFetch: fetch,
+          logger: pino({ enabled: false }),
         });
 
         const command = CommandAuthenticateService.call(
@@ -75,12 +72,7 @@ describe('APIService', () => {
           configuration
         );
         await expect(
-          APIService.call(
-            controller,
-            command,
-            configuration,
-            pino({ enabled: false })
-          )
+          APIService.call(controller, command, configuration)
         ).rejects.toThrowError('Castle: Responded with 400 code');
       });
     });
