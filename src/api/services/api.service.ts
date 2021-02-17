@@ -4,14 +4,12 @@ import { CoreProcessResponseService } from '../../core/core.module';
 import { LoggerService } from '../../logger/logger.module';
 import AbortController from 'abort-controller';
 import fetch from 'node-fetch';
-import pino from 'pino';
 
 export const APIService = {
   call: async (
     controller: AbortController,
     { requestUrl, requestOptions },
-    configuration: Configuration,
-    logger: pino.Logger
+    configuration: Configuration
   ): Promise<void | AuthenticateResult> => {
     const fetcher = configuration.overrideFetch || fetch;
 
@@ -23,7 +21,10 @@ export const APIService = {
     try {
       response = await fetcher(requestUrl, requestOptions);
     } catch (err) {
-      LoggerService.call({ requestUrl, requestOptions, err }, logger);
+      LoggerService.call(
+        { requestUrl, requestOptions, err },
+        configuration.logger
+      );
       throw err;
     } finally {
       clearTimeout(timeout);
@@ -33,7 +34,7 @@ export const APIService = {
       requestUrl,
       requestOptions,
       response,
-      logger
+      configuration.logger
     );
 
     return processedResponse;

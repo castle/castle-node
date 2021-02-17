@@ -35,13 +35,10 @@ describe('APITrackService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
+        logger: pino({ enabled: false }),
       });
 
-      const response = await APITrackService.call(
-        sampleRequestData,
-        config,
-        pino({ enabled: false })
-      );
+      const response = await APITrackService.call(sampleRequestData, config);
       expect(response).toBeUndefined();
     });
   });

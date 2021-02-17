@@ -39,12 +39,12 @@ describe('APIAuthenticateService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
+        logger: pino({ enabled: false }),
       });
 
       const response = await APIAuthenticateService.call(
         sampleRequestData,
-        config,
-        pino({ enabled: false })
+        config
       );
       expect(response).toHaveProperty('action', 'allow');
       expect(response).toHaveProperty('device_token', 'device_token');
@@ -61,12 +61,12 @@ describe('APIAuthenticateService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
+        logger: pino({ enabled: false }),
       });
 
       const response = await APIAuthenticateService.call(
         sampleRequestData,
-        config,
-        pino({ enabled: false })
+        config
       );
       expect(response).toHaveProperty('action', 'deny');
       expect(response).toHaveProperty('device_token', 'device_token');
@@ -89,12 +89,12 @@ describe('APIAuthenticateService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
+        logger: pino({ enabled: false }),
       });
 
       const response = await APIAuthenticateService.call(
         sampleRequestData,
-        config,
-        pino({ enabled: false })
+        config
       );
       expect(response).toHaveProperty('action', 'deny');
       expect(response).toHaveProperty('device_token', 'device_token');

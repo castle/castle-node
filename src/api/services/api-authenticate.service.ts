@@ -8,7 +8,6 @@ import {
 } from '../../failover/failover.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
-import pino from 'pino';
 
 const handleFailover = (
   userId: string,
@@ -35,8 +34,7 @@ const isTimeoutError = (e: Error) => e.name === 'AbortError';
 export const APIAuthenticateService = {
   call: async (
     params: Payload,
-    configuration: Configuration,
-    logger: pino.Logger
+    configuration: Configuration
   ): Promise<AuthenticateResult> => {
     const controller = new AbortController();
     const command = CommandAuthenticateService.call(
@@ -50,8 +48,7 @@ export const APIAuthenticateService = {
       processedResponse = await APIService.call(
         controller,
         command,
-        configuration,
-        logger
+        configuration
       );
     } catch (e) {
       if (isTimeoutError(e)) {
