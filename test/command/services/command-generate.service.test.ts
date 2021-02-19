@@ -59,7 +59,7 @@ describe('CommandGenerateService', () => {
         'GET',
         config
       );
-
+      expect(received.requestUrl.href).toEqual(expected.requestUrl.href);
       expect(received).toMatchObject(expected);
     });
   });

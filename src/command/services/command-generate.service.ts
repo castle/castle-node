@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { Configuration } from '../../configuraton';
 import {
   CoreGenerateDefaultHeadersService,
@@ -13,12 +14,14 @@ export const CommandGenerateService = {
     configuration: Configuration
   ) => {
     return {
-      requestUrl: `${configuration.baseUrl}/${path}`,
+      requestUrl: new URL(path, configuration.baseUrl),
       requestOptions: {
         signal: controller.signal,
         method,
         headers: CoreGenerateDefaultHeadersService.call(configuration),
-        body: CoreGenerateRequestBody.call(options, configuration),
+        body: isEmpty(options)
+          ? JSON.stringify({})
+          : CoreGenerateRequestBody.call(options, configuration),
       },
     };
   },
