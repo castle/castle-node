@@ -10,7 +10,7 @@ export const APIService = {
     controller: AbortController,
     { requestUrl, requestOptions },
     configuration: Configuration
-  ): Promise<void | AuthenticateResult> => {
+  ): Promise<any> => {
     const fetcher = configuration.overrideFetch || fetch;
 
     let response: Response;

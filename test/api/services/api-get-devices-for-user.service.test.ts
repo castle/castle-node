@@ -19,9 +19,7 @@ describe('APIGetDevicesForUserService', () => {
 
   describe('call', () => {
     it('handles get devices response', async () => {
-      const fetch = fetchMock
-        .sandbox()
-        .mock('*', { device_token: 'device_token' });
+      const fetch = fetchMock.sandbox().mock('*', {});
 
       const config = new Configuration({
         apiSecret: 'test',
