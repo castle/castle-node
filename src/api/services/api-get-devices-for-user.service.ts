@@ -13,6 +13,6 @@ export const APIGetDevicesForUserService = {
       configuration
     );
 
-    return await APIService.call(controller, command, configuration);
+    return APIService.call(controller, command, configuration);
   },
 };
