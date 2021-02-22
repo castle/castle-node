@@ -6,6 +6,7 @@ export type Payload = {
   user_traits?: object;
   properties?: object;
   created_at?: string;
+  device_id?: string;
   device_token?: string;
   context?: {
     ip: string;
