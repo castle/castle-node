@@ -1,4 +1,5 @@
 import { Configuration } from '../../configuraton';
+import { Payload } from '../../models';
 import {
   CoreGenerateDefaultHeadersService,
   CoreGenerateRequestBody,
@@ -8,7 +9,7 @@ export const CommandGenerateService = {
   call: (
     controller,
     path: string,
-    options: any,
+    options: Payload,
     method: string,
     configuration: Configuration
   ) => {

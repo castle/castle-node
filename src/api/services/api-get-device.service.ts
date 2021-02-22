@@ -5,11 +5,14 @@ import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 
 export const APIGetDeviceService = {
-  call: async (params: Payload, configuration: Configuration): Promise<any> => {
+  call: async (
+    options: { device_token: string },
+    configuration: Configuration
+  ): Promise<any> => {
     const controller = new AbortController();
     const command = CommandGetDeviceService.call(
       controller,
-      params,
+      options,
       configuration
     );
 

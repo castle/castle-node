@@ -6,11 +6,15 @@ import AbortController from 'abort-controller';
 
 export const APITrackService = {
   call: async (
-    params: Payload,
+    options: Payload,
     configuration: Configuration
   ): Promise<void> => {
     const controller = new AbortController();
-    const command = CommandTrackService.call(controller, params, configuration);
+    const command = CommandTrackService.call(
+      controller,
+      options,
+      configuration
+    );
 
     APIService.call(controller, command, configuration);
   },
