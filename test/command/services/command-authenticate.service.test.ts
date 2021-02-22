@@ -26,6 +26,7 @@ describe('CommandAuthenticateService', () => {
         body: JSON.stringify({
           sent_at: '2021-01-25T00:00:00.000Z',
           context: {
+            ip: '127.0.0.1',
             headers: {
               'x-castle-client-id': 'client_id',
             },
