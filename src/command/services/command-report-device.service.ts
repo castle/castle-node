@@ -1,17 +1,17 @@
 import { Configuration } from '../../configuraton';
 import { CommandGenerateService } from './command-generate.service';
 
-export const CommandGetDevicesForUserService = {
+export const CommandReportDeviceService = {
   call: (
     controller,
-    options: { user_id: string },
+    options: { device_token: string },
     configuration: Configuration
   ) => {
     return CommandGenerateService.call(
       controller,
-      `users/${options.user_id}/devices`,
+      `devices/${options.device_token}/report`,
       {},
-      'GET',
+      'PUT',
       configuration
     );
   },

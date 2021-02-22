@@ -33,13 +33,13 @@ const isTimeoutError = (e: Error) => e.name === 'AbortError';
 
 export const APIAuthenticateService = {
   call: async (
-    params: Payload,
+    options: Payload,
     configuration: Configuration
   ): Promise<AuthenticateResult> => {
     const controller = new AbortController();
     const command = CommandAuthenticateService.call(
       controller,
-      params,
+      options,
       configuration
     );
 
@@ -52,9 +52,9 @@ export const APIAuthenticateService = {
       );
     } catch (e) {
       if (isTimeoutError(e)) {
-        return handleFailover(params.user_id, 'timeout', configuration, e);
+        return handleFailover(options.user_id, 'timeout', configuration, e);
       } else if (e instanceof InternalServerError) {
-        return handleFailover(params.user_id, 'server error', configuration);
+        return handleFailover(options.user_id, 'server error', configuration);
       } else {
         throw e;
       }
