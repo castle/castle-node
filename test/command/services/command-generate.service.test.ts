@@ -46,6 +46,7 @@ describe('CommandGenerateService', () => {
     });
 
     const context = {
+      ip: '127.0.0.1',
       headers: {
         'x-castle-client-id': 'client_id',
       },
