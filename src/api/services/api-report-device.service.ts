@@ -1,5 +1,4 @@
 import { Configuration } from '../../configuraton';
-import { Payload } from '../../models';
 import { CommandReportDeviceService } from '../../command/command.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
