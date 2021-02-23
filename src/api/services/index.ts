@@ -1,4 +1,5 @@
 export * from './api.service';
+export * from './api-approve-device.service';
 export * from './api-authenticate.service';
 export * from './api-get-device.service';
 export * from './api-get-devices-for-user.service';

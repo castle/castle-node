@@ -84,7 +84,7 @@ This is the synchronous version of the castle integration. This is for events wh
 ```js
 let response;
 try {
-  const response = await castle.authenticate({
+  response = await castle.authenticate({
     event: EVENTS.EMAIL_CHANGE_SUCCEEDED,
     user_id: user.id,
     user_traits: {
@@ -128,3 +128,25 @@ Response format
 | created_at    | `string` - An optional ISO date string indicating when the event occurred, in cases where this might be different from the time when the request is made. |
 | device_token  | `string` - The optional device token, used for mitigating or escalating. |
 | context       | `object` - The request context information. |
+
+## Device management
+
+This SDK allows issuing requests to [Castle's Device Management Endpoints](https://docs.castle.io/device_management_tool/). Use these endpoints for admin-level management of end-user devices (i.e., for an internal dashboard).
+
+Fetching device data, approving a device, reporting a device requires a valid `device_token`.
+
+```js
+// Get device data
+castle.getDevice.call({ device_token })
+// Approve a device
+castle.approveDevice.call({ device_token })
+// Report a device
+castle.reportDevice.call({ device_token })
+```
+
+Fetching available devices that belong to a given user requires a valid `user_id`.
+
+```js
+// Get user's devices data
+castle.getDevicesForUser.call({ user_id })
+```
