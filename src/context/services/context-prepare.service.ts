@@ -1,19 +1,10 @@
+import merge from 'lodash.merge';
+import { Configuration } from '../../configuraton';
+import { ContextGetDefaultService } from './context-get-default.service';
+
 export const ContextPrepareService = {
-  call: (context: any) => {
-    if (!context) {
-      return {};
-    }
-
-    if (!('active' in context)) {
-      return context;
-    }
-
-    if (typeof context.active === 'boolean') {
-      return context;
-    }
-
-    delete context.active;
-
-    return context;
+  call: (context: any, configuration: Configuration) => {
+    const defaultContext = ContextGetDefaultService.call(context, configuration);
+    return merge(context, defaultContext);
   },
 };
