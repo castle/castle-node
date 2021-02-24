@@ -137,16 +137,36 @@ Fetching device data, approving a device, reporting a device requires a valid `d
 
 ```js
 // Get device data
-castle.getDevice.call({ device_token })
+castle.getDevice({ device_token })
 // Approve a device
-castle.approveDevice.call({ device_token })
+castle.approveDevice({ device_token })
 // Report a device
-castle.reportDevice.call({ device_token })
+castle.reportDevice({ device_token })
 ```
 
 Fetching available devices that belong to a given user requires a valid `user_id`.
 
 ```js
 // Get user's devices data
-castle.getDevicesForUser.call({ user_id })
+castle.getDevicesForUser({ user_id })
+```
+
+## Payload
+
+To generate the payload, use the following command:
+```js
+const payload = PayloadPrepareService.call(
+  {
+    event: EVENTS_LOGIN_SUCCEEDED,
+    user_id: user.id,
+    properties: {
+      key: 'value'
+    },
+    user_traits: {
+      key: 'value'
+    }
+  },
+  request
+)
+castle.track(payload)
 ```
