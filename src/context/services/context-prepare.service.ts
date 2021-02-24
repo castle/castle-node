@@ -3,11 +3,12 @@ import { Configuration } from '../../configuraton';
 import { ContextGetDefaultService } from './context-get-default.service';
 
 export const ContextPrepareService = {
-  call: (context: any, configuration: Configuration) => {
+  call: (requestContext: any, options: any, configuration: Configuration) => {
     const defaultContext = ContextGetDefaultService.call(
-      context,
+      requestContext,
+      options.cookies,
       configuration
     );
-    return merge(context, defaultContext);
+    return merge(requestContext, defaultContext);
   },
 };

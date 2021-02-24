@@ -23,7 +23,7 @@ export const CoreGenerateRequestBody = {
       user_traits,
       properties,
       device_token,
-      context: ContextPrepareService.call(context, configuration),
+      context: ContextPrepareService.call(context, {}, configuration),
     });
   },
 };

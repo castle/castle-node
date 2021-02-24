@@ -1,18 +1,25 @@
 import isEmpty from 'lodash.isempty';
-
+import get from 'lodash.get';
+import pickBy from 'lodash.pickby';
 import { Configuration } from '../../configuraton';
 import { ClientIdExtractService } from '../../client-id/client-id.module';
 import { HeadersExtractService } from '../../headers/headers.module';
 import { IPsExtractService } from '../../ips/ips.module';
 import { version } from '../../../package.json';
 
-const requestContextData = (request: any, configuration: Configuration) => {
-  if (isEmpty(request) || isEmpty(request.headers)) {
+const requestContextData = (
+  request: any,
+  cookies: any,
+  configuration: Configuration
+) => {
+  if (isEmpty(request)) {
     return {};
   }
+
+  const cookiesForClientId = cookies || get(request, 'headers.cookies');
   return {
     client_id:
-      ClientIdExtractService.call(request.headers, request.cookies) || false,
+      ClientIdExtractService.call(request.headers, cookiesForClientId) || false,
     active: true,
     headers: HeadersExtractService.call(request.headers, configuration),
     ip: IPsExtractService.call(request.headers, configuration),
@@ -20,9 +27,9 @@ const requestContextData = (request: any, configuration: Configuration) => {
 };
 
 export const ContextGetDefaultService = {
-  call: (request: any, configuration: Configuration) => {
+  call: (request: any, cookies: any, configuration: Configuration) => {
     return {
-      ...requestContextData(request, configuration),
+      ...pickBy(requestContextData(request, cookies, configuration)),
       library: {
         name: 'castle-node',
         version,

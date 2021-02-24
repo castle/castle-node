@@ -6,9 +6,14 @@ export const PayloadPrepareService = {
   call: (
     payloadOptions: any,
     requestContext: any,
-    configuration: Configuration
+    configuration: Configuration,
+    options: any = {}
   ) => {
-    const context = ContextPrepareService.call(requestContext, configuration);
+    const context = ContextPrepareService.call(
+      requestContext,
+      merge(payloadOptions, options),
+      configuration
+    );
     return merge(payloadOptions, context);
   },
 };

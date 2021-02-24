@@ -1,20 +1,16 @@
-import { ContextGetDefaultService } from '../../../src/context/context.module';
+import { ContextPrepareService } from '../../../src/context/context.module';
 import { Configuration } from '../../../src/configuraton';
 import { version } from '../../../package.json';
 
-describe('ContextGetDefaultService', () => {
+describe('ContextPrepareService', () => {
   describe('call', () => {
     const expected = {
-      headers: {
-        'x-forwarded-for': '1.2.3.4',
-        'x-castle-client-id': 'client_id',
-      },
       library: {
         name: 'castle-node',
         version,
       },
-      client_id: 'client_id',
-      ip: '1.2.3.4',
+      client_id: 'abcd',
+      active: true,
     };
 
     const config = new Configuration({
@@ -26,14 +22,15 @@ describe('ContextGetDefaultService', () => {
 
     const context = {
       client_id: 'client_id',
-      headers: {
-        'x-forwarded-for': '1.2.3.4',
-        'x-castle-client-id': 'client_id',
-      },
+      active: true,
     };
 
-    it('generates default context', () => {
-      const received = ContextGetDefaultService.call(context, {}, config);
+    const options = {
+      cookies: '__cid=abcd;',
+    };
+
+    it('generates context', () => {
+      const received = ContextPrepareService.call(context, options, config);
       expect(received).toMatchObject(expected);
     });
   });
