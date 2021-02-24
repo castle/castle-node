@@ -1,4 +1,4 @@
-export const ContextSanitizeService = {
+export const ContextPrepareService = {
   call: (context: any) => {
     if (!context) {
       return {};

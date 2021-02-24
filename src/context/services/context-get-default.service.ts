@@ -1,5 +1,4 @@
-import { IncomingHttpHeaders } from 'http';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash.isempty';
 
 import { Configuration } from '../../configuraton';
 import { ClientIdExtractService } from '../../client-id/client-id.module';

@@ -27,7 +27,9 @@
   "devDependencies": {
     "@types/fetch-mock": "^7.3.3",
     "@types/jest": "^26.0.20",
-    "@types/lodash": "^4.14.168",
+    "@types/lodash.isempty": "^4.4.6",
+    "@types/lodash.merge": "^4.6.6",
+    "@types/lodash.reduce": "^4.6.6",
     "@types/mockdate": "^2.0.0",
     "@types/node": "^14.14.22",
     "@types/node-fetch": "^2.5.8",
@@ -48,7 +50,9 @@
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
-    "lodash": "^4.17.20",
+    "lodash.isempty": "^4.4.0",
+    "lodash.merge": "^4.6.2",
+    "lodash.reduce": "^4.6.0",
     "node-fetch": "^2.6.1",
     "pino": "^6.11.0",
     "pino-pretty": "^4.3.0"

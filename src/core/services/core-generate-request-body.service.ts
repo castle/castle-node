@@ -1,4 +1,4 @@
-import { merge } from 'lodash';
+import merge from 'lodash.merge';
 import { Configuration } from '../../configuraton';
 import { ContextGetDefaultService } from '../../context/context.module';
 import { Payload } from '../../payload/payload.module';
