@@ -1,7 +1,7 @@
 import { merge } from 'lodash';
-import { Payload } from '../../models';
 import { Configuration } from '../../configuraton';
 import { ContextGetDefaultService } from '../../context/context.module';
+import { Payload } from '../../payload/payload.module';
 
 export const CoreGenerateRequestBody = {
   call: (

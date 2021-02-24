@@ -1,9 +1,9 @@
 import { Configuration } from '../../configuraton';
-import { Payload } from '../../models';
 import {
   CoreGenerateDefaultHeadersService,
   CoreGenerateRequestBody,
 } from '../../core/core.module';
+import { Payload } from '../../payload/payload.module';
 
 export const CommandGenerateService = {
   call: (
