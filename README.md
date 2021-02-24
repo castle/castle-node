@@ -166,7 +166,8 @@ const payload = PayloadPrepareService.call(
       key: 'value'
     }
   },
-  request
+  request,
+  castle.configuration
 )
 castle.track(payload)
 ```
