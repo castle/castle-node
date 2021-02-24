@@ -13,7 +13,7 @@
     "lint-fix": "tslint -c tslint.json --fix '{src,test}/**/*.ts'",
     "build": "tsc",
     "start": "tsc -w",
-    "test": "jest",
+    "test": "jest --runInBand",
     "prettier-fix": "prettier --write --parser typescript '{src,test}/**/*.ts'",
     "prettier-verify": "yarn prettier --list-different --parser typescript src/**/*.ts",
     "prepush": "yarn build && yarn lint-fix && yarn prettier-verify",
