@@ -1,6 +1,6 @@
 import { Configuration } from '../../configuraton';
-import { Payload } from '../../models';
 import { ContextSanitizeService } from '../../context/context.module';
+import { Payload } from '../../payload/payload.module';
 import { CommandGenerateService } from './command-generate.service';
 
 export const CommandAuthenticateService = {

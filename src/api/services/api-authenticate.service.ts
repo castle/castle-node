@@ -1,11 +1,12 @@
 import { Configuration } from '../../configuraton';
 import { InternalServerError } from '../../errors';
-import { AuthenticateResult, Payload } from '../../models';
+import { AuthenticateResult } from '../../models';
 import { CommandAuthenticateService } from '../../command/command.module';
 import {
   FailoverResponsePrepareService,
   FailoverStrategy,
 } from '../../failover/failover.module';
+import { Payload } from '../../payload/payload.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 

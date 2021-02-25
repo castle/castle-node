@@ -1,4 +1,4 @@
-import { AuthenticateResult, Payload } from './models';
+import { AuthenticateResult } from './models';
 import {
   APIAuthenticateService,
   APIApproveDeviceService,
@@ -8,6 +8,7 @@ import {
   APITrackService,
 } from './api/api.module';
 import { FailoverResponsePrepareService } from './failover/failover.module';
+import { Payload } from './payload/payload.module';
 import { Configuration } from './configuraton';
 
 export class Castle {

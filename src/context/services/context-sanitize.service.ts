@@ -1,7 +1,3 @@
-import { IncomingHttpHeaders } from 'http';
-
-import { Configuration } from '../../configuraton';
-import { HeadersExtractService } from '../../headers/headers.module';
 export const ContextSanitizeService = {
   call: (context: any) => {
     if (!context) {

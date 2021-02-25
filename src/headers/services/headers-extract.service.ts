@@ -1,5 +1,5 @@
 import { IncomingHttpHeaders } from 'http';
-import { reduce } from 'lodash';
+import reduce from 'lodash.reduce';
 import { Configuration } from '../../configuraton';
 
 const ALWAYS_ALLOWLISTED = ['user-agent'];

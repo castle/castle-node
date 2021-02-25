@@ -1,7 +1,7 @@
-import { merge } from 'lodash';
-import { Payload } from '../../models';
+import merge from 'lodash.merge';
 import { Configuration } from '../../configuraton';
 import { ContextGetDefaultService } from '../../context/context.module';
+import { Payload } from '../../payload/payload.module';
 
 export const CoreGenerateRequestBody = {
   call: (
@@ -18,6 +18,7 @@ export const CoreGenerateRequestBody = {
   ) => {
     const defaultContext = ContextGetDefaultService.call(
       context,
+      '',
       configuration
     );
     return JSON.stringify({
