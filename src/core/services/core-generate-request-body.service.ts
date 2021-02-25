@@ -1,5 +1,6 @@
+import merge from 'lodash.merge';
 import { Configuration } from '../../configuraton';
-import { ContextPrepareService } from '../../context/context.module';
+import { ContextGetDefaultService } from '../../context/context.module';
 import { Payload } from '../../payload/payload.module';
 
 export const CoreGenerateRequestBody = {
@@ -15,6 +16,11 @@ export const CoreGenerateRequestBody = {
     }: Payload,
     configuration: Configuration
   ) => {
+    const defaultContext = ContextGetDefaultService.call(
+      context,
+      '',
+      configuration
+    );
     return JSON.stringify({
       sent_at: new Date().toISOString(),
       created_at,
@@ -23,7 +29,7 @@ export const CoreGenerateRequestBody = {
       user_traits,
       properties,
       device_token,
-      context: ContextPrepareService.call(context, {}, configuration),
+      context: merge(context, defaultContext),
     });
   },
 };
