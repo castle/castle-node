@@ -157,7 +157,7 @@ To generate the payload, use the following command:
 ```js
 const payload = PayloadPrepareService.call(
   {
-    event: EVENTS_LOGIN_SUCCEEDED,
+    event: EVENTS.LOGIN_SUCCEEDED,
     user_id: user.id,
     properties: {
       key: 'value'
