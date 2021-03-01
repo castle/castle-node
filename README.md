@@ -44,6 +44,7 @@ const castle = new Castle({ apiSecret: 'YOUR SECRET HERE' });
 | allowlisted       | `string[]` - An array of strings matching the headers you want to pass fully to the service. We highly recommend using the DEFAULT_ALLOWLIST constant. |
 | denylisted        | `string[]` - An array of of strings matching the headers you do not want to pass fully to the service. |
 | failoverStrategy  | `FailoverStrategy` - If the request to our service would for some reason time out, this is where you select the automatic response from `authenticate`. Options are `FailoverStrategy.allow`, `FailoverStrategy.deny`, `FailoverStrategy.challenge`. |
+| logger            | `any` - Logs Castle API requests and responses, has to respond to `info` method. |
 | doNotTrack        | `boolean` - False by default, setting it to true turns off all requests and triggers automatic failover on `authenticate`. Used for development and testing. |
 | ipHeaders         | `string[]` - IP Headers to look for a client IP address. |
 | trustedProxies    | `string[]` - Trusted public proxies list. |
