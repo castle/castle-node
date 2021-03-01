@@ -54,6 +54,7 @@ describe('Castle', () => {
         // Pass the sandboxed instance to Castle constructor
         // using the optional property `overrideFetch`
         overrideFetch: fetch,
+        logger: { info: () => {} },
       });
       castle.track(sampleRequestData);
 
@@ -103,6 +104,7 @@ describe('Castle', () => {
         // using the optional property `overrideFetch`
         overrideFetch: fetch,
         allowlisted: ['X-NOT-A-SECRET'],
+        logger: { info: () => {} },
       });
 
       castle.track({
@@ -140,6 +142,7 @@ describe('Castle', () => {
         overrideFetch: fetch,
         allowlisted: ['X-NOT-A-SECRET'],
         denylisted: ['X-SUPER-SECRET'],
+        logger: { info: () => {} },
       });
 
       castle.track({
@@ -172,6 +175,7 @@ describe('Castle', () => {
         overrideFetch: fetch,
         doNotTrack: true,
         failoverStrategy: FailoverStrategy.deny,
+        logger: { info: () => {} },
       });
 
       await castle.track(sampleRequestData);
@@ -187,6 +191,7 @@ describe('Castle', () => {
       const castle = new Castle({
         apiSecret: 'some secret',
         overrideFetch: fetch,
+        logger: { info: () => {} },
       });
 
       // Promise based expectations have to be awaited to properly fail
@@ -228,6 +233,7 @@ describe('Castle', () => {
         // Pass the sandboxed instance to Castle constructor
         // using the optional property `overrideFetch`
         overrideFetch: fetch,
+        logger: { info: () => {} },
       });
 
       const response = await castle.authenticate(sampleRequestData);
@@ -290,6 +296,7 @@ describe('Castle', () => {
         apiSecret: 'some secret',
         overrideFetch: fetch,
         failoverStrategy: FailoverStrategy.deny,
+        logger: { info: () => {} },
       });
 
       const response = await castle.authenticate(sampleRequestData);
@@ -305,6 +312,7 @@ describe('Castle', () => {
         apiSecret: 'some secret',
         overrideFetch: fetch,
         failoverStrategy: FailoverStrategy.deny,
+        logger: { info: () => {} },
       });
 
       const response = await castle.authenticate(sampleRequestData);
@@ -321,6 +329,7 @@ describe('Castle', () => {
         overrideFetch: fetch,
         doNotTrack: true,
         failoverStrategy: FailoverStrategy.deny,
+        logger: { info: () => {} },
       });
 
       const response = await castle.authenticate(sampleRequestData);
@@ -340,6 +349,7 @@ describe('Castle', () => {
       const castle = new Castle({
         apiSecret: 'some secret',
         overrideFetch: fetch,
+        logger: { info: () => {} },
       });
 
       // Promise based expectations have to be awaited to properly fail

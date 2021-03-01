@@ -5,7 +5,6 @@ import { CommandAuthenticateService } from '../../../src/command/services';
 import MockDate from 'mockdate';
 import fetchMock from 'fetch-mock';
 import AbortController from 'abort-controller';
-import pino from 'pino';
 
 describe('APIService', () => {
   beforeEach(() => {
@@ -43,7 +42,7 @@ describe('APIService', () => {
         const configuration = new Configuration({
           apiSecret: 'test',
           overrideFetch: fetch,
-          logger: pino({ enabled: false }),
+          logger: { info: () => {} },
         });
 
         const command = CommandAuthenticateService.call(
@@ -63,7 +62,7 @@ describe('APIService', () => {
         const configuration = new Configuration({
           apiSecret: 'test',
           overrideFetch: fetch,
-          logger: pino({ enabled: false }),
+          logger: { info: () => {} },
         });
 
         const command = CommandAuthenticateService.call(

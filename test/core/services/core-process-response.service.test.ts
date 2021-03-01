@@ -1,5 +1,4 @@
 import { CoreProcessResponseService } from '../../../src/core/core.module';
-import pino from 'pino';
 import { Response } from 'node-fetch';
 
 describe('CoreProcessResponseService', () => {
@@ -20,7 +19,7 @@ describe('CoreProcessResponseService', () => {
               'authenticate',
               {},
               response,
-              pino({ enabled: false })
+              { info: () => {} }
             )
           ).toEqual(result);
         });
@@ -41,7 +40,7 @@ describe('CoreProcessResponseService', () => {
               'authenticate',
               {},
               response,
-              pino({ enabled: false })
+              { info: () => {} }
             )
           ).toEqual(result);
         });
@@ -62,7 +61,7 @@ describe('CoreProcessResponseService', () => {
               'authenticate',
               {},
               response,
-              pino({ enabled: false })
+              { info: () => {} }
             )
           ).toEqual(result);
         });
@@ -83,7 +82,7 @@ describe('CoreProcessResponseService', () => {
               'authenticate',
               {},
               response,
-              pino({ enabled: false })
+              { info: () => {} }
             )
           ).toEqual(result);
         });
@@ -114,7 +113,7 @@ describe('CoreProcessResponseService', () => {
               'authenticate',
               {},
               response,
-              pino({ enabled: false })
+              { info: () => {} }
             )
           ).toEqual(result);
         });
@@ -135,7 +134,7 @@ describe('CoreProcessResponseService', () => {
               'authenticate',
               {},
               response,
-              pino({ enabled: false })
+              { info: () => {} }
             )
           ).toEqual(result);
         });
@@ -151,12 +150,9 @@ describe('CoreProcessResponseService', () => {
 
         it('generates request body', async () => {
           await expect(
-            CoreProcessResponseService.call(
-              'authenticate',
-              {},
-              response,
-              pino({ enabled: false })
-            )
+            CoreProcessResponseService.call('authenticate', {}, response, {
+              info: () => {},
+            })
           ).rejects.toThrowError('Castle: Malformed JSON response');
         });
       });
@@ -176,12 +172,9 @@ describe('CoreProcessResponseService', () => {
 
           it('throws BadRequestError', async () => {
             await expect(
-              CoreProcessResponseService.call(
-                'authenticate',
-                {},
-                response,
-                pino({ enabled: false })
-              )
+              CoreProcessResponseService.call('authenticate', {}, response, {
+                info: () => {},
+              })
             ).rejects.toThrowError(
               `Castle: Responded with ${errorStatus} code`
             );

@@ -3,7 +3,6 @@ import { Configuration } from '../../../src/configuraton';
 import { EVENTS } from '../../../src/events';
 import MockDate from 'mockdate';
 import fetchMock from 'fetch-mock';
-import pino from 'pino';
 
 describe('APIAuthenticateService', () => {
   beforeEach(() => {
@@ -39,7 +38,7 @@ describe('APIAuthenticateService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
-        logger: pino({ enabled: false }),
+        logger: { info: () => {} },
       });
 
       const response = await APIAuthenticateService.call(
@@ -61,7 +60,7 @@ describe('APIAuthenticateService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
-        logger: pino({ enabled: false }),
+        logger: { info: () => {} },
       });
 
       const response = await APIAuthenticateService.call(
@@ -89,7 +88,7 @@ describe('APIAuthenticateService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
-        logger: pino({ enabled: false }),
+        logger: { info: () => {} },
       });
 
       const response = await APIAuthenticateService.call(

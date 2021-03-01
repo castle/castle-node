@@ -2,7 +2,6 @@ import { APIGetDeviceService } from '../../../src/api/api.module';
 import { Configuration } from '../../../src/configuraton';
 import MockDate from 'mockdate';
 import fetchMock from 'fetch-mock';
-import pino from 'pino';
 
 describe('APIGetDeviceService', () => {
   beforeEach(() => {
@@ -24,7 +23,7 @@ describe('APIGetDeviceService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
-        logger: pino({ enabled: false }),
+        logger: { info: () => {} },
       });
 
       const response = await APIGetDeviceService.call(
