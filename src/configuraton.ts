@@ -13,7 +13,6 @@ interface ConfigurationProperties {
   denylisted?: string[];
   overrideFetch?: any;
   failoverStrategy?: FailoverStrategy;
-  logLevel?: pino.Level;
   doNotTrack?: boolean;
   ipHeaders?: string[];
   trustedProxies?: RegExp[];
@@ -30,7 +29,6 @@ export class Configuration {
   denylisted?: string[];
   overrideFetch?: any;
   failoverStrategy?: FailoverStrategy;
-  logLevel?: pino.Level;
   doNotTrack?: boolean;
   ipHeaders?: string[];
   trustedProxies?: RegExp[];
@@ -46,7 +44,6 @@ export class Configuration {
     denylisted = [],
     overrideFetch = fetch,
     failoverStrategy = FailoverStrategy.allow,
-    logLevel = 'error',
     doNotTrack = false,
     ipHeaders = [],
     trustedProxies = [],
@@ -71,13 +68,11 @@ export class Configuration {
     this.denylisted = denylisted.map((x) => x.toLowerCase());
     this.overrideFetch = overrideFetch;
     this.failoverStrategy = failoverStrategy;
-    this.logLevel = logLevel;
     this.doNotTrack = doNotTrack;
     this.ipHeaders = ipHeaders;
     this.trustedProxies = trustedProxies.map((proxy) => new RegExp(proxy));
     this.trustProxyChain = trustProxyChain;
     this.trustedProxyDepth = trustedProxyDepth;
     this.logger = logger;
-    this.logger.level = logLevel;
   }
 }

@@ -9,7 +9,6 @@ import {
   APIError,
 } from '../../errors';
 import { LoggerService } from '../../logger/logger.module';
-import pino from 'pino';
 
 const RESPONSE_ERRORS = {
   '400': BadRequestError,
@@ -44,7 +43,7 @@ const getBody = async (response: any) => {
 };
 
 export const CoreProcessResponseService = {
-  call: async (requestUrl, requestOptions, response, logger: pino.Logger) => {
+  call: async (requestUrl, requestOptions, response, logger) => {
     const body = await getBody(response);
 
     LoggerService.call({ requestUrl, requestOptions, response, body }, logger);

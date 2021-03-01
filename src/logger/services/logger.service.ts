@@ -1,6 +1,5 @@
 import { LoggingParameters } from '../models';
 import { LoggerRequestFormatterService } from '../services';
-import pino from 'pino';
 
 export const LoggerService = {
   call: async (
@@ -13,17 +12,7 @@ export const LoggerService = {
       );
     }
 
-    let log: pino.LogFn;
-
-    if (response.ok) {
-      log = logger.info.bind(logger);
-    } else if (response.status < 500 && response.status >= 400) {
-      log = logger.warn.bind(logger);
-    } else {
-      log = logger.error.bind(logger);
-    }
-
-    return log(
+    return logger.info(
       LoggerRequestFormatterService.call({
         requestUrl,
         requestOptions,
