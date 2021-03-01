@@ -290,9 +290,6 @@ describe('Castle', () => {
         apiSecret: 'some secret',
         overrideFetch: fetch,
         failoverStrategy: FailoverStrategy.deny,
-        // This test causes an error level log event, so increase
-        // logLevel to fatal to prevent clouding the test output.
-        logLevel: 'fatal',
       });
 
       const response = await castle.authenticate(sampleRequestData);
@@ -308,9 +305,6 @@ describe('Castle', () => {
         apiSecret: 'some secret',
         overrideFetch: fetch,
         failoverStrategy: FailoverStrategy.deny,
-        // This test causes an error level log event, so increase
-        // logLevel to fatal to prevent clouding the test output.
-        logLevel: 'fatal',
       });
 
       const response = await castle.authenticate(sampleRequestData);
