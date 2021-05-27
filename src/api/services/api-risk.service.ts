@@ -1,12 +1,10 @@
 import { Configuration } from '../../configuraton';
 import { InternalServerError } from '../../errors';
-import { RiskResult } from '../../models';
 import { CommandRiskService } from '../../command/command.module';
 import {
   FailoverResponsePrepareService,
   FailoverStrategy,
 } from '../../failover/failover.module';
-import { RiskPayload } from '../../payload/risk_payload.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 
@@ -15,7 +13,7 @@ const handleFailover = (
   reason: string,
   configuration: Configuration,
   err?: Error
-): RiskResult => {
+): object => {
   // Have to check it this way to make sure TS understands
   // that this.failoverStrategy is of type Verdict,
   // not FailoverStrategyType.
@@ -34,9 +32,9 @@ const isTimeoutError = (e: Error) => e.name === 'AbortError';
 
 export const APIRiskService = {
   call: async (
-    options: RiskPayload,
+    options: object,
     configuration: Configuration
-  ): Promise<RiskResult> => {
+  ): Promise<object> => {
     const controller = new AbortController();
     const command = CommandRiskService.call(
       controller,

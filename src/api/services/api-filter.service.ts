@@ -1,6 +1,5 @@
 import { Configuration } from '../../configuraton';
 import { InternalServerError } from '../../errors';
-import { FilterResult } from '../../models';
 import { CommandFilterService } from '../../command/command.module';
 import {
   FailoverResponsePrepareService,
@@ -15,7 +14,7 @@ const handleFailover = (
   reason: string,
   configuration: Configuration,
   err?: Error
-): FilterResult => {
+): object => {
   // Have to check it this way to make sure TS understands
   // that this.failoverStrategy is of type Verdict,
   // not FailoverStrategyType.
@@ -36,7 +35,7 @@ export const APIFilterService = {
   call: async (
     options: FilterPayload,
     configuration: Configuration
-  ): Promise<FilterResult> => {
+  ): Promise<object> => {
     const controller = new AbortController();
     const command = CommandFilterService.call(
       controller,
