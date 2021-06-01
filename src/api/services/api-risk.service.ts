@@ -31,16 +31,9 @@ const handleFailover = (
 const isTimeoutError = (e: Error) => e.name === 'AbortError';
 
 export const APIRiskService = {
-  call: async (
-    options: any,
-    configuration: Configuration
-  ): Promise<object> => {
+  call: async (options: any, configuration: Configuration): Promise<object> => {
     const controller = new AbortController();
-    const command = CommandRiskService.call(
-      controller,
-      options,
-      configuration
-    );
+    const command = CommandRiskService.call(controller, options, configuration);
 
     let processedResponse;
     try {

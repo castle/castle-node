@@ -10,11 +10,7 @@ export const APILogService = {
     configuration: Configuration
   ): Promise<void> => {
     const controller = new AbortController();
-    const command = CommandLogService.call(
-      controller,
-      options,
-      configuration
-    );
+    const command = CommandLogService.call(controller, options, configuration);
 
     APIService.call(controller, command, configuration);
   },

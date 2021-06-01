@@ -54,11 +54,7 @@ describe('CommandLogService', () => {
     };
 
     it('generates payload', () => {
-      const received = CommandLogService.call(
-        controller,
-        { context },
-        config
-      );
+      const received = CommandLogService.call(controller, { context }, config);
       expect(received.requestUrl.href).toEqual(expected.requestUrl.href);
       expect(received).toMatchObject(expected);
     });

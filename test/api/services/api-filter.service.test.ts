@@ -41,15 +41,11 @@ describe('APIFilterService', () => {
         logger: { info: () => {} },
       });
 
-      const response = await APIFilterService.call(
-        sampleRequestData,
-        config
-      );
+      const response = await APIFilterService.call(sampleRequestData, config);
       expect(response).toHaveProperty('action', 'allow');
       expect(response).toHaveProperty('device_token', 'device_token');
       expect(response).toHaveProperty('user_id', 'user_id');
       // expect(response).toEqual({'action': 'allow', 'risk': 0.41, 'policy': {'id': ..., 'revision_id': ..., 'name': ...}, 'signals': {'datacenter_ip': {}}
-
     });
 
     it('handles deny response without risk policy', async () => {
@@ -65,10 +61,7 @@ describe('APIFilterService', () => {
         logger: { info: () => {} },
       });
 
-      const response = await APIFilterService.call(
-        sampleRequestData,
-        config
-      );
+      const response = await APIFilterService.call(sampleRequestData, config);
       expect(response).toHaveProperty('action', 'deny');
       expect(response).toHaveProperty('device_token', 'device_token');
       expect(response).toHaveProperty('user_id', 'user_id');
@@ -93,10 +86,7 @@ describe('APIFilterService', () => {
         logger: { info: () => {} },
       });
 
-      const response = await APIFilterService.call(
-        sampleRequestData,
-        config
-      );
+      const response = await APIFilterService.call(sampleRequestData, config);
       expect(response).toHaveProperty('action', 'deny');
       expect(response).toHaveProperty('device_token', 'device_token');
       expect(response).toHaveProperty('user_id', 'user_id');

@@ -54,11 +54,7 @@ describe('CommandRiskService', () => {
     };
 
     it('generates payload', () => {
-      const received = CommandRiskService.call(
-        controller,
-        { context },
-        config
-      );
+      const received = CommandRiskService.call(controller, { context }, config);
       expect(received.requestUrl.href).toEqual(expected.requestUrl.href);
       expect(received).toMatchObject(expected);
     });

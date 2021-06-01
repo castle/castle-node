@@ -41,10 +41,7 @@ describe('APIRiskService', () => {
         logger: { info: () => {} },
       });
 
-      const response = await APIRiskService.call(
-        sampleRequestData,
-        config
-      );
+      const response = await APIRiskService.call(sampleRequestData, config);
       expect(response).toHaveProperty('action', 'allow');
       expect(response).toHaveProperty('device_token', 'device_token');
       expect(response).toHaveProperty('user_id', 'user_id');
@@ -63,10 +60,7 @@ describe('APIRiskService', () => {
         logger: { info: () => {} },
       });
 
-      const response = await APIRiskService.call(
-        sampleRequestData,
-        config
-      );
+      const response = await APIRiskService.call(sampleRequestData, config);
       expect(response).toHaveProperty('action', 'deny');
       expect(response).toHaveProperty('device_token', 'device_token');
       expect(response).toHaveProperty('user_id', 'user_id');
@@ -91,10 +85,7 @@ describe('APIRiskService', () => {
         logger: { info: () => {} },
       });
 
-      const response = await APIRiskService.call(
-        sampleRequestData,
-        config
-      );
+      const response = await APIRiskService.call(sampleRequestData, config);
       expect(response).toHaveProperty('action', 'deny');
       expect(response).toHaveProperty('device_token', 'device_token');
       expect(response).toHaveProperty('user_id', 'user_id');
