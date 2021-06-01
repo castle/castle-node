@@ -2,6 +2,7 @@ import { CommandGenerateService } from '../../../src/command/command.module';
 import { Configuration } from '../../../src/configuraton';
 import { version } from '../../../package.json';
 import MockDate from 'mockdate';
+import AbortController from 'abort-controller';
 
 describe('CommandGenerateService', () => {
   beforeEach(() => {

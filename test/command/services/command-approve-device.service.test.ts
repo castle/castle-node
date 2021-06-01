@@ -1,6 +1,7 @@
 import { CommandApproveDeviceService } from '../../../src/command/command.module';
 import { Configuration } from '../../../src/configuraton';
 import { version } from '../../../package.json';
+import AbortController from 'abort-controller';
 import MockDate from 'mockdate';
 
 describe('CommandApproveDeviceService', () => {
