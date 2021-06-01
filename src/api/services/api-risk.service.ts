@@ -32,7 +32,7 @@ const isTimeoutError = (e: Error) => e.name === 'AbortError';
 
 export const APIRiskService = {
   call: async (
-    options: object,
+    options: any,
     configuration: Configuration
   ): Promise<object> => {
     const controller = new AbortController();

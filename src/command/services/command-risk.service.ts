@@ -3,7 +3,7 @@ import { ContextSanitizeService } from '../../context/context.module';
 import { CommandGenerateService } from './command-generate.service';
 
 export const CommandRiskService = {
-  call: (controller, options: object, configuration: Configuration) => {
+  call: (controller, options: any, configuration: Configuration) => {
     const context = ContextSanitizeService.call(options.context);
     return CommandGenerateService.call(
       controller,
