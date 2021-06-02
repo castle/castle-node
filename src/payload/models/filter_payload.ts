@@ -1,15 +1,15 @@
 import { IncomingHttpHeaders } from 'http2';
 
 export type FilterPayload = {
-  request_token?: string;
-  event?: string;
+  request_token: string;
+  event: string;
+  status?: string;
   user?: {
-    id: string;
-    email: string;
+    id?: string;
+    email?: string;
   };
   properties?: object;
-  created_at?: string;
-  context?: {
+  context: {
     ip: string;
     headers: IncomingHttpHeaders;
   };

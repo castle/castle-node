@@ -1,16 +1,18 @@
 import { IncomingHttpHeaders } from 'http2';
 
 export type RiskPayload = {
-  request_token?: string;
-  event?: string;
-  status?: string;
-  user?: {
+  request_token: string;
+  event: string;
+  status: string;
+  user: {
     id: string;
     email: string;
+    registered_at?: string;
+    traits?: object;
+    name?: string;
   };
   properties?: object;
-  created_at?: string;
-  context?: {
+  context: {
     ip: string;
     headers: IncomingHttpHeaders;
   };

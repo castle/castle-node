@@ -1,10 +1,7 @@
 import { Configuration } from '../../configuraton';
 import { InternalServerError } from '../../errors';
 import { CommandRiskService } from '../../command/command.module';
-import {
-  FailoverResponsePrepareService,
-  FailoverStrategy,
-} from '../../failover/failover.module';
+import { FailoverStrategy } from '../../failover/failover.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 
@@ -21,11 +18,11 @@ const handleFailover = (
     throw err;
   }
 
-  return FailoverResponsePrepareService.call(
-    userId,
-    reason,
-    configuration.failoverStrategy
-  );
+  return {
+    action: configuration.failoverStrategy,
+    failover: true,
+    failover_reason: reason,
+  };
 };
 
 const isTimeoutError = (e: Error) => e.name === 'AbortError';

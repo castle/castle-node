@@ -76,11 +76,10 @@ describe('APIAuthenticateService', () => {
         action: 'deny',
         device_token: 'device_token',
         user_id: 'user_id',
-        risk_policy: {
+        policy: {
           id: 'q-rbeMzBTdW2Fd09sbz55A',
           revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
           name: 'Block Users from X',
-          type: 'bot',
         },
       });
 
@@ -97,16 +96,12 @@ describe('APIAuthenticateService', () => {
       expect(response).toHaveProperty('action', 'deny');
       expect(response).toHaveProperty('device_token', 'device_token');
       expect(response).toHaveProperty('user_id', 'user_id');
-      expect(response.risk_policy).toHaveProperty(
-        'id',
-        'q-rbeMzBTdW2Fd09sbz55A'
-      );
-      expect(response.risk_policy).toHaveProperty(
+      expect(response.policy).toHaveProperty('id', 'q-rbeMzBTdW2Fd09sbz55A');
+      expect(response.policy).toHaveProperty(
         'revision_id',
         'pke4zqO2TnqVr-NHJOAHEg'
       );
-      expect(response.risk_policy).toHaveProperty('type', 'bot');
-      expect(response.risk_policy).toHaveProperty('name', 'Block Users from X');
+      expect(response.policy).toHaveProperty('name', 'Block Users from X');
     });
   });
 });

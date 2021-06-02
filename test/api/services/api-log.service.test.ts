@@ -1,5 +1,6 @@
 import { APILogService } from '../../../src/api/api.module';
 import { Configuration } from '../../../src/configuraton';
+import type { LogPayload } from '../../../src/payload/payload.module';
 import MockDate from 'mockdate';
 import fetchMock from 'fetch-mock';
 
@@ -12,13 +13,14 @@ describe('APILogService', () => {
     MockDate.reset();
   });
 
-  const sampleRequestData = {
-    event: '$login.succeeded',
+  const sampleRequestData: LogPayload = {
+    event: '$login',
+    request_token: 'token',
+    status: '$succeeded',
     created_at: 'now',
-    user_id: 'userid',
-    user_traits: {
+    user: {
+      id: 'userid',
       email: 'myemail',
-      updated_at: 'today',
     },
     context: {
       ip: '8.8.8.8',

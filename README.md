@@ -111,7 +111,8 @@ Response format
 | --------------- | --------------------------------------------------------------------------------------------------- |
 | action          | `string` - The recommended action for the given event. Options: `allow`, `challenge`, `deny`.       |
 | user_id         | `string` - The `user_id` of the end user.                                                           |
-| risk_policy     | `object` - object containing risk policy information, such as `id`,`revision_id`, `name` and `type` |
+| policy          | `object` - object containing risk policy information, such as `id`,`revision_id`, `name`            |
+| signals         | `object` - object containing hash with signals names                                                |
 | device_token    | `string` - Our token for the device that generated the event.                                       |
 | failover        | `boolean` - An optional property indicating the request failed and the response is a failover.      |
 | failover_reason | `string` - A message indicating why the request failed.                                             |

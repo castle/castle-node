@@ -13,12 +13,16 @@ describe('APIRiskService', () => {
   });
 
   const sampleRequestData = {
-    event: '$login.succeeded',
-    created_at: 'now',
-    user_id: 'userid',
-    user_traits: {
+    event: '$login',
+    request_token: 'token',
+    status: '$succeeded',
+    user: {
+      id: 'userid',
       email: 'myemail',
-      updated_at: 'today',
+      traits: {
+        email: 'myemail',
+        updated_at: 'today',
+      },
     },
     context: {
       ip: '8.8.8.8',
@@ -30,8 +34,8 @@ describe('APIRiskService', () => {
     it('handles allow response', async () => {
       const fetch = fetchMock.sandbox().mock('*', {
         action: 'allow',
-        device_token: 'device_token',
-        user_id: 'user_id',
+        risk: 0.85,
+        device: { token: 'device_token' },
       });
 
       const config = new Configuration({
@@ -42,15 +46,14 @@ describe('APIRiskService', () => {
 
       const response = await APIRiskService.call(sampleRequestData, config);
       expect(response).toHaveProperty('action', 'allow');
-      expect(response).toHaveProperty('device_token', 'device_token');
-      expect(response).toHaveProperty('user_id', 'user_id');
+      expect(response).toHaveProperty('device.token', 'device_token');
     });
 
     it('handles deny response without risk policy', async () => {
       const fetch = fetchMock.sandbox().mock('*', {
         action: 'deny',
-        device_token: 'device_token',
-        user_id: 'user_id',
+        risk: 0.85,
+        device: { token: 'device_token' },
       });
 
       const config = new Configuration({
@@ -59,22 +62,23 @@ describe('APIRiskService', () => {
         logger: { info: () => {} },
       });
 
-      const response = await APIRiskService.call(sampleRequestData, config);
+      const response = await (<any>(
+        APIRiskService.call(sampleRequestData, config)
+      ));
       expect(response).toHaveProperty('action', 'deny');
-      expect(response).toHaveProperty('device_token', 'device_token');
-      expect(response).toHaveProperty('user_id', 'user_id');
+      expect(response).toHaveProperty('device.token', 'device_token');
     });
 
     it('handles deny response with risk policy', async () => {
       const fetch = fetchMock.sandbox().mock('*', {
         action: 'deny',
-        device_token: 'device_token',
-        user_id: 'user_id',
-        risk_policy: {
+        device: {
+          token: 'device_token',
+        },
+        policy: {
           id: 'q-rbeMzBTdW2Fd09sbz55A',
           revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
           name: 'Block Users from X',
-          type: 'bot',
         },
       });
 
@@ -84,20 +88,17 @@ describe('APIRiskService', () => {
         logger: { info: () => {} },
       });
 
-      const response = await APIRiskService.call(sampleRequestData, config);
+      const response = await (<any>(
+        APIRiskService.call(sampleRequestData, config)
+      ));
       expect(response).toHaveProperty('action', 'deny');
-      expect(response).toHaveProperty('device_token', 'device_token');
-      expect(response).toHaveProperty('user_id', 'user_id');
-      expect(response.risk_policy).toHaveProperty(
-        'id',
-        'q-rbeMzBTdW2Fd09sbz55A'
-      );
-      expect(response.risk_policy).toHaveProperty(
+      expect(response).toHaveProperty('device.token', 'device_token');
+      expect(response.policy).toHaveProperty('id', 'q-rbeMzBTdW2Fd09sbz55A');
+      expect(response.policy).toHaveProperty(
         'revision_id',
         'pke4zqO2TnqVr-NHJOAHEg'
       );
-      expect(response.risk_policy).toHaveProperty('type', 'bot');
-      expect(response.risk_policy).toHaveProperty('name', 'Block Users from X');
+      expect(response.policy).toHaveProperty('name', 'Block Users from X');
     });
   });
 });

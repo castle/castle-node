@@ -93,11 +93,10 @@ describe('CoreProcessResponseService', () => {
           action: 'deny',
           user_id: '1',
           device_token: 'abc',
-          risk_policy: {
+          policy: {
             id: '123',
             revision_id: 'abc',
             name: 'def',
-            type: 'bot',
           },
         };
         const response = new Response(JSON.stringify(result), {
