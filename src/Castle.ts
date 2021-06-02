@@ -6,6 +6,9 @@ import {
   APIGetDevicesForUserService,
   APIReportDeviceService,
   APITrackService,
+  APILogService,
+  APIFilterService,
+  APIRiskService,
 } from './api/api.module';
 import { FailoverResponsePrepareService } from './failover/failover.module';
 import { Payload } from './payload/payload.module';

@@ -5,3 +5,6 @@ export * from './api-get-device.service';
 export * from './api-get-devices-for-user.service';
 export * from './api-report-device.service';
 export * from './api-track.service';
+export * from './api-risk.service';
+export * from './api-log.service';
+export * from './api-filter.service';
