@@ -26,6 +26,8 @@ describe('CommandFilterService', () => {
         },
         body: JSON.stringify({
           sent_at: '2021-01-25T00:00:00.000Z',
+          event: '$login',
+          request_token: 'token',
           context: {
             ip: '127.0.0.1',
             headers: {
@@ -57,7 +59,7 @@ describe('CommandFilterService', () => {
     it('generates payload', () => {
       const received = CommandFilterService.call(
         controller,
-        { context },
+        { event: '$login', request_token: 'token', context },
         config
       );
       expect(received.requestUrl.href).toEqual(expected.requestUrl.href);

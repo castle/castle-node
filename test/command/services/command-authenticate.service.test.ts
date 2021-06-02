@@ -26,6 +26,7 @@ describe('CommandAuthenticateService', () => {
         },
         body: JSON.stringify({
           sent_at: '2021-01-25T00:00:00.000Z',
+          event: '$login.succeeded',
           context: {
             ip: '127.0.0.1',
             headers: {
@@ -57,7 +58,7 @@ describe('CommandAuthenticateService', () => {
     it('generates payload', () => {
       const received = CommandAuthenticateService.call(
         controller,
-        { context },
+        { event: '$login.succeeded', context },
         config
       );
       expect(received.requestUrl.href).toEqual(expected.requestUrl.href);

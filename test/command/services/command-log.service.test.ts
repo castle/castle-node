@@ -26,6 +26,7 @@ describe('CommandLogService', () => {
         },
         body: JSON.stringify({
           sent_at: '2021-01-25T00:00:00.000Z',
+          event: '$login',
           context: {
             ip: '127.0.0.1',
             headers: {
@@ -55,7 +56,11 @@ describe('CommandLogService', () => {
     };
 
     it('generates payload', () => {
-      const received = CommandLogService.call(controller, { context }, config);
+      const received = CommandLogService.call(
+        controller,
+        { event: '$login', context },
+        config
+      );
       expect(received.requestUrl.href).toEqual(expected.requestUrl.href);
       expect(received).toMatchObject(expected);
     });

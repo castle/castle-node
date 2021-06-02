@@ -6,14 +6,9 @@ import { Payload } from '../../payload/payload.module';
 export const CoreGenerateRequestBody = {
   call: (
     {
-      event,
-      user_id,
-      user_traits,
-      properties,
       context,
-      created_at,
-      device_token,
-    }: Payload,
+      ...payloadOptions
+    }: any,
     configuration: Configuration
   ) => {
     const defaultContext = ContextGetDefaultService.call(
@@ -23,12 +18,7 @@ export const CoreGenerateRequestBody = {
     );
     return JSON.stringify({
       sent_at: new Date().toISOString(),
-      created_at,
-      event,
-      user_id,
-      user_traits,
-      properties,
-      device_token,
+      ...payloadOptions,
       context: merge(context, defaultContext),
     });
   },

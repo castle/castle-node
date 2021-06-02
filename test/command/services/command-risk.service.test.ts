@@ -26,6 +26,10 @@ describe('CommandRiskService', () => {
         },
         body: JSON.stringify({
           sent_at: '2021-01-25T00:00:00.000Z',
+          request_token: 'token',
+          event: '$login',
+          status: '$succeeded',
+          user: { id: 'user_id', email: 'user_email' },
           context: {
             ip: '127.0.0.1',
             headers: {
@@ -55,7 +59,17 @@ describe('CommandRiskService', () => {
     };
 
     it('generates payload', () => {
-      const received = CommandRiskService.call(controller, { context }, config);
+      const received = CommandRiskService.call(
+        controller,
+        {
+          request_token: 'token',
+          event: '$login',
+          status: '$succeeded',
+          user: { id: 'user_id', email: 'user_email' },
+          context,
+        },
+        config
+      );
       expect(received.requestUrl.href).toEqual(expected.requestUrl.href);
       expect(received).toMatchObject(expected);
     });
