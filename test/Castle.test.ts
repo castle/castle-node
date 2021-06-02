@@ -21,6 +21,73 @@ const sampleRequestData = {
   },
 };
 
+const sampleRiskRequestData = {
+  event: '$login',
+  request_token: 'token',
+  status: '$succeeded',
+  user: {
+    id: 'userid',
+    email: 'email',
+    traits: {
+      registered_at: 'today',
+    },
+  },
+  context: {
+    ip: '8.8.8.8',
+    client_id: 'clientid',
+    headers: {
+      Cookie: 'SECRET=pleasedontbehere',
+      'x-forwarded-for': '8.8.8.8',
+    },
+  },
+};
+
+
+const sampleFilterRequestData = {
+  event: '$login',
+  request_token: 'token',
+  status: '$succeeded',
+  user: {
+    id: 'userid',
+    email: 'email',
+    traits: {
+      registered_at: 'today',
+    },
+  },
+  context: {
+    ip: '8.8.8.8',
+    client_id: 'clientid',
+    headers: {
+      Cookie: 'SECRET=pleasedontbehere',
+      'x-forwarded-for': '8.8.8.8',
+    },
+  },
+};
+
+const sampleLogRequestData = {
+  event: '$login',
+  status: '$succeeded',
+  user: {
+    id: 'userid',
+    email: 'email',
+    traits: {
+      email: 'myemail',
+      registered_at: 'today',
+    },
+  },
+  context: {
+    ip: '8.8.8.8',
+    client_id: 'clientid',
+    headers: {
+      Cookie: 'SECRET=pleasedontbehere',
+      'x-forwarded-for': '8.8.8.8',
+    },
+  },
+};
+
+
+
+
 describe('Castle', () => {
   it('should have some public methods', () => {
     const castle = new Castle({ apiSecret: 'some secret' });
@@ -67,7 +134,6 @@ describe('Castle', () => {
         'created_at',
         sampleRequestData.created_at
       );
-      expect(payload).toHaveProperty('event', sampleRequestData.event);
       expect(payload).toHaveProperty('user_id', sampleRequestData.user_id);
       expect(payload).toHaveProperty('user_traits');
       expect(payload.user_traits).toHaveProperty(
@@ -351,6 +417,198 @@ describe('Castle', () => {
       await expect(castle.authenticate(sampleRequestData)).rejects.toThrowError(
         'Castle: Responded with 401 code'
       );
+    });
+  });
+
+  describe('risk', () => {
+    beforeEach(() => {
+      MockDate.set(new Date(2011, 9, 1));
+    });
+
+    afterEach(() => {
+      MockDate.reset();
+    });
+    it('should make a network request with some basic information', async () => {
+      // Because we don't use a global fetch we have to create a
+      // sandboxed instance of it here.
+      const fetch = fetchMock.sandbox().mock(
+        '*',
+        // Mimic an allow response from authenticate.
+        {
+          action: 'allow',
+          device: { token: 'device_token'},
+          policy: {
+            id: 'q-rbeMzBTdW2Fd09sbz55A',
+            revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
+            name: 'Block Users from X',
+          },
+        }
+      );
+      const castle = new Castle({
+        apiSecret: 'some secret',
+        // Pass the sandboxed instance to Castle constructor
+        // using the optional property `overrideFetch`
+        overrideFetch: fetch,
+        logger: { info: () => {} },
+      });
+
+      const response = await <any>castle.risk(sampleRiskRequestData);
+      expect(response).toHaveProperty('action', 'allow');
+      expect(response).toHaveProperty('device.token', 'device_token');
+      expect(response.policy).toHaveProperty('id', 'q-rbeMzBTdW2Fd09sbz55A');
+      expect(response.policy).toHaveProperty(
+        'revision_id',
+        'pke4zqO2TnqVr-NHJOAHEg'
+      );
+      expect(response.policy).toHaveProperty('name', 'Block Users from X');
+
+      const lastOptions: any = fetch.lastOptions();
+      const payload = JSON.parse(lastOptions.body.toString());
+      // Ensure the client set the sent_at property.
+      expect(payload).toHaveProperty('sent_at', new Date().toISOString());
+      // Verify that the passed in properties are passed on.
+      expect(payload).toHaveProperty('event', sampleRiskRequestData.event);
+      expect(payload).toHaveProperty('user.id', sampleRiskRequestData.user.id);
+      expect(payload).toHaveProperty('user.traits');
+      expect(payload.user).toHaveProperty(
+        'email',
+        sampleRiskRequestData.user.email
+      );
+      expect(payload.user.traits).toHaveProperty(
+        'registered_at',
+        sampleRiskRequestData.user.traits.registered_at
+      );
+      expect(payload).toHaveProperty('context');
+      expect(payload.context).toHaveProperty(
+        'ip',
+        sampleRiskRequestData.context.ip
+      );
+      expect(payload.context).toHaveProperty('headers');
+      // Ensure that cookie header property is scrubbed.
+      expect(payload.context.headers).toHaveProperty('Cookie', true);
+    });
+  });
+
+  describe('filter', () => {
+    beforeEach(() => {
+      MockDate.set(new Date(2011, 9, 1));
+    });
+
+    afterEach(() => {
+      MockDate.reset();
+    });
+    it('should make a network request with some basic information', async () => {
+      // Because we don't use a global fetch we have to create a
+      // sandboxed instance of it here.
+      const fetch = fetchMock.sandbox().mock(
+        '*',
+        // Mimic an allow response from authenticate.
+        {
+          action: 'allow',
+          device: { token: 'device_token'},
+          policy: {
+            id: 'q-rbeMzBTdW2Fd09sbz55A',
+            revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
+            name: 'Block Users from X',
+          },
+        }
+      );
+      const castle = new Castle({
+        apiSecret: 'some secret',
+        // Pass the sandboxed instance to Castle constructor
+        // using the optional property `overrideFetch`
+        overrideFetch: fetch,
+        logger: { info: () => {} },
+      });
+
+      const response = await <any>castle.filter(sampleFilterRequestData);
+      expect(response).toHaveProperty('action', 'allow');
+      expect(response).toHaveProperty('device.token', 'device_token');
+      expect(response.policy).toHaveProperty('id', 'q-rbeMzBTdW2Fd09sbz55A');
+      expect(response.policy).toHaveProperty(
+        'revision_id',
+        'pke4zqO2TnqVr-NHJOAHEg'
+      );
+      expect(response.policy).toHaveProperty('name', 'Block Users from X');
+
+      const lastOptions: any = fetch.lastOptions();
+      const payload = JSON.parse(lastOptions.body.toString());
+      // Ensure the client set the sent_at property.
+      expect(payload).toHaveProperty('sent_at', new Date().toISOString());
+      // Verify that the passed in properties are passed on.
+      expect(payload).toHaveProperty('event', sampleFilterRequestData.event);
+      expect(payload).toHaveProperty('user.id', sampleFilterRequestData.user.id);
+      expect(payload).toHaveProperty('user.traits');
+      expect(payload.user).toHaveProperty(
+        'email',
+        sampleFilterRequestData.user.email
+      );
+      expect(payload.user.traits).toHaveProperty(
+        'registered_at',
+        sampleFilterRequestData.user.traits.registered_at
+      );
+      expect(payload).toHaveProperty('context');
+      expect(payload.context).toHaveProperty(
+        'ip',
+        sampleFilterRequestData.context.ip
+      );
+      expect(payload.context).toHaveProperty('headers');
+      // Ensure that cookie header property is scrubbed.
+      expect(payload.context.headers).toHaveProperty('Cookie', true);
+    });
+  });
+
+  describe('log', () => {
+    beforeEach(() => {
+      MockDate.set(new Date(2011, 9, 1));
+    });
+
+    afterEach(() => {
+      MockDate.reset();
+    });
+
+    it('should make a network request with some basic information', () => {
+      // Because we don't use a global fetch we have to create a
+      // sandboxed instance of it here.
+      const fetch = fetchMock.sandbox().post('*', 204);
+
+      const castle = new Castle({
+        apiSecret: 'some secret',
+        // Pass the sandboxed instance to Castle constructor
+        // using the optional property `overrideFetch`
+        overrideFetch: fetch,
+        logger: { info: () => {} },
+      });
+      castle.log(sampleLogRequestData);
+
+      const lastOptions: any = fetch.lastOptions();
+      const payload = JSON.parse(lastOptions.body.toString());
+      // Ensure the client set the sent_at property.
+      expect(payload).toHaveProperty('sent_at', new Date().toISOString());
+      // Verify that the passed in properties are passed on.
+      expect(payload).toHaveProperty('event', sampleLogRequestData.event);
+      expect(payload).toHaveProperty('user.id', sampleLogRequestData.user.id);
+      expect(payload).toHaveProperty('user.traits');
+      expect(payload.user).toHaveProperty(
+        'email',
+        sampleLogRequestData.user.email
+      );
+      expect(payload.user.traits).toHaveProperty(
+        'registered_at',
+        sampleLogRequestData.user.traits.registered_at
+      );
+      expect(payload).toHaveProperty('context');
+      expect(payload.context).toHaveProperty(
+        'ip',
+        sampleLogRequestData.context.ip
+      );
+      expect(payload.context).toHaveProperty(
+        'client_id',
+        sampleLogRequestData.context.client_id
+      );
+      expect(payload.context).toHaveProperty('headers');
+      // Ensure that cookie header property is scrubbed.
+      expect(payload.context.headers).toHaveProperty('Cookie', true);
     });
   });
 });
