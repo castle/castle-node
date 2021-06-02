@@ -1,4 +1,4 @@
-import { AuthenticateResult } from './models';
+import type { AuthenticateResult } from './models';
 import {
   APIAuthenticateService,
   APIApproveDeviceService,
@@ -10,8 +10,13 @@ import {
   APIFilterService,
   APIRiskService,
 } from './api/api.module';
-import { FailoverResponsePrepareService } from './failover/failover.module';
-import { Payload } from './payload/payload.module';
+import { FailoverStrategy } from './failover/failover.module';
+import type {
+  Payload,
+  LogPayload,
+  FilterPayload,
+  RiskPayload,
+} from './payload/payload.module';
 import { Configuration } from './configuraton';
 
 export class Castle {
@@ -27,10 +32,36 @@ export class Castle {
     }
 
     if (this.configuration.doNotTrack) {
-      return this.generateDoNotTrackResponse(params.user_id);
+      return <AuthenticateResult>(
+        this.generateDoNotTrackResponse(params.user_id)
+      );
     }
 
     return APIAuthenticateService.call(params, this.configuration);
+  }
+
+  public async risk(params: RiskPayload): Promise<object> {
+    if (this.configuration.doNotTrack) {
+      return this.generateDoNotTrackResponse(params.user?.id);
+    }
+
+    return APIRiskService.call(params, this.configuration);
+  }
+
+  public async filter(params: FilterPayload): Promise<object> {
+    if (this.configuration.doNotTrack) {
+      return this.generateDoNotTrackResponse(params.user?.id);
+    }
+
+    return APIFilterService.call(params, this.configuration);
+  }
+
+  public async log(params: LogPayload): Promise<void> {
+    if (this.configuration.doNotTrack) {
+      return;
+    }
+
+    APILogService.call(params, this.configuration);
   }
 
   public async track(params: Payload): Promise<void> {
@@ -61,11 +92,12 @@ export class Castle {
     return APIReportDeviceService.call({ device_token }, this.configuration);
   }
 
-  private generateDoNotTrackResponse(userId) {
-    return FailoverResponsePrepareService.call(
-      userId,
-      'do not track',
-      this.configuration.failoverStrategy
-    );
+  private generateDoNotTrackResponse(userId): object {
+    return {
+      action: FailoverStrategy.allow,
+      user_id: userId,
+      failover: true,
+      failover_reason: 'do not track',
+    };
   }
 }

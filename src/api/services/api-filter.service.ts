@@ -1,10 +1,7 @@
 import { Configuration } from '../../configuraton';
 import { InternalServerError } from '../../errors';
 import { CommandFilterService } from '../../command/command.module';
-import {
-  FailoverResponsePrepareService,
-  FailoverStrategy,
-} from '../../failover/failover.module';
+import { FailoverStrategy } from '../../failover/failover.module';
 import { FilterPayload } from '../../payload/payload.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';

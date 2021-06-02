@@ -327,7 +327,7 @@ describe('Castle', () => {
       });
 
       const response = await castle.authenticate(sampleRequestData);
-      expect(response).toHaveProperty('action', 'deny');
+      expect(response).toHaveProperty('action', 'allow');
       expect(response).toHaveProperty('failover', true);
       expect(response).toHaveProperty('failover_reason', 'do not track');
       expect(response).toHaveProperty('user_id', 'userid');
