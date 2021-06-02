@@ -42,7 +42,6 @@ const sampleRiskRequestData = {
   },
 };
 
-
 const sampleFilterRequestData = {
   event: '$login',
   request_token: 'token',
@@ -84,9 +83,6 @@ const sampleLogRequestData = {
     },
   },
 };
-
-
-
 
 describe('Castle', () => {
   it('should have some public methods', () => {
@@ -436,7 +432,7 @@ describe('Castle', () => {
         // Mimic an allow response from authenticate.
         {
           action: 'allow',
-          device: { token: 'device_token'},
+          device: { token: 'device_token' },
           policy: {
             id: 'q-rbeMzBTdW2Fd09sbz55A',
             revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
@@ -452,7 +448,7 @@ describe('Castle', () => {
         logger: { info: () => {} },
       });
 
-      const response = await <any>castle.risk(sampleRiskRequestData);
+      const response = await (<any>castle.risk(sampleRiskRequestData));
       expect(response).toHaveProperty('action', 'allow');
       expect(response).toHaveProperty('device.token', 'device_token');
       expect(response.policy).toHaveProperty('id', 'q-rbeMzBTdW2Fd09sbz55A');
@@ -505,7 +501,7 @@ describe('Castle', () => {
         // Mimic an allow response from authenticate.
         {
           action: 'allow',
-          device: { token: 'device_token'},
+          device: { token: 'device_token' },
           policy: {
             id: 'q-rbeMzBTdW2Fd09sbz55A',
             revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
@@ -521,7 +517,7 @@ describe('Castle', () => {
         logger: { info: () => {} },
       });
 
-      const response = await <any>castle.filter(sampleFilterRequestData);
+      const response = await (<any>castle.filter(sampleFilterRequestData));
       expect(response).toHaveProperty('action', 'allow');
       expect(response).toHaveProperty('device.token', 'device_token');
       expect(response.policy).toHaveProperty('id', 'q-rbeMzBTdW2Fd09sbz55A');
@@ -537,7 +533,10 @@ describe('Castle', () => {
       expect(payload).toHaveProperty('sent_at', new Date().toISOString());
       // Verify that the passed in properties are passed on.
       expect(payload).toHaveProperty('event', sampleFilterRequestData.event);
-      expect(payload).toHaveProperty('user.id', sampleFilterRequestData.user.id);
+      expect(payload).toHaveProperty(
+        'user.id',
+        sampleFilterRequestData.user.id
+      );
       expect(payload).toHaveProperty('user.traits');
       expect(payload.user).toHaveProperty(
         'email',

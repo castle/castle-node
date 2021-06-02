@@ -4,13 +4,7 @@ import { ContextGetDefaultService } from '../../context/context.module';
 import { Payload } from '../../payload/payload.module';
 
 export const CoreGenerateRequestBody = {
-  call: (
-    {
-      context,
-      ...payloadOptions
-    }: any,
-    configuration: Configuration
-  ) => {
+  call: ({ context, ...payloadOptions }: any, configuration: Configuration) => {
     const defaultContext = ContextGetDefaultService.call(
       context,
       '',
