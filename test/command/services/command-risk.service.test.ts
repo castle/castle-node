@@ -1,10 +1,10 @@
-import { CommandAuthenticateService } from '../../../src/command/command.module';
+import { CommandRiskService } from '../../../src/command/command.module';
 import { Configuration } from '../../../src/configuraton';
 import { version } from '../../../package.json';
 import AbortController from 'abort-controller';
 import MockDate from 'mockdate';
 
-describe('CommandAuthenticateService', () => {
+describe('CommandRiskService', () => {
   beforeEach(() => {
     MockDate.set(new Date('2021-01-25T00:00:00.000Z'));
   });
@@ -16,7 +16,7 @@ describe('CommandAuthenticateService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: new URL('https://castle.io/authenticate'),
+      requestUrl: new URL('https://castle.io/risk'),
       requestOptions: {
         signal: controller.signal,
         method: 'POST',
@@ -26,7 +26,10 @@ describe('CommandAuthenticateService', () => {
         },
         body: JSON.stringify({
           sent_at: '2021-01-25T00:00:00.000Z',
-          event: '$login.succeeded',
+          request_token: 'token',
+          event: '$login',
+          status: '$succeeded',
+          user: { id: 'user_id', email: 'user_email' },
           context: {
             ip: '127.0.0.1',
             headers: {
@@ -56,9 +59,15 @@ describe('CommandAuthenticateService', () => {
     };
 
     it('generates payload', () => {
-      const received = CommandAuthenticateService.call(
+      const received = CommandRiskService.call(
         controller,
-        { event: '$login.succeeded', context },
+        {
+          request_token: 'token',
+          event: '$login',
+          status: '$succeeded',
+          user: { id: 'user_id', email: 'user_email' },
+          context,
+        },
         config
       );
       expect(received.requestUrl.href).toEqual(expected.requestUrl.href);

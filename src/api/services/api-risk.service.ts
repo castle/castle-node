@@ -1,9 +1,7 @@
 import { Configuration } from '../../configuraton';
 import { InternalServerError } from '../../errors';
-import { AuthenticateResult } from '../../models';
-import { CommandAuthenticateService } from '../../command/command.module';
+import { CommandRiskService } from '../../command/command.module';
 import { FailoverStrategy } from '../../failover/failover.module';
-import { Payload } from '../../payload/payload.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 
@@ -12,7 +10,7 @@ const handleFailover = (
   reason: string,
   configuration: Configuration,
   err?: Error
-): AuthenticateResult => {
+): object => {
   // Have to check it this way to make sure TS understands
   // that this.failoverStrategy is of type Verdict,
   // not FailoverStrategyType.
@@ -22,7 +20,6 @@ const handleFailover = (
 
   return {
     action: configuration.failoverStrategy,
-    user_id: userId,
     failover: true,
     failover_reason: reason,
   };
@@ -30,17 +27,10 @@ const handleFailover = (
 
 const isTimeoutError = (e: Error) => e.name === 'AbortError';
 
-export const APIAuthenticateService = {
-  call: async (
-    options: Payload,
-    configuration: Configuration
-  ): Promise<AuthenticateResult> => {
+export const APIRiskService = {
+  call: async (options: any, configuration: Configuration): Promise<object> => {
     const controller = new AbortController();
-    const command = CommandAuthenticateService.call(
-      controller,
-      options,
-      configuration
-    );
+    const command = CommandRiskService.call(controller, options, configuration);
 
     let processedResponse;
     try {
@@ -51,9 +41,9 @@ export const APIAuthenticateService = {
       );
     } catch (e) {
       if (isTimeoutError(e)) {
-        return handleFailover(options.user_id, 'timeout', configuration, e);
+        return handleFailover(options.user.id, 'timeout', configuration, e);
       } else if (e instanceof InternalServerError) {
-        return handleFailover(options.user_id, 'server error', configuration);
+        return handleFailover(options.user.id, 'server error', configuration);
       } else {
         throw e;
       }

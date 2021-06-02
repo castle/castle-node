@@ -5,3 +5,6 @@ export * from './command-get-device.service';
 export * from './command-get-devices-for-user.service';
 export * from './command-report-device.service';
 export * from './command-track.service';
+export * from './command-filter.service';
+export * from './command-log.service';
+export * from './command-risk.service';
