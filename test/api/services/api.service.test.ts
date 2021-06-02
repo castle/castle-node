@@ -1,6 +1,5 @@
 import { APIService } from '../../../src/api/api.module';
 import { Configuration } from '../../../src/configuraton';
-import { EVENTS } from '../../../src/events';
 import { CommandAuthenticateService } from '../../../src/command/services';
 import MockDate from 'mockdate';
 import fetchMock from 'fetch-mock';
@@ -16,7 +15,7 @@ describe('APIService', () => {
   });
 
   const sampleRequestData = {
-    event: EVENTS.LOGIN_SUCCEEDED,
+    event: '$login.succeeded',
     created_at: 'now',
     user_id: 'userid',
     user_traits: {

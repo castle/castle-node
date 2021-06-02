@@ -2,7 +2,7 @@ aliases:
   - &job-defaults
     working_directory: ~/repo
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:14
   - &yarn-checksum yarn-packages-{{ checksum "yarn.lock" }}-v1
   - &yarn-restore
     keys:
