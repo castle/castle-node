@@ -19,6 +19,7 @@
     "prepush": "yarn build && yarn lint-fix && yarn prettier-verify",
     "prepublishOnly": "yarn build"
   },
+  "files": ["dist/*"],
   "husky": {
     "hooks": {
       "pre-push": "yarn prepush"
