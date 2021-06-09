@@ -1,3 +1,3 @@
-export type Signals = {
+export interface Signals {
   [name: string]: any;
-};
+}

@@ -3,7 +3,7 @@ import type { Verdict } from './verdict';
 import type { Signals } from './signals';
 import type { Device } from './device';
 
-export type RiskResult = {
+export interface RiskResult {
   action: Verdict | string;
   risk?: number;
   failover?: boolean;
@@ -11,4 +11,4 @@ export type RiskResult = {
   policy?: RiskPolicy;
   signals?: Signals;
   device?: Device;
-};
+}

@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http2';
 
-export type FilterPayload = {
+export interface FilterPayload {
   request_token: string;
   event: string;
   status?: string;
@@ -13,4 +13,4 @@ export type FilterPayload = {
     ip: string;
     headers: IncomingHttpHeaders;
   };
-};
+}

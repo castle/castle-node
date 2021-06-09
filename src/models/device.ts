@@ -1,3 +1,3 @@
-export type Device = {
+export interface Device {
   token: string;
-};
+}
