@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http2';
 
-export type Payload = {
+export interface Payload {
   event?: string;
   user_id?: string;
   user_traits?: object;
@@ -11,4 +11,4 @@ export type Payload = {
     ip: string;
     headers: IncomingHttpHeaders;
   };
-};
+}

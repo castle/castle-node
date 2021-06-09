@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http2';
 
-export type LogPayload = {
+export interface LogPayload {
   request_token?: string;
   event: string;
   status?: string;
@@ -17,4 +17,4 @@ export type LogPayload = {
     ip?: string;
     headers?: IncomingHttpHeaders;
   };
-};
+}

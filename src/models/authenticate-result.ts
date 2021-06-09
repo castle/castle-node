@@ -2,7 +2,7 @@ import { RiskPolicy } from './risk-policy';
 import { Verdict } from './verdict';
 import { Signals } from './signals';
 
-export type AuthenticateResult = {
+export interface AuthenticateResult {
   action: Verdict | string;
   risk?: number;
   user_id?: string;
@@ -13,4 +13,4 @@ export type AuthenticateResult = {
   policy?: RiskPolicy;
   signals?: Signals;
   internal?: string;
-};
+}
