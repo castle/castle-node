@@ -1,12 +1,18 @@
 # Changelog
 
+## 1.0.1
+
+**Enhancements:**
+
+- [#117](https://github.com/castle/castle-node/pull/117)
+  * typings improvements
+
 ## 1.0.0
 **BREAKING CHANGES:**
+  - remove `identify` and `review` commands - they are no longer supported
 
-- [#42](https://github.com/castle/castle-php/pull/42)
-  * remove `identify` and `review` commands - they are no longer supported
-  * renamed setUseWhitelist with setUseAllowlist
-  
+  - renamed setUseWhitelist with setUseAllowlist
+
   - added better support for configuration, replaced apiUrl with baseUrl option
     * [#97](https://github.com/castle/castle-node/pull/97)
 
