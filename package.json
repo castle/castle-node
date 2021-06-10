@@ -5,7 +5,11 @@
   "version": "1.0.1",
   "main": "dist/index.js",
   "repository": "git@github.com:castle/castle-node.git",
-  "author": "castle.io",
+  "author": {
+    "name": "castle.io",
+    "url": "https://castle.io"
+  },
+  "homepage": "https://github.com/castle/castle-node",
   "license": "MIT",
   "private": false,
   "scripts": {
