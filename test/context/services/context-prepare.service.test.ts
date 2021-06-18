@@ -15,7 +15,7 @@ describe('ContextPrepareService', () => {
 
     const config = new Configuration({
       apiSecret: 'test',
-      baseUrl: 'https://castle.io',
+      baseUrl: 'https://castle.io/v1',
       denylisted: [],
       allowlisted: [],
     });
