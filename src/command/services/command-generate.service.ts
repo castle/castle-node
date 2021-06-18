@@ -5,6 +5,10 @@ import {
 } from '../../core/core.module';
 import { Payload } from '../../payload/payload.module';
 
+const combineURLs = (baseURL, relativeURL) => {
+  return baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '');
+};
+
 export const CommandGenerateService = {
   call: (
     controller,
@@ -14,7 +18,7 @@ export const CommandGenerateService = {
     configuration: Configuration
   ) => {
     return {
-      requestUrl: new URL(path, configuration.baseUrl),
+      requestUrl: new URL(combineURLs(configuration.baseUrl.toString(), path)),
       requestOptions: {
         signal: controller.signal,
         method,
