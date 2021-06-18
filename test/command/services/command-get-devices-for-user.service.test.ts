@@ -16,7 +16,7 @@ describe('CommandGetDevicesForUserService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: new URL('https://castle.io/users/user_id/devices'),
+      requestUrl: new URL('https://castle.io/v1/users/user_id/devices'),
       requestOptions: {
         signal: controller.signal,
         method: 'GET',
@@ -38,7 +38,7 @@ describe('CommandGetDevicesForUserService', () => {
 
     const config = new Configuration({
       apiSecret: 'test',
-      baseUrl: 'https://castle.io',
+      baseUrl: 'https://castle.io/v1',
     });
 
     const options = {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.2
+
+**BugFix:**
+
+- [#119](https://github.com/castle/castle-node/pull/119)
+  * fixed path resolving
+
 ## 1.0.1
 
 **Enhancements:**

@@ -16,7 +16,7 @@ describe('CommandLogService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: new URL('https://castle.io/log'),
+      requestUrl: new URL('https://castle.io/v1/log'),
       requestOptions: {
         signal: controller.signal,
         method: 'POST',
@@ -45,7 +45,7 @@ describe('CommandLogService', () => {
 
     const config = new Configuration({
       apiSecret: 'test',
-      baseUrl: 'https://castle.io',
+      baseUrl: 'https://castle.io/v1',
     });
 
     const context = {
