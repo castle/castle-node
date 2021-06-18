@@ -16,7 +16,7 @@ describe('CommandRiskService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: new URL('https://castle.io/risk'),
+      requestUrl: new URL('https://castle.io/v1/risk'),
       requestOptions: {
         signal: controller.signal,
         method: 'POST',

@@ -16,7 +16,7 @@ describe('CommandApproveDeviceService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: new URL('https://castle.io/devices/device_token/approve'),
+      requestUrl: new URL('https://castle.io/v1/devices/device_token/approve'),
       requestOptions: {
         signal: controller.signal,
         method: 'PUT',

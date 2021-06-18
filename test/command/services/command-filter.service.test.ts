@@ -16,7 +16,7 @@ describe('CommandFilterService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: new URL('https://castle.io/filter'),
+      requestUrl: new URL('https://castle.io/v1/filter'),
       requestOptions: {
         signal: controller.signal,
         method: 'POST',

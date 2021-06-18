@@ -16,7 +16,7 @@ describe('CommandGetDeviceService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: new URL('https://castle.io/devices/device_token'),
+      requestUrl: new URL('https://castle.io/v1/devices/device_token'),
       requestOptions: {
         signal: controller.signal,
         method: 'GET',

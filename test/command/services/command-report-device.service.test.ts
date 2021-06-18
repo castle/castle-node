@@ -16,7 +16,7 @@ describe('CommandReportDeviceService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: new URL('https://castle.io/devices/device_token/report'),
+      requestUrl: new URL('https://castle.io/v1/devices/device_token/report'),
       requestOptions: {
         signal: controller.signal,
         method: 'PUT',

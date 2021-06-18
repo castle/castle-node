@@ -16,7 +16,7 @@ describe('CommandGenerateService', () => {
   describe('call', () => {
     const controller = new AbortController();
     const expected = {
-      requestUrl: new URL('https://castle.io/test'),
+      requestUrl: new URL('https://castle.io/v1/test'),
       requestOptions: {
         signal: controller.signal,
         method: 'GET',
