@@ -24,15 +24,6 @@ describe('CommandGetDevicesForUserService', () => {
           Authorization: 'Basic OnRlc3Q=',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          sent_at: '2021-01-25T00:00:00.000Z',
-          context: {
-            library: {
-              name: 'castle-node',
-              version,
-            },
-          },
-        }),
       },
     };
 

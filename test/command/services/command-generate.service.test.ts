@@ -24,21 +24,6 @@ describe('CommandGenerateService', () => {
           Authorization: 'Basic OnRlc3Q=',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          sent_at: '2021-01-25T00:00:00.000Z',
-          context: {
-            ip: '127.0.0.1',
-            headers: {
-              'x-castle-client-id': 'client_id',
-            },
-            client_id: 'client_id',
-            active: true,
-            library: {
-              name: 'castle-node',
-              version,
-            },
-          },
-        }),
       },
     };
 
