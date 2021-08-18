@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.3
+
+**BugFix:**
+
+- [#120](https://github.com/castle/castle-node/pull/120)
+  * removes body in request for GET requests
+
 ## 1.0.2
 
 **BugFix:**
