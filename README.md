@@ -4,7 +4,7 @@
 
 ## Usage
 
-See the [documentation](https://castle.io/docs) for how to use this SDK with the Castle APIs
+See the [documentation](https://docs.castle.io) for how to use this SDK with the Castle APIs
 
 ## Installation
 
