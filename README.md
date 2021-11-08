@@ -40,7 +40,7 @@ const castle = new Castle({ apiSecret: 'YOUR SECRET HERE' });
 | ----------------- | ----------- |
 | apiSecret         | `string` - This can be found in the Castle dashboard. |
 | baseUrl           | `string` - Base Castle API url. |
-| timeout           | `number` - Time before returning the failover strategy. Default value is 500. |
+| timeout           | `number` - Time before returning the failover strategy. Default value is 1000. |
 | allowlisted       | `string[]` - An array of strings matching the headers you want to pass fully to the service. We highly recommend using the DEFAULT_ALLOWLIST constant. |
 | denylisted        | `string[]` - An array of of strings matching the headers you do not want to pass fully to the service. |
 | failoverStrategy  | `FailoverStrategy` - If the request to our service would for some reason time out, this is where you select the automatic response from `authenticate`. Options are `FailoverStrategy.allow`, `FailoverStrategy.deny`, `FailoverStrategy.challenge`. |
