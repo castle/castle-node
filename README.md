@@ -1,6 +1,6 @@
 # Castle SDK for Node
 
-**[Castle](https://castle.io) analyzes device, location, and interaction patterns in your web and mobile apps and lets you stop account takeover attacks in real-time..**
+**[Castle](https://castle.io) analyzes user behavior in web and mobile apps to stop fraud before it happens.**
 
 ## Usage
 
