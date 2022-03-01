@@ -66,7 +66,7 @@ export const CoreProcessResponseService = {
     // Throw a special exception for subtype errors if defined. Eg. for
     // invalid request token, which is a subtype of InvalidParametersError.
     // Otherwise, throw exception as defined per status code
-    let err = RESPONSE_SUB_ERRORS[body.type] || RESPONSE_ERRORS[response.status.toString()];
+    const err = RESPONSE_SUB_ERRORS[body.type] || RESPONSE_ERRORS[response.status.toString()];
 
     throw new err(`Castle: Responded with ${response.status} code`);
   },
