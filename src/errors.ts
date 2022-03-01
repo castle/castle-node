@@ -60,6 +60,14 @@ export class InvalidParametersError extends APIError {
   }
 }
 
+// api error invalid param 422, subtype
+export class InvalidRequestTokenError extends InvalidParametersError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidRequestTokenError';
+  }
+}
+
 // all internal server errors
 export class InternalServerError extends APIError {
   constructor(message: string) {
