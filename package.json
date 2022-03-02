@@ -2,7 +2,7 @@
   "$schema": "http://json.schemastore.org/package",
   "name": "@castleio/sdk",
   "description": "Castle SDK for Node",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "main": "dist/index.js",
   "repository": "git@github.com:castle/castle-node.git",
   "author": {
