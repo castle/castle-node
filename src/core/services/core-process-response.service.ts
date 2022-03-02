@@ -5,6 +5,7 @@ import {
   NotFoundError,
   UserUnauthorizedError,
   InvalidParametersError,
+  InvalidRequestTokenError,
   InternalServerError,
   APIError,
 } from '../../errors';
@@ -17,6 +18,10 @@ const RESPONSE_ERRORS = {
   '404': NotFoundError,
   '419': UserUnauthorizedError,
   '422': InvalidParametersError,
+};
+
+const RESPONSE_SUB_ERRORS = {
+  'invalid_request_token': InvalidRequestTokenError
 };
 
 // The body on the request is a stream and can only be
@@ -58,7 +63,10 @@ export const CoreProcessResponseService = {
       );
     }
 
-    const err = RESPONSE_ERRORS[response.status.toString()];
+    // Throw a special exception for subtype errors if defined. Eg. for
+    // invalid request token, which is a subtype of InvalidParametersError.
+    // Otherwise, throw exception as defined per status code
+    const err = RESPONSE_SUB_ERRORS[body.type] || RESPONSE_ERRORS[response.status.toString()];
 
     throw new err(`Castle: Responded with ${response.status} code`);
   },
