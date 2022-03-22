@@ -23,7 +23,9 @@ export const CommandGenerateService = {
         signal: controller.signal,
         method,
         headers: CoreGenerateDefaultHeadersService.call(configuration),
-        ...(method !== 'GET' && { body: CoreGenerateRequestBody.call(options, configuration) }),
+        ...(method !== 'GET' && {
+          body: CoreGenerateRequestBody.call(options, configuration),
+        }),
       },
     };
   },

@@ -183,21 +183,24 @@ describe('CoreProcessResponseService', () => {
       });
 
       describe('with invalid request token', () => {
-        const response = new Response(JSON.stringify({
-          type: "invalid_request_token",
-          message: "Invalid Request Token"
-        }), {
-          headers: { 'Content-Type': 'application/json' },
-          status: 422
-        })
+        const response = new Response(
+          JSON.stringify({
+            type: 'invalid_request_token',
+            message: 'Invalid Request Token',
+          }),
+          {
+            headers: { 'Content-Type': 'application/json' },
+            status: 422,
+          }
+        );
 
         it('throws InvalidRequestTokenError', async () => {
           await expect(
             CoreProcessResponseService.call('risk', {}, response, {
               info: () => {},
             })
-          ).rejects.toThrow(InvalidRequestTokenError)
-        })
+          ).rejects.toThrow(InvalidRequestTokenError);
+        });
       });
     });
   });

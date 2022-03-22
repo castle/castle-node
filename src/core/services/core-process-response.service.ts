@@ -21,7 +21,7 @@ const RESPONSE_ERRORS = {
 };
 
 const RESPONSE_SUB_ERRORS = {
-  'invalid_request_token': InvalidRequestTokenError
+  invalid_request_token: InvalidRequestTokenError,
 };
 
 // The body on the request is a stream and can only be
@@ -66,7 +66,9 @@ export const CoreProcessResponseService = {
     // Throw a special exception for subtype errors if defined. Eg. for
     // invalid request token, which is a subtype of InvalidParametersError.
     // Otherwise, throw exception as defined per status code
-    const err = RESPONSE_SUB_ERRORS[body.type] || RESPONSE_ERRORS[response.status.toString()];
+    const err =
+      RESPONSE_SUB_ERRORS[body.type] ||
+      RESPONSE_ERRORS[response.status.toString()];
 
     throw new err(`Castle: Responded with ${response.status} code`);
   },

@@ -20,7 +20,7 @@ const handleFailover = (
 
   return {
     policy: {
-      action: configuration.failoverStrategy
+      action: configuration.failoverStrategy,
     },
     action: configuration.failoverStrategy,
     failover: true,
