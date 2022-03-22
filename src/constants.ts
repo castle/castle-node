@@ -22,7 +22,6 @@ export const DEFAULT_ALLOWLIST = [
   'te',
   'upgrade-insecure-requests',
   'user-agent',
-  'x-castle-client-id',
   'x-requested-with',
 ];
 export const TRUSTED_PROXIES = [
