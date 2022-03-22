@@ -19,6 +19,9 @@ const handleFailover = (
   }
 
   return {
+    policy: {
+      action: configuration.failoverStrategy,
+    },
     action: configuration.failoverStrategy,
     failover: true,
     failover_reason: reason,

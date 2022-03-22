@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.1
+
+**Enhancements**
+
+- [#131](https://github.com/castle/castle-node/pull/131)
+  * failover response enhancement, removed X-Castle header from allowlist
+
+## 1.1.0
+
+**Enhancements**
+
+- [#127](https://github.com/castle/castle-node/pull/127)
+  * Introduce a new exception `InvalidRequestTokenError` for facilitating handling of all request token related errors
+
 ## 1.0.3
 
 **BugFix:**
@@ -36,7 +50,7 @@
   - dropped EVENTS const with list of events
     * [#97](https://github.com/castle/castle-node/pull/114)
 **Enhancements:**
-  - restructuring the codebase 
+  - restructuring the codebase
     * [#89](https://github.com/castle/castle-node/pull/89)
     * [#90](https://github.com/castle/castle-node/pull/90)
     * [#91](https://github.com/castle/castle-node/pull/91)
@@ -83,4 +97,3 @@
 **Enhancements:**
 
 - Re-publish to fix broken build
-
