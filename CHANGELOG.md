@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.1
+
+**Enhancements**
+
+- [#131](https://github.com/castle/castle-node/pull/131)
+  * failover response enhancement, removed X-Castle header from allowlist
+
 ## 1.1.0
 
 **Enhancements**
