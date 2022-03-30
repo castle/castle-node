@@ -29,7 +29,7 @@ const requestContextData = (
 
 export const ContextGetDefaultService = {
   call: (
-    request: any,
+    request: ExpressRequest,
     cookies: string | undefined,
     configuration: Configuration
   ): { [key: string]: any } => {
