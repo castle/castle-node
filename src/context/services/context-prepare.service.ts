@@ -1,14 +1,19 @@
 import merge from 'lodash.merge';
 import { Configuration } from '../../configuraton';
 import { ContextGetDefaultService } from './context-get-default.service';
+import type { Request as ExpressRequest } from 'express';
 
 export const ContextPrepareService = {
-  call: (requestContext: any, options: any, configuration: Configuration) => {
+  call: (
+    request: ExpressRequest,
+    options: undefined | { [key: string]: any },
+    configuration: Configuration
+  ) => {
     const defaultContext = ContextGetDefaultService.call(
-      requestContext,
-      options.cookies,
+      request,
+      options?.cookies,
       configuration
     );
-    return merge(requestContext, defaultContext);
+    return merge(defaultContext, options?.context);
   },
 };

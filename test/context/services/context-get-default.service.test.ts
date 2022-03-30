@@ -1,6 +1,7 @@
 import { ContextGetDefaultService } from '../../../src/context/context.module';
 import { Configuration } from '../../../src/configuraton';
 import { version } from '../../../package.json';
+import type { Request as ExpressRequest } from 'express';
 
 describe('ContextGetDefaultService', () => {
   describe('call', () => {
@@ -24,16 +25,21 @@ describe('ContextGetDefaultService', () => {
       allowlisted: [],
     });
 
-    const context = {
-      client_id: 'client_id',
+    const mockRequest = {
       headers: {
         'x-forwarded-for': '1.2.3.4',
         'x-castle-client-id': 'client_id',
+        cookies: 'client_id',
       },
-    };
+      body: {},
+    } as ExpressRequest;
 
     it('generates default context', () => {
-      const received = ContextGetDefaultService.call(context, {}, config);
+      const received = ContextGetDefaultService.call(
+        mockRequest,
+        undefined,
+        config
+      );
       expect(received).toMatchObject(expected);
     });
   });

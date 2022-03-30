@@ -9,7 +9,7 @@ export const CommandFilterService = {
     return CommandGenerateService.call(
       controller,
       'filter',
-      { ...options, ...{ context } },
+      { ...options, ...{ context } } as FilterPayload,
       'POST',
       configuration
     );

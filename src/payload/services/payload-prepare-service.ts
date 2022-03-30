@@ -1,19 +1,20 @@
 import merge from 'lodash.merge';
 import { Configuration } from '../../configuraton';
 import { ContextPrepareService } from '../../context/context.module';
+import type { Request } from 'express';
 
 export const PayloadPrepareService = {
   call: (
-    payloadOptions: any,
-    requestContext: any,
+    payloadParams: { [key: string]: any },
+    request: Request,
     configuration: Configuration,
-    options: any = {}
+    options: { [key: string]: any } = {}
   ) => {
     const context = ContextPrepareService.call(
-      requestContext,
-      merge(payloadOptions, options),
+      request,
+      merge(payloadParams, options),
       configuration
     );
-    return merge(payloadOptions, context);
+    return merge(payloadParams, { context });
   },
 };

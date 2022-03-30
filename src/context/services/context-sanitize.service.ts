@@ -1,5 +1,5 @@
 export const ContextSanitizeService = {
-  call: (context: any) => {
+  call: (context: undefined | { [key: string]: any }) => {
     if (!context) {
       return {};
     }

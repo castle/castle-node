@@ -3,7 +3,12 @@ import {
   CoreGenerateDefaultHeadersService,
   CoreGenerateRequestBody,
 } from '../../core/core.module';
-import { Payload } from '../../payload/payload.module';
+import {
+  Payload,
+  LogPayload,
+  RiskPayload,
+  FilterPayload,
+} from '../../payload/payload.module';
 
 const combineURLs = (baseURL, relativeURL) => {
   return baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '');
@@ -13,7 +18,7 @@ export const CommandGenerateService = {
   call: (
     controller,
     path: string,
-    options: Payload,
+    options: Payload | LogPayload | RiskPayload | FilterPayload,
     method: string,
     configuration: Configuration
   ) => {

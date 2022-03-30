@@ -1,6 +1,6 @@
 import { Configuration } from '../../configuraton';
 import { ContextSanitizeService } from '../../context/context.module';
-import { Payload } from '../../payload/payload.module';
+import type { Payload } from '../../payload/payload.module';
 import { CommandGenerateService } from './command-generate.service';
 
 export const CommandAuthenticateService = {
@@ -9,7 +9,7 @@ export const CommandAuthenticateService = {
     return CommandGenerateService.call(
       controller,
       'authenticate',
-      { ...options, ...{ context } },
+      { ...options, ...{ context } } as Payload,
       'POST',
       configuration
     );
