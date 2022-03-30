@@ -1,12 +1,15 @@
-import { IncomingHttpHeaders } from 'http';
+import type { IncomingHttpHeaders } from 'http2';
 import reduce from 'lodash.reduce';
-import { Configuration } from '../../configuraton';
+import type { Configuration } from '../../configuraton';
 
 const ALWAYS_ALLOWLISTED = ['user-agent'];
 const ALWAYS_DENYLISTED = ['cookie', 'authorization'];
 
 export const HeadersExtractService = {
-  call: (headers: IncomingHttpHeaders, configuration: Configuration) => {
+  call: (
+    headers: IncomingHttpHeaders,
+    configuration: Configuration
+  ): { [key: string]: boolean | string } => {
     return reduce(
       headers,
       (accumulator: object, value: string, key: string) => {

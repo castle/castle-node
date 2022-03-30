@@ -9,7 +9,7 @@ export const CommandLogService = {
     return CommandGenerateService.call(
       controller,
       'log',
-      { ...options, ...{ context } },
+      { ...options, ...{ context } } as LogPayload,
       'POST',
       configuration
     );

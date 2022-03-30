@@ -9,7 +9,7 @@ export const CommandTrackService = {
     return CommandGenerateService.call(
       controller,
       'track',
-      { ...options, ...{ context } },
+      { ...options, ...{ context } } as Payload,
       'POST',
       configuration
     );

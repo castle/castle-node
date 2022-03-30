@@ -1,4 +1,4 @@
-import { IncomingHttpHeaders } from 'http';
+import type { IncomingHttpHeaders } from 'http2';
 import { Configuration } from '../../configuraton';
 import { TRUSTED_PROXIES } from '../../constants';
 

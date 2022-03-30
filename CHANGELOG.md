@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0
+
+**BugFix:**
+
+- [#132](https://github.com/castle/castle-node/pull/132)
+  * fixed how options in the context prepare are merged
+  * changed/fixed how payload prepare options are merge
+
 ## 1.1.1
 
 **Enhancements**

@@ -1,4 +1,4 @@
-import { IncomingHttpHeaders } from 'http2';
+import type { IncomingHttpHeaders } from 'http2';
 
 export interface LogPayload {
   request_token?: string;

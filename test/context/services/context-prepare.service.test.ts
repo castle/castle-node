@@ -1,6 +1,7 @@
 import { ContextPrepareService } from '../../../src/context/context.module';
 import { Configuration } from '../../../src/configuraton';
 import { version } from '../../../package.json';
+import type { Request as ExpressRequest } from 'express';
 
 describe('ContextPrepareService', () => {
   describe('call', () => {
@@ -9,7 +10,7 @@ describe('ContextPrepareService', () => {
         name: 'castle-node',
         version,
       },
-      client_id: 'abcd',
+      client_id: 'client_id',
       active: true,
     };
 
@@ -20,17 +21,21 @@ describe('ContextPrepareService', () => {
       allowlisted: [],
     });
 
-    const context = {
-      client_id: 'client_id',
-      active: true,
-    };
-
     const options = {
       cookies: '__cid=abcd;',
+      context: {
+        client_id: 'client_id',
+        active: true,
+      },
     };
 
+    const mockRequest = {
+      headers: {},
+      body: {},
+    } as ExpressRequest;
+
     it('generates context', () => {
-      const received = ContextPrepareService.call(context, options, config);
+      const received = ContextPrepareService.call(mockRequest, options, config);
       expect(received).toMatchObject(expected);
     });
   });

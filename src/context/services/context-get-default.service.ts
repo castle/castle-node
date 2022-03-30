@@ -6,12 +6,13 @@ import { ClientIdExtractService } from '../../client-id/client-id.module';
 import { HeadersExtractService } from '../../headers/headers.module';
 import { IPsExtractService } from '../../ips/ips.module';
 import { version } from '../../../package.json';
+import type { Request as ExpressRequest } from 'express';
 
 const requestContextData = (
-  request: any,
-  cookies: any,
+  request: ExpressRequest,
+  cookies: string | undefined,
   configuration: Configuration
-) => {
+): { [key: string]: any } => {
   if (isEmpty(request)) {
     return {};
   }
@@ -27,7 +28,11 @@ const requestContextData = (
 };
 
 export const ContextGetDefaultService = {
-  call: (request: any, cookies: any, configuration: Configuration) => {
+  call: (
+    request: ExpressRequest,
+    cookies: string | undefined,
+    configuration: Configuration
+  ): { [key: string]: any } => {
     return {
       ...pickBy(requestContextData(request, cookies, configuration)),
       library: {
