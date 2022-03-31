@@ -12,6 +12,8 @@
 
 - [#133](https://github.com/castle/castle-node/pull/133)
   * increased default timeout from 1000 to 1500
+- [#133](https://github.com/castle/castle-node/pull/133)
+  * exposed ContextPrepareService
 
 ## 1.1.1
 
