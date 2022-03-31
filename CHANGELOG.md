@@ -1,12 +1,19 @@
 # Changelog
 
-## 2.0.0
+## 1.2.0
 
 **BugFix:**
 
 - [#132](https://github.com/castle/castle-node/pull/132)
   * fixed how options in the context prepare are merged
   * changed/fixed how payload prepare options are merge
+
+**Enhancements**
+
+- [#133](https://github.com/castle/castle-node/pull/133)
+  * increased default timeout from 1000 to 1500
+- [#133](https://github.com/castle/castle-node/pull/133)
+  * exposed ContextPrepareService
 
 ## 1.1.1
 
