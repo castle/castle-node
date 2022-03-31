@@ -10,7 +10,7 @@ describe('Configration', () => {
       });
 
       it('sets default timeout', () => {
-        expect(config.timeout).toEqual(1000);
+        expect(config.timeout).toEqual(1500);
       });
 
       describe('with setter', () => {

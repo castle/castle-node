@@ -1,5 +1,5 @@
 export const DEFAULT_API_URL = 'https://api.castle.io/v1';
-export const DEFAULT_TIMEOUT = 1000;
+export const DEFAULT_TIMEOUT = 1500;
 export const DEFAULT_ALLOWLIST = [
   'accept',
   'accept-charset',
