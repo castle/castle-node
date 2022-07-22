@@ -18,16 +18,10 @@ describe('CoreGenerateRequestBody', () => {
       event: '$login.succeeded',
       user_id: 'user_id',
       context: {
-        ip: '127.0.0.1',
+        ip: '127.0.0.2',
         headers: {
           'x-forwarded-for': '127.0.0.1',
           'x-castle-client-id': 'client_id',
-        },
-        client_id: 'client_id',
-        active: true,
-        library: {
-          name: 'castle-node',
-          version,
         },
       },
     });
@@ -40,7 +34,7 @@ describe('CoreGenerateRequestBody', () => {
       event: '$login.succeeded',
       user_id: 'user_id',
       context: {
-        ip: '127.0.0.1',
+        ip: '127.0.0.2',
         headers: {
           'x-forwarded-for': '127.0.0.1',
           'x-castle-client-id': 'client_id',
@@ -49,7 +43,7 @@ describe('CoreGenerateRequestBody', () => {
     };
 
     it('generates request body', () => {
-      expect(CoreGenerateRequestBody.call(payload, config)).toEqual(result);
+      expect(CoreGenerateRequestBody.call(payload)).toEqual(result);
     });
   });
 });

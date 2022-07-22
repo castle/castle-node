@@ -15,6 +15,6 @@ export interface LogPayload {
   properties?: object;
   context?: {
     ip?: string;
-    headers?: IncomingHttpHeaders;
+    headers: IncomingHttpHeaders | { [key: string]: string | boolean };
   };
 }

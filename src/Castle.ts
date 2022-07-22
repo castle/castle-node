@@ -20,7 +20,7 @@ import type {
 import { Configuration } from './configuraton';
 
 export class Castle {
-  private configuration: Configuration;
+  public configuration: Configuration;
 
   constructor(configAttributes) {
     this.configuration = new Configuration(configAttributes);
