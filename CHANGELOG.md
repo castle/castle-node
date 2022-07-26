@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.0.0
+
+**BREAKING CHANGES:**
+
+- [#135](https://github.com/castle/castle-node/pull/135)
+  * removed auto context building from the command payload generation. Follow https://docs.castle.io/ for passing the context to the commands. This version does not build context when castle commands are called. `ContextPrepareService` should be used explicitly.
+
+**Enhancements**
+
+- allowed to import errors classes and constants
+
+- [#136](https://github.com/castle/castle-node/pull/136)
+  * fixes inconsistencies regarding failover responses between the commands
+  * removed unused code
+
 ## 1.2.0
 
 **BugFix:**
