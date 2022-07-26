@@ -21,6 +21,9 @@ const handleFailover = (
   }
 
   return {
+    policy: {
+      action: configuration.failoverStrategy,
+    },
     action: configuration.failoverStrategy,
     user_id: userId,
     failover: true,
