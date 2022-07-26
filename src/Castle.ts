@@ -94,6 +94,9 @@ export class Castle {
 
   private generateDoNotTrackResponse(userId): object {
     return {
+      policy: {
+        action: FailoverStrategy.allow,
+      },
       action: FailoverStrategy.allow,
       user_id: userId,
       failover: true,

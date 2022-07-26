@@ -1,4 +1,4 @@
-import { RiskPolicy } from './risk-policy';
+import { RiskPolicy, RiskPolicyFailover } from './risk-policy';
 import { Verdict } from './verdict';
 import { Signals } from './signals';
 
@@ -10,7 +10,7 @@ export interface AuthenticateResult {
   device_token?: string;
   failover?: boolean;
   failover_reason?: string;
-  policy?: RiskPolicy;
+  policy?: RiskPolicy | RiskPolicyFailover;
   signals?: Signals;
   internal?: string;
 }
