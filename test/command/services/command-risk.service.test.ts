@@ -35,12 +35,6 @@ describe('CommandRiskService', () => {
             headers: {
               'x-castle-client-id': 'client_id',
             },
-            client_id: 'client_id',
-            active: true,
-            library: {
-              name: 'castle-node',
-              version,
-            },
           },
         }),
       },

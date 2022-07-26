@@ -29,7 +29,7 @@ export const CommandGenerateService = {
         method,
         headers: CoreGenerateDefaultHeadersService.call(configuration),
         ...(method !== 'GET' && {
-          body: CoreGenerateRequestBody.call(options, configuration),
+          body: CoreGenerateRequestBody.call(options),
         }),
       },
     };

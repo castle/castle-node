@@ -11,6 +11,6 @@ export interface FilterPayload {
   properties?: object;
   context: {
     ip: string;
-    headers: IncomingHttpHeaders;
+    headers: IncomingHttpHeaders | { [key: string]: string | boolean };
   };
 }

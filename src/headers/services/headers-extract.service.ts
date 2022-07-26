@@ -7,7 +7,7 @@ const ALWAYS_DENYLISTED = ['cookie', 'authorization'];
 
 export const HeadersExtractService = {
   call: (
-    headers: IncomingHttpHeaders,
+    headers: IncomingHttpHeaders | { [key: string]: string },
     configuration: Configuration
   ): { [key: string]: boolean | string } => {
     return reduce(

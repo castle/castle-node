@@ -2,86 +2,110 @@ import { Castle } from '../index';
 import fetchMock from 'fetch-mock';
 import { FailoverStrategy } from '../src/failover/models';
 import MockDate from 'mockdate';
+import { ContextPrepareService } from '../src/context/services';
+import { ClientIdExtractService } from '../src/client-id/client-id.module';
+import { HeadersExtractService } from '../src/headers/headers.module';
+import { Configuration } from '../src/configuraton';
 
-const sampleRequestData = {
-  event: '$login.succeeded',
-  created_at: 'now',
-  user_id: 'userid',
-  user_traits: {
-    email: 'myemail',
-    registered_at: 'today',
-  },
-  context: {
-    ip: '8.8.8.8',
-    client_id: 'clientid',
-    headers: {
-      Cookie: 'SECRET=pleasedontbehere',
-      'x-forwarded-for': '8.8.8.8',
-    },
-  },
-};
-
-const sampleRiskRequestData = {
-  event: '$login',
-  request_token: 'token',
-  status: '$succeeded',
-  user: {
-    id: 'userid',
-    email: 'email',
-    traits: {
-      registered_at: 'today',
-    },
-  },
-  context: {
-    ip: '8.8.8.8',
-    client_id: 'clientid',
-    headers: {
-      Cookie: 'SECRET=pleasedontbehere',
-      'x-forwarded-for': '8.8.8.8',
-    },
-  },
-};
-
-const sampleFilterRequestData = {
-  event: '$login',
-  request_token: 'token',
-  status: '$succeeded',
-  user: {
-    id: 'userid',
-    email: 'email',
-    traits: {
-      registered_at: 'today',
-    },
-  },
-  context: {
-    ip: '8.8.8.8',
-    client_id: 'clientid',
-    headers: {
-      Cookie: 'SECRET=pleasedontbehere',
-      'x-forwarded-for': '8.8.8.8',
-    },
-  },
-};
-
-const sampleLogRequestData = {
-  event: '$login',
-  status: '$succeeded',
-  user: {
-    id: 'userid',
-    email: 'email',
-    traits: {
+const sampleRequestData = (configuration) => {
+  return {
+    event: '$login.succeeded',
+    created_at: 'now',
+    user_id: 'userid',
+    user_traits: {
       email: 'myemail',
       registered_at: 'today',
     },
-  },
-  context: {
-    ip: '8.8.8.8',
-    client_id: 'clientid',
-    headers: {
-      Cookie: 'SECRET=pleasedontbehere',
-      'x-forwarded-for': '8.8.8.8',
+    context: {
+      ip: '8.8.8.8',
+      client_id: 'clientid',
+      headers: HeadersExtractService.call(
+        {
+          Cookie: 'SECRET=pleasedontbehere',
+          'x-forwarded-for': '8.8.8.8',
+        },
+        configuration
+      ),
     },
-  },
+  };
+};
+
+const sampleRiskRequestData = (configuration) => {
+  return {
+    event: '$login',
+    request_token: 'token',
+    status: '$succeeded',
+    user: {
+      id: 'userid',
+      email: 'email',
+      traits: {
+        registered_at: 'today',
+      },
+    },
+    context: {
+      ip: '8.8.8.8',
+      client_id: 'clientid',
+      headers: HeadersExtractService.call(
+        {
+          Cookie: 'SECRET=pleasedontbehere',
+          'x-forwarded-for': '8.8.8.8',
+        },
+        configuration
+      ),
+    },
+  };
+};
+
+const sampleFilterRequestData = (configuration) => {
+  return {
+    event: '$login',
+    request_token: 'token',
+    status: '$succeeded',
+    user: {
+      id: 'userid',
+      email: 'email',
+      traits: {
+        registered_at: 'today',
+      },
+    },
+    context: {
+      ip: '8.8.8.8',
+      client_id: 'clientid',
+      headers: HeadersExtractService.call(
+        {
+          Cookie: 'SECRET=pleasedontbehere',
+          'x-forwarded-for': '8.8.8.8',
+        },
+        configuration
+      ),
+    },
+  };
+};
+
+const sampleLogRequestData = (configuration) => {
+  return {
+    event: '$login',
+    status: '$succeeded',
+    user: {
+      id: 'userid',
+      email: 'email',
+      traits: {
+        email: 'myemail',
+        registered_at: 'today',
+      },
+    },
+    context: {
+      ip: '8.8.8.8',
+      client_id: 'clientid',
+      headers: HeadersExtractService.call(
+        {
+          Cookie: 'SECRET=pleasedontbehere',
+          'x-forwarded-for': '8.8.8.8',
+        },
+        configuration
+      ),
+    },
+  };
 };
 
 describe('Castle', () => {
@@ -118,36 +142,38 @@ describe('Castle', () => {
         overrideFetch: fetch,
         logger: { info: () => {} },
       });
-      castle.track(sampleRequestData);
+
+      const sampleRequestDataLocal = sampleRequestData(castle.configuration);
+      castle.track(sampleRequestDataLocal);
 
       const lastOptions: any = fetch.lastOptions();
       const payload = JSON.parse(lastOptions.body.toString());
       // Ensure the client set the sent_at property.
       expect(payload).toHaveProperty('sent_at', new Date().toISOString());
       // Verify that the passed in properties are passed on.
-      expect(payload).toHaveProperty('event', sampleRequestData.event);
+      expect(payload).toHaveProperty('event', sampleRequestDataLocal.event);
       expect(payload).toHaveProperty(
         'created_at',
-        sampleRequestData.created_at
+        sampleRequestDataLocal.created_at
       );
-      expect(payload).toHaveProperty('user_id', sampleRequestData.user_id);
+      expect(payload).toHaveProperty('user_id', sampleRequestDataLocal.user_id);
       expect(payload).toHaveProperty('user_traits');
       expect(payload.user_traits).toHaveProperty(
         'email',
-        sampleRequestData.user_traits.email
+        sampleRequestDataLocal.user_traits.email
       );
       expect(payload.user_traits).toHaveProperty(
         'registered_at',
-        sampleRequestData.user_traits.registered_at
+        sampleRequestDataLocal.user_traits.registered_at
       );
       expect(payload).toHaveProperty('context');
       expect(payload.context).toHaveProperty(
         'ip',
-        sampleRequestData.context.ip
+        sampleRequestDataLocal.context.ip
       );
       expect(payload.context).toHaveProperty(
         'client_id',
-        sampleRequestData.context.client_id
+        sampleRequestDataLocal.context.client_id
       );
       expect(payload.context).toHaveProperty('headers');
       // Ensure that cookie header property is scrubbed.
@@ -168,14 +194,19 @@ describe('Castle', () => {
         logger: { info: () => {} },
       });
 
+      const sampleRequestDataLocal = sampleRequestData(castle.configuration);
+
       castle.track({
-        ...sampleRequestData,
+        ...sampleRequestDataLocal,
         context: {
-          ...sampleRequestData.context,
-          headers: {
-            'X-NOT-A-SECRET': 'not secret!',
-            'X-SUPER-SECRET': 'so secret!',
-          },
+          ...sampleRequestDataLocal.context,
+          headers: HeadersExtractService.call(
+            {
+              'X-NOT-A-SECRET': 'not secret!',
+              'X-SUPER-SECRET': 'so secret!',
+            },
+            castle.configuration
+          ),
         },
       });
 
@@ -206,14 +237,19 @@ describe('Castle', () => {
         logger: { info: () => {} },
       });
 
+      const sampleRequestDataLocal = sampleRequestData(castle.configuration);
+
       castle.track({
-        ...sampleRequestData,
+        ...sampleRequestDataLocal,
         context: {
-          ...sampleRequestData.context,
-          headers: {
-            'X-NOT-A-SECRET': 'not secret!',
-            'X-SUPER-SECRET': 'so secret!',
-          },
+          ...sampleRequestDataLocal.context,
+          headers: HeadersExtractService.call(
+            {
+              'X-NOT-A-SECRET': 'not secret!',
+              'X-SUPER-SECRET': 'so secret!',
+            },
+            castle.configuration
+          ),
         },
       });
 
@@ -239,7 +275,9 @@ describe('Castle', () => {
         logger: { info: () => {} },
       });
 
-      await castle.track(sampleRequestData);
+      const sampleRequestDataLocal = sampleRequestData(castle.configuration);
+
+      await castle.track(sampleRequestDataLocal);
 
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
@@ -255,11 +293,13 @@ describe('Castle', () => {
         logger: { info: () => {} },
       });
 
+      const sampleRequestDataLocal = sampleRequestData(castle.configuration);
+
       // Promise based expectations have to be awaited to properly fail
       // tests, instead of just logging unhandled rejections.
-      await expect(castle.authenticate(sampleRequestData)).rejects.toThrowError(
-        'Castle: Responded with 401 code'
-      );
+      await expect(
+        castle.authenticate(sampleRequestDataLocal)
+      ).rejects.toThrowError('Castle: Responded with 401 code');
     });
   });
 
@@ -296,7 +336,8 @@ describe('Castle', () => {
         logger: { info: () => {} },
       });
 
-      const response = await castle.authenticate(sampleRequestData);
+      const sampleRequestDataLocal = sampleRequestData(castle.configuration);
+      const response = await castle.authenticate(sampleRequestDataLocal);
       expect(response).toHaveProperty('action', 'allow');
       expect(response).toHaveProperty('device_token', 'device_token');
       expect(response).toHaveProperty('user_id', 'user_id');
@@ -312,29 +353,29 @@ describe('Castle', () => {
       // Ensure the client set the sent_at property.
       expect(payload).toHaveProperty('sent_at', new Date().toISOString());
       // Verify that the passed in properties are passed on.
-      expect(payload).toHaveProperty('event', sampleRequestData.event);
+      expect(payload).toHaveProperty('event', sampleRequestDataLocal.event);
       expect(payload).toHaveProperty(
         'created_at',
-        sampleRequestData.created_at
+        sampleRequestDataLocal.created_at
       );
-      expect(payload).toHaveProperty('user_id', sampleRequestData.user_id);
+      expect(payload).toHaveProperty('user_id', sampleRequestDataLocal.user_id);
       expect(payload).toHaveProperty('user_traits');
       expect(payload.user_traits).toHaveProperty(
         'email',
-        sampleRequestData.user_traits.email
+        sampleRequestDataLocal.user_traits.email
       );
       expect(payload.user_traits).toHaveProperty(
         'registered_at',
-        sampleRequestData.user_traits.registered_at
+        sampleRequestDataLocal.user_traits.registered_at
       );
       expect(payload).toHaveProperty('context');
       expect(payload.context).toHaveProperty(
         'ip',
-        sampleRequestData.context.ip
+        sampleRequestDataLocal.context.ip
       );
       expect(payload.context).toHaveProperty(
         'client_id',
-        sampleRequestData.context.client_id
+        sampleRequestDataLocal.context.client_id
       );
       expect(payload.context).toHaveProperty('headers');
       // Ensure that cookie header property is scrubbed.
@@ -354,8 +395,8 @@ describe('Castle', () => {
         failoverStrategy: FailoverStrategy.deny,
         logger: { info: () => {} },
       });
-
-      const response = await castle.authenticate(sampleRequestData);
+      const sampleRequestDataLocal = sampleRequestData(castle.configuration);
+      const response = await castle.authenticate(sampleRequestDataLocal);
       expect(response).toHaveProperty('action', 'deny');
       expect(response).toHaveProperty('failover', true);
       expect(response).toHaveProperty('failover_reason', 'timeout');
@@ -370,8 +411,8 @@ describe('Castle', () => {
         failoverStrategy: FailoverStrategy.deny,
         logger: { info: () => {} },
       });
-
-      const response = await castle.authenticate(sampleRequestData);
+      const sampleRequestDataLocal = sampleRequestData(castle.configuration);
+      const response = await castle.authenticate(sampleRequestDataLocal);
       expect(response).toHaveProperty('action', 'deny');
       expect(response).toHaveProperty('failover', true);
       expect(response).toHaveProperty('failover_reason', 'server error');
@@ -387,8 +428,8 @@ describe('Castle', () => {
         failoverStrategy: FailoverStrategy.deny,
         logger: { info: () => {} },
       });
-
-      const response = await castle.authenticate(sampleRequestData);
+      const sampleRequestDataLocal = sampleRequestData(castle.configuration);
+      const response = await castle.authenticate(sampleRequestDataLocal);
       expect(response).toHaveProperty('action', 'allow');
       expect(response).toHaveProperty('failover', true);
       expect(response).toHaveProperty('failover_reason', 'do not track');
@@ -407,12 +448,12 @@ describe('Castle', () => {
         overrideFetch: fetch,
         logger: { info: () => {} },
       });
-
+      const sampleRequestDataLocal = sampleRequestData(castle.configuration);
       // Promise based expectations have to be awaited to properly fail
       // tests, instead of just logging unhandled rejections.
-      await expect(castle.authenticate(sampleRequestData)).rejects.toThrowError(
-        'Castle: Responded with 401 code'
-      );
+      await expect(
+        castle.authenticate(sampleRequestDataLocal)
+      ).rejects.toThrowError('Castle: Responded with 401 code');
     });
   });
 
@@ -448,7 +489,10 @@ describe('Castle', () => {
         logger: { info: () => {} },
       });
 
-      const response = await (<any>castle.risk(sampleRiskRequestData));
+      const sampleRiskRequestDataLocal = sampleRiskRequestData(
+        castle.configuration
+      );
+      const response = await (<any>castle.risk(sampleRiskRequestDataLocal));
       expect(response).toHaveProperty('action', 'allow');
       expect(response).toHaveProperty('device.token', 'device_token');
       expect(response.policy).toHaveProperty('id', 'q-rbeMzBTdW2Fd09sbz55A');
@@ -463,21 +507,24 @@ describe('Castle', () => {
       // Ensure the client set the sent_at property.
       expect(payload).toHaveProperty('sent_at', new Date().toISOString());
       // Verify that the passed in properties are passed on.
-      expect(payload).toHaveProperty('event', sampleRiskRequestData.event);
-      expect(payload).toHaveProperty('user.id', sampleRiskRequestData.user.id);
+      expect(payload).toHaveProperty('event', sampleRiskRequestDataLocal.event);
+      expect(payload).toHaveProperty(
+        'user.id',
+        sampleRiskRequestDataLocal.user.id
+      );
       expect(payload).toHaveProperty('user.traits');
       expect(payload.user).toHaveProperty(
         'email',
-        sampleRiskRequestData.user.email
+        sampleRiskRequestDataLocal.user.email
       );
       expect(payload.user.traits).toHaveProperty(
         'registered_at',
-        sampleRiskRequestData.user.traits.registered_at
+        sampleRiskRequestDataLocal.user.traits.registered_at
       );
       expect(payload).toHaveProperty('context');
       expect(payload.context).toHaveProperty(
         'ip',
-        sampleRiskRequestData.context.ip
+        sampleRiskRequestDataLocal.context.ip
       );
       expect(payload.context).toHaveProperty('headers');
       // Ensure that cookie header property is scrubbed.
@@ -517,7 +564,10 @@ describe('Castle', () => {
         logger: { info: () => {} },
       });
 
-      const response = await (<any>castle.filter(sampleFilterRequestData));
+      const sampleFilterRequestDataLocal = sampleRiskRequestData(
+        castle.configuration
+      );
+      const response = await (<any>castle.filter(sampleFilterRequestDataLocal));
       expect(response).toHaveProperty('action', 'allow');
       expect(response).toHaveProperty('device.token', 'device_token');
       expect(response.policy).toHaveProperty('id', 'q-rbeMzBTdW2Fd09sbz55A');
@@ -532,24 +582,27 @@ describe('Castle', () => {
       // Ensure the client set the sent_at property.
       expect(payload).toHaveProperty('sent_at', new Date().toISOString());
       // Verify that the passed in properties are passed on.
-      expect(payload).toHaveProperty('event', sampleFilterRequestData.event);
+      expect(payload).toHaveProperty(
+        'event',
+        sampleFilterRequestDataLocal.event
+      );
       expect(payload).toHaveProperty(
         'user.id',
-        sampleFilterRequestData.user.id
+        sampleFilterRequestDataLocal.user.id
       );
       expect(payload).toHaveProperty('user.traits');
       expect(payload.user).toHaveProperty(
         'email',
-        sampleFilterRequestData.user.email
+        sampleFilterRequestDataLocal.user.email
       );
       expect(payload.user.traits).toHaveProperty(
         'registered_at',
-        sampleFilterRequestData.user.traits.registered_at
+        sampleFilterRequestDataLocal.user.traits.registered_at
       );
       expect(payload).toHaveProperty('context');
       expect(payload.context).toHaveProperty(
         'ip',
-        sampleFilterRequestData.context.ip
+        sampleFilterRequestDataLocal.context.ip
       );
       expect(payload.context).toHaveProperty('headers');
       // Ensure that cookie header property is scrubbed.
@@ -578,32 +631,39 @@ describe('Castle', () => {
         overrideFetch: fetch,
         logger: { info: () => {} },
       });
-      castle.log(sampleLogRequestData);
+      const sampleLogRequestDataLocal = sampleLogRequestData(
+        castle.configuration
+      );
+      castle.log(sampleLogRequestDataLocal);
 
       const lastOptions: any = fetch.lastOptions();
+
       const payload = JSON.parse(lastOptions.body.toString());
       // Ensure the client set the sent_at property.
       expect(payload).toHaveProperty('sent_at', new Date().toISOString());
       // Verify that the passed in properties are passed on.
-      expect(payload).toHaveProperty('event', sampleLogRequestData.event);
-      expect(payload).toHaveProperty('user.id', sampleLogRequestData.user.id);
+      expect(payload).toHaveProperty('event', sampleLogRequestDataLocal.event);
+      expect(payload).toHaveProperty(
+        'user.id',
+        sampleLogRequestDataLocal.user.id
+      );
       expect(payload).toHaveProperty('user.traits');
       expect(payload.user).toHaveProperty(
         'email',
-        sampleLogRequestData.user.email
+        sampleLogRequestDataLocal.user.email
       );
       expect(payload.user.traits).toHaveProperty(
         'registered_at',
-        sampleLogRequestData.user.traits.registered_at
+        sampleLogRequestDataLocal.user.traits.registered_at
       );
       expect(payload).toHaveProperty('context');
       expect(payload.context).toHaveProperty(
         'ip',
-        sampleLogRequestData.context.ip
+        sampleLogRequestDataLocal.context.ip
       );
       expect(payload.context).toHaveProperty(
         'client_id',
-        sampleLogRequestData.context.client_id
+        sampleLogRequestDataLocal.context.client_id
       );
       expect(payload.context).toHaveProperty('headers');
       // Ensure that cookie header property is scrubbed.

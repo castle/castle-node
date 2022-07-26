@@ -9,6 +9,6 @@ export interface Payload {
   device_token?: string;
   context?: {
     ip: string;
-    headers: IncomingHttpHeaders;
+    headers: IncomingHttpHeaders | { [key: string]: string | boolean };
   };
 }
