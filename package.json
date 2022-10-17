@@ -22,11 +22,6 @@
     "prepush": "yarn build && yarn lint-fix && yarn prettier-verify",
     "prepublishOnly": "yarn build"
   },
-  "jest": {
-    "projects": [
-      "<rootDir>/jest.config.js"
-    ]
-  },
   "files": [
     "dist/*"
   ],
