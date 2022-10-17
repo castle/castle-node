@@ -1,5 +1,4 @@
 import { Configuration } from '../../configuraton';
-import { AuthenticateResult } from '../../models';
 import { CoreProcessResponseService } from '../../core/core.module';
 import { LoggerService } from '../../logger/logger.module';
 import AbortController from 'abort-controller';

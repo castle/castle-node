@@ -1,7 +1,5 @@
 import { CoreGenerateRequestBody } from '../../../src/core/core.module';
-import { version } from '../../../package.json';
 import MockDate from 'mockdate';
-import { Configuration } from '../../../src/configuraton';
 
 describe('CoreGenerateRequestBody', () => {
   beforeEach(() => {
@@ -24,10 +22,6 @@ describe('CoreGenerateRequestBody', () => {
           'x-castle-client-id': 'client_id',
         },
       },
-    });
-
-    const config = new Configuration({
-      apiSecret: 'test',
     });
 
     const payload = {
