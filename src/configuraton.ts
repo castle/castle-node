@@ -53,9 +53,9 @@ export class Configuration {
       transport: {
         target: 'pino-pretty',
         options: {
-          levelFirst: true
-        }
-      }
+          levelFirst: true,
+        },
+      },
     }),
   }: ConfigurationProperties) {
     if (!apiSecret) {

@@ -278,7 +278,7 @@ describe('Castle', () => {
 
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
-      // tslint:disable-next-line:no-unused-expression
+      // eslint:disable-next-line:no-unused-expression
       expect(fetch.called()).toBeFalsy;
     });
 
@@ -434,7 +434,7 @@ describe('Castle', () => {
 
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
-      // tslint:disable-next-line:no-unused-expression
+      // eslint:disable-next-line:no-unused-expression
       expect(fetch.called()).toBeFalsy;
     });
 
