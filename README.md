@@ -34,6 +34,15 @@ import { Castle } from '@castleio/sdk';
 const castle = new Castle({ apiSecret: 'YOUR SECRET HERE' });
 ```
 
+When using setup without the modules:
+
+```js
+const { Castle } = require('@castleio/sdk');
+
+const castle = new Castle({ apiSecret: 'YOUR SECRET HERE' });
+```
+
+
 #### Config options
 
 | Config option     | Type | Default | Explanation |
