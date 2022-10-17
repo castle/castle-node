@@ -1368,7 +1368,7 @@ expect@^29.0.0, expect@^29.2.0:
     jest-message-util "^29.2.0"
     jest-util "^29.2.0"
 
-express@4.18.2:
+express@^4.18.2:
   version "4.18.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.18.2.tgz#3fabe08296e930c796c19e3c516979386ba9fd59"
   integrity sha512-5/PsL6iGPdfQ/lKM1UuielYgv3BUoJfz1aUwU9vHZ+J7gyvwdQXFEBIEIaxeGf0GIcreATNyBExtalisDbuMqQ==
@@ -2353,7 +2353,7 @@ negotiator@0.6.3:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.3.tgz#58e323a72fedc0d6f9cd4d31fe49f51479590ccd"
   integrity sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==
 
-"node-fetch@< 3.0.0":
+"node-fetch@< 3":
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
@@ -2835,7 +2835,7 @@ source-map-support@0.5.13:
     buffer-from "^1.0.0"
     source-map "^0.6.0"
 
-source-map-support@^0.5.21:
+source-map-support@0.5.21:
   version "0.5.21"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.21.tgz#04fe7c7f9e1ed2d662233c28cb2b35b9f63f6e4f"
   integrity sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==
@@ -2957,6 +2957,13 @@ thread-stream@^2.0.0:
   integrity sha512-rUkv4/fnb4rqy/gGy7VuqK6wE1+1DOCOWy4RMeaV69ZHMP11tQKZvZSip1yTgrKCMZzEMcCL/bKfHvSfDHx+iQ==
   dependencies:
     real-require "^0.2.0"
+
+timeout-signal@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/timeout-signal/-/timeout-signal-1.1.0.tgz#b3805c4b9422c239d87d5e69b20df7bc19b21da5"
+  integrity sha512-fuWY4tM1njcHCiOB7XkTmP0EOxzBkPbuQwPN+ZCzM6G0Tj4fMVgEffG/OPgiNUX48o+FhQEa2Oh4qjEDBCy5WQ==
+  dependencies:
+    abort-controller "^3.0.0"
 
 tmpl@1.0.5:
   version "1.0.5"
