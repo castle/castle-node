@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1
+
+- [#138](https://github.com/castle/castle-node/pull/138)
+  * dependencies and readme updates
+
 ## 2.0.0
 
 **BREAKING CHANGES:**
