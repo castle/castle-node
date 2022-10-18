@@ -2,13 +2,13 @@ aliases:
   - &job-defaults
     working_directory: ~/repo
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:lts
   - &yarn-checksum yarn-packages-{{ checksum "yarn.lock" }}-v1
   - &yarn-restore
     keys:
       - *yarn-checksum
 
-version: 2
+version: 2.1
 jobs:
   dependencies:
     <<: *job-defaults
@@ -27,7 +27,7 @@ jobs:
     steps:
       - checkout
       - restore_cache: *yarn-restore
-      - run: yarn lint-verify && yarn prettier-verify
+      - run: yarn lint-verify
   test:
     <<: *job-defaults
     steps:

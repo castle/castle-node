@@ -50,8 +50,11 @@ export class Configuration {
     trustProxyChain = false,
     trustedProxyDepth = 0,
     logger = pino({
-      prettyPrint: {
-        levelFirst: true,
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          levelFirst: true,
+        },
       },
     }),
   }: ConfigurationProperties) {

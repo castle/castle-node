@@ -2,10 +2,7 @@ import { Castle } from '../index';
 import fetchMock from 'fetch-mock';
 import { FailoverStrategy } from '../src/failover/models';
 import MockDate from 'mockdate';
-import { ContextPrepareService } from '../src/context/services';
-import { ClientIdExtractService } from '../src/client-id/client-id.module';
 import { HeadersExtractService } from '../src/headers/headers.module';
-import { Configuration } from '../src/configuraton';
 
 const sampleRequestData = (configuration) => {
   return {
@@ -281,7 +278,7 @@ describe('Castle', () => {
 
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
-      // tslint:disable-next-line:no-unused-expression
+      // eslint:disable-next-line:no-unused-expression
       expect(fetch.called()).toBeFalsy;
     });
 
@@ -437,7 +434,7 @@ describe('Castle', () => {
 
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
-      // tslint:disable-next-line:no-unused-expression
+      // eslint:disable-next-line:no-unused-expression
       expect(fetch.called()).toBeFalsy;
     });
 
@@ -564,7 +561,7 @@ describe('Castle', () => {
         logger: { info: () => {} },
       });
 
-      const sampleFilterRequestDataLocal = sampleRiskRequestData(
+      const sampleFilterRequestDataLocal = sampleFilterRequestData(
         castle.configuration
       );
       const response = await (<any>castle.filter(sampleFilterRequestDataLocal));
