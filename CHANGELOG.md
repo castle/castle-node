@@ -2,6 +2,7 @@
 
 ## 2.0.1
 
+- [#140](https://github.com/castle/castle-node/pull/140)
 - [#138](https://github.com/castle/castle-node/pull/138)
   * dependencies and readme updates
 
