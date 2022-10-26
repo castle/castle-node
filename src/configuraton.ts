@@ -1,4 +1,5 @@
 import pino from 'pino';
+import pretty from 'pino-pretty';
 import fetch from 'node-fetch';
 
 import { DEFAULT_API_URL, DEFAULT_TIMEOUT } from './constants';
@@ -49,14 +50,7 @@ export class Configuration {
     trustedProxies = [],
     trustProxyChain = false,
     trustedProxyDepth = 0,
-    logger = pino({
-      transport: {
-        target: 'pino-pretty',
-        options: {
-          levelFirst: true,
-        },
-      },
-    }),
+    logger = pino(pretty({ levelFirst: true })),
   }: ConfigurationProperties) {
     if (!apiSecret) {
       throw new ConfigurationError(
