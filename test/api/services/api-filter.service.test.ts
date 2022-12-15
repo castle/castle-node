@@ -1,5 +1,6 @@
 import { APIFilterService } from '../../../src/api/api.module';
 import { Configuration } from '../../../src/configuraton';
+import { FailoverStrategy } from '../../../src/failover/models';
 import type { FilterPayload } from '../../../src/payload/payload.module';
 import MockDate from 'mockdate';
 import fetchMock from 'fetch-mock';
@@ -16,11 +17,8 @@ describe('APIFilterService', () => {
   const sampleRequestData: FilterPayload = {
     event: '$login',
     request_token: 'token',
-    status: '$succeeded',
-    user: {
-      id: 'userid',
-      email: 'myemail',
-    },
+    status: '$failed',
+    matching_user_id: 'userid',
     context: {
       ip: '8.8.8.8',
       headers: {},
@@ -38,7 +36,7 @@ describe('APIFilterService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
-        logger: { info: () => {} },
+        logger: { info: () => { } },
       });
 
       const response = await (<any>(
@@ -58,7 +56,7 @@ describe('APIFilterService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
-        logger: { info: () => {} },
+        logger: { info: () => { } },
       });
 
       const response = await APIFilterService.call(sampleRequestData, config);
@@ -82,7 +80,7 @@ describe('APIFilterService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
-        logger: { info: () => {} },
+        logger: { info: () => { } },
       });
 
       const response = await (<any>(
@@ -96,6 +94,49 @@ describe('APIFilterService', () => {
         'pke4zqO2TnqVr-NHJOAHEg'
       );
       expect(response.policy).toHaveProperty('name', 'Block Users from X');
+    });
+
+    it('handles timeouts with failover strategy', async () => {
+      jest.useFakeTimers();
+      const fetch = fetchMock.sandbox().mock('*', {
+        action: 'deny',
+        device: {
+          token: 'device_token',
+        },
+        policy: {
+          id: 'q-rbeMzBTdW2Fd09sbz55A',
+          revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
+          name: 'Block Users from X',
+        },
+      }, {
+        delay: 2000
+      });
+
+      const config = new Configuration({
+        apiSecret: 'test',
+        overrideFetch: fetch,
+        failoverStrategy: FailoverStrategy.allow,
+        timeout: 1000,
+        logger: { info: () => { } },
+      });
+
+      const filterCall = (<any>(
+        APIFilterService.call(sampleRequestData, config)
+      ));
+      jest.runAllTimers();
+
+      const response = await filterCall
+
+      expect(response).toEqual({
+        policy: {
+          action: 'allow',
+        },
+        action: 'allow',
+        failover: true,
+        failover_reason: 'timeout'
+      });
+
+      jest.useRealTimers();
     });
   });
 });
