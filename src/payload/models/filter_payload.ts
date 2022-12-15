@@ -13,4 +13,10 @@ export interface FilterPayload {
     ip: string;
     headers: IncomingHttpHeaders | { [key: string]: string | boolean };
   };
+  matching_user_id?: string;
+  params?: {
+    email?: string;
+    phone?: string;
+    username?: string;
+  }
 }
