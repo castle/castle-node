@@ -6,7 +6,7 @@ export interface RiskPayload {
   status: string;
   user: {
     id: string;
-    email: string;
+    email?: string;
     registered_at?: string;
     traits?: object;
     name?: string;
