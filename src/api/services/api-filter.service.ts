@@ -7,7 +7,6 @@ import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 
 const handleFailover = (
-  userId: string,
   reason: string,
   configuration: Configuration,
   err?: Error
@@ -18,7 +17,6 @@ const handleFailover = (
   if (configuration.failoverStrategy === FailoverStrategy.throw) {
     throw err;
   }
-
   return {
     policy: {
       action: configuration.failoverStrategy,
@@ -52,9 +50,9 @@ export const APIFilterService = {
       );
     } catch (e) {
       if (isTimeoutError(e)) {
-        return handleFailover(options.user.id, 'timeout', configuration, e);
+        return handleFailover('timeout', configuration, e);
       } else if (e instanceof InternalServerError) {
-        return handleFailover(options.user.id, 'server error', configuration);
+        return handleFailover('server error', configuration, e);
       } else {
         throw e;
       }
