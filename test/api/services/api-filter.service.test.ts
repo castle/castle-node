@@ -36,7 +36,7 @@ describe('APIFilterService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
-        logger: { info: () => { } },
+        logger: { info: () => {} },
       });
 
       const response = await (<any>(
@@ -56,7 +56,7 @@ describe('APIFilterService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
-        logger: { info: () => { } },
+        logger: { info: () => {} },
       });
 
       const response = await APIFilterService.call(sampleRequestData, config);
@@ -80,7 +80,7 @@ describe('APIFilterService', () => {
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
-        logger: { info: () => { } },
+        logger: { info: () => {} },
       });
 
       const response = await (<any>(
@@ -98,34 +98,36 @@ describe('APIFilterService', () => {
 
     it('handles timeouts with failover strategy', async () => {
       jest.useFakeTimers();
-      const fetch = fetchMock.sandbox().mock('*', {
-        action: 'deny',
-        device: {
-          token: 'device_token',
+      const fetch = fetchMock.sandbox().mock(
+        '*',
+        {
+          action: 'deny',
+          device: {
+            token: 'device_token',
+          },
+          policy: {
+            id: 'q-rbeMzBTdW2Fd09sbz55A',
+            revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
+            name: 'Block Users from X',
+          },
         },
-        policy: {
-          id: 'q-rbeMzBTdW2Fd09sbz55A',
-          revision_id: 'pke4zqO2TnqVr-NHJOAHEg',
-          name: 'Block Users from X',
-        },
-      }, {
-        delay: 2000
-      });
+        {
+          delay: 2000,
+        }
+      );
 
       const config = new Configuration({
         apiSecret: 'test',
         overrideFetch: fetch,
         failoverStrategy: FailoverStrategy.allow,
         timeout: 1000,
-        logger: { info: () => { } },
+        logger: { info: () => {} },
       });
 
-      const filterCall = (<any>(
-        APIFilterService.call(sampleRequestData, config)
-      ));
+      const filterCall = <any>APIFilterService.call(sampleRequestData, config);
       jest.runAllTimers();
 
-      const response = await filterCall
+      const response = await filterCall;
 
       expect(response).toEqual({
         policy: {
@@ -133,7 +135,7 @@ describe('APIFilterService', () => {
         },
         action: 'allow',
         failover: true,
-        failover_reason: 'timeout'
+        failover_reason: 'timeout',
       });
 
       jest.useRealTimers();
