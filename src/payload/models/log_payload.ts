@@ -29,4 +29,5 @@ export type LogPayload = {
     email?: string;
     phone?: string;
   };
-} & ({ event: string } | { type: string; status?: string });
+  status?: string;
+} & ({ event: string } | { type: string });

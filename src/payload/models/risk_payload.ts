@@ -28,4 +28,5 @@ export type RiskPayload = {
     email?: string;
     phone?: string;
   };
-} & ({ event: string } | { type: string; status?: string });
+  status?: string;
+} & ({ event: string } | { type: string });
