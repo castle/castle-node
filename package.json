@@ -68,7 +68,7 @@
     "lodash.pickby": "^4.6.0",
     "lodash.reduce": "^4.6.0",
     "node-fetch": "< 3",
-    "pino": "^8.7.0",
+    "pino": "^8.8.0",
     "pino-pretty": "^9.1.1"
   }
 }
