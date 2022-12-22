@@ -1,14 +1,14 @@
 import type { IncomingHttpHeaders } from 'http2';
 
-export interface FilterPayload {
+export type FilterPayload = {
   request_token: string;
-  event: string;
-  status?: string;
+  // deprecated
   user?: {
     id?: string;
     email?: string;
+    phone?: string;
   };
-  properties?: object;
+  properties?: { [key: string]: any };
   context: {
     ip: string;
     headers: IncomingHttpHeaders | { [key: string]: string | boolean };
@@ -19,4 +19,16 @@ export interface FilterPayload {
     phone?: string;
     username?: string;
   };
-}
+  product?: any;
+  session?: {
+    id: string;
+    created_at?: string;
+  };
+  created_at?: string;
+  authentication_method?: {
+    type: string;
+    variant?: string;
+    email?: string;
+    phone?: string;
+  };
+} & ({ event: string } | { type: string; status?: string });
