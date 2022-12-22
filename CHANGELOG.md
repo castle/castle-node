@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.1.0
+
+- [#142](https://github.com/castle/castle-node/pull/142)
+  * dependencies  updates
+
+- [#143](https://github.com/castle/castle-node/pull/143)
+- [#144](https://github.com/castle/castle-node/pull/144)
+  * updated definitions to match API schema
+
 ## 2.0.1
 
 - [#140](https://github.com/castle/castle-node/pull/140)
