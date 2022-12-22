@@ -8,16 +8,16 @@ export type FilterPayload = {
     email?: string;
     phone?: string;
   };
-  properties?: { [key: string]: any };
-  context: {
-    ip: string;
-    headers: IncomingHttpHeaders | { [key: string]: string | boolean };
-  };
   matching_user_id?: string;
   params?: {
     email?: string;
     phone?: string;
     username?: string;
+  };
+  properties?: { [key: string]: any };
+  context: {
+    ip: string;
+    headers: IncomingHttpHeaders | { [key: string]: string | boolean };
   };
   product?: any;
   session?: {
