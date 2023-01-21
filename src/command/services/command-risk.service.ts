@@ -1,4 +1,4 @@
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { ContextSanitizeService } from '../../context/context.module';
 import { CommandGenerateService } from './command-generate.service';
 import { RiskPayload } from '../../payload/payload.module';

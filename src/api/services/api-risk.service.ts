@@ -1,4 +1,4 @@
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { InternalServerError } from '../../errors';
 import { CommandRiskService } from '../../command/command.module';
 import { FailoverStrategy } from '../../failover/failover.module';

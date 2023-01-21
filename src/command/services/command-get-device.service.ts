@@ -1,4 +1,4 @@
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { CommandGenerateService } from './command-generate.service';
 import { Payload } from '../../payload/payload.module';
 import { ValidatorPresentService } from '../../validator/validator.module';

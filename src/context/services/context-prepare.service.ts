@@ -1,5 +1,5 @@
 import merge from 'lodash.merge';
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { ContextGetDefaultService } from './context-get-default.service';
 import type { Request as ExpressRequest } from 'express';
 

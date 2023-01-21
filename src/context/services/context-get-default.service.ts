@@ -1,7 +1,7 @@
 import isEmpty from 'lodash.isempty';
 import get from 'lodash.get';
 import pickBy from 'lodash.pickby';
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { ClientIdExtractService } from '../../client-id/client-id.module';
 import { HeadersExtractService } from '../../headers/headers.module';
 import { IPsExtractService } from '../../ips/ips.module';

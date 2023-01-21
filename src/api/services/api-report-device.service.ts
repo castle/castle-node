@@ -1,4 +1,4 @@
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { CommandReportDeviceService } from '../../command/command.module';
 import { Payload } from '../../payload/payload.module';
 import { APIService } from './api.service';

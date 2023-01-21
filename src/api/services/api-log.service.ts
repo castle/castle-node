@@ -1,4 +1,4 @@
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { CommandLogService } from '../../command/command.module';
 import { LogPayload } from '../../payload/payload.module';
 import { APIService } from './api.service';
