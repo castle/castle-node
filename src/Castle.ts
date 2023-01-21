@@ -17,12 +17,12 @@ import type {
   FilterPayload,
   RiskPayload,
 } from './payload/payload.module';
-import { Configuration } from './configuration';
+import { Configuration, ConfigurationProperties } from './configuration';
 
 export class Castle {
   public configuration: Configuration;
 
-  constructor(configAttributes) {
+  constructor(configAttributes: ConfigurationProperties) {
     this.configuration = new Configuration(configAttributes);
   }
 
