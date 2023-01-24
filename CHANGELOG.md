@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.1
+
+- [#146](https://github.com/castle/castle-node/pull/146)
+  * add and expose more typings
+
+- [#147](https://github.com/castle/castle-node/pull/147)
+  * internal dependencies bumps
+
 ## 2.1.0
 
 - [#142](https://github.com/castle/castle-node/pull/142)
