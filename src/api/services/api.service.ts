@@ -1,4 +1,4 @@
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { CoreProcessResponseService } from '../../core/core.module';
 import { LoggerService } from '../../logger/logger.module';
 import AbortController from 'abort-controller';

@@ -1,4 +1,4 @@
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { InternalServerError } from '../../errors';
 import { AuthenticateResult } from '../../models';
 import { CommandAuthenticateService } from '../../command/command.module';

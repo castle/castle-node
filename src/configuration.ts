@@ -6,7 +6,7 @@ import { DEFAULT_API_URL, DEFAULT_TIMEOUT } from './constants';
 import { ConfigurationError } from './errors';
 import { FailoverStrategy } from './failover/models/failover-strategy';
 
-interface ConfigurationProperties {
+export interface ConfigurationProperties {
   apiSecret: string;
   baseUrl?: string;
   timeout?: number;

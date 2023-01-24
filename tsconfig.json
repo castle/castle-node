@@ -15,7 +15,8 @@
     "outDir": "dist",
     "rootDir": ".",
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "declaration": true
   },
   "compileOnSave": true,
   "buildOnSave": true,

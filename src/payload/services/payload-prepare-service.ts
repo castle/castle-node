@@ -1,5 +1,5 @@
 import merge from 'lodash.merge';
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { ContextPrepareService } from '../../context/context.module';
 import type { Request } from 'express';
 

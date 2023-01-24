@@ -1,6 +1,6 @@
 import type { IncomingHttpHeaders } from 'http2';
 import reduce from 'lodash.reduce';
-import type { Configuration } from '../../configuraton';
+import type { Configuration } from '../../configuration';
 
 const ALWAYS_ALLOWLISTED = ['user-agent'];
 const ALWAYS_DENYLISTED = ['cookie', 'authorization'];

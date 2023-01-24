@@ -1,4 +1,4 @@
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import {
   CoreGenerateDefaultHeadersService,
   CoreGenerateRequestBody,

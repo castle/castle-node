@@ -1,5 +1,5 @@
 import type { IncomingHttpHeaders } from 'http2';
-import { Configuration } from '../../configuraton';
+import { Configuration } from '../../configuration';
 import { TRUSTED_PROXIES } from '../../constants';
 
 // ordered list of ip headers for ip extraction
