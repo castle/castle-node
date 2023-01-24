@@ -1,5 +1,5 @@
 import { HeadersExtractService } from '../../../src/headers/headers.module';
-import { Configuration } from '../../../src/configuraton';
+import { Configuration } from '../../../src/configuration';
 
 describe('HeadersExtractService', () => {
   describe('call', () => {

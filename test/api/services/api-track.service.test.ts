@@ -1,5 +1,5 @@
 import { APITrackService } from '../../../src/api/api.module';
-import { Configuration } from '../../../src/configuraton';
+import { Configuration } from '../../../src/configuration';
 import MockDate from 'mockdate';
 import fetchMock from 'fetch-mock';
 

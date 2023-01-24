@@ -1,5 +1,5 @@
 import { PayloadPrepareService } from '../../../src/payload/payload.module';
-import { Configuration } from '../../../src/configuraton';
+import { Configuration } from '../../../src/configuration';
 import { version } from '../../../package.json';
 
 describe('PayloadPrepareService', () => {

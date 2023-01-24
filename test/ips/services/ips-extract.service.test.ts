@@ -1,5 +1,5 @@
 import { IPsExtractService } from '../../../src/ips/ips.module';
-import { Configuration } from '../../../src/configuraton';
+import { Configuration } from '../../../src/configuration';
 
 describe('IPsExtractService', () => {
   describe('call', () => {

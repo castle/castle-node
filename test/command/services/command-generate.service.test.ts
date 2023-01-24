@@ -1,5 +1,5 @@
 import { CommandGenerateService } from '../../../src/command/command.module';
-import { Configuration } from '../../../src/configuraton';
+import { Configuration } from '../../../src/configuration';
 import MockDate from 'mockdate';
 import AbortController from 'abort-controller';
 

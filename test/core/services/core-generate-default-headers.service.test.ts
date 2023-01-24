@@ -1,5 +1,5 @@
 import { CoreGenerateDefaultHeadersService } from '../../../src/core/core.module';
-import { Configuration } from '../../../src/configuraton';
+import { Configuration } from '../../../src/configuration';
 
 describe('CoreGenerateDefaultHeadersService', () => {
   describe('call', () => {

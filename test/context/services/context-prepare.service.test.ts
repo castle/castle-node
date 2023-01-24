@@ -1,5 +1,5 @@
 import { ContextPrepareService } from '../../../src/context/context.module';
-import { Configuration } from '../../../src/configuraton';
+import { Configuration } from '../../../src/configuration';
 import { version } from '../../../package.json';
 import type { Request as ExpressRequest } from 'express';
 

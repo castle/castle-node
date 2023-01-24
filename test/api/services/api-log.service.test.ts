@@ -1,5 +1,5 @@
 import { APILogService } from '../../../src/api/api.module';
-import { Configuration } from '../../../src/configuraton';
+import { Configuration } from '../../../src/configuration';
 import type { LogPayload } from '../../../src/payload/payload.module';
 import MockDate from 'mockdate';
 import fetchMock from 'fetch-mock';

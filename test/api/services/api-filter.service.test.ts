@@ -1,5 +1,5 @@
 import { APIFilterService } from '../../../src/api/api.module';
-import { Configuration } from '../../../src/configuraton';
+import { Configuration } from '../../../src/configuration';
 import { FailoverStrategy } from '../../../src/failover/models';
 import type { FilterPayload } from '../../../src/payload/payload.module';
 import MockDate from 'mockdate';
