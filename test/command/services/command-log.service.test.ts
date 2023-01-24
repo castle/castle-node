@@ -1,5 +1,5 @@
 import { CommandLogService } from '../../../src/command/command.module';
-import { Configuration } from '../../../src/configuraton';
+import { Configuration } from '../../../src/configuration';
 import AbortController from 'abort-controller';
 import MockDate from 'mockdate';
 

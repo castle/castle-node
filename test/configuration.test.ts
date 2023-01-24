@@ -1,4 +1,4 @@
-import { Configuration } from '../src/configuraton';
+import { Configuration } from '../src/configuration';
 import { ConfigurationError } from '../src/errors';
 import { FailoverStrategy } from '../src/failover/models/failover-strategy';
 
