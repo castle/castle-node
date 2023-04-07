@@ -38,3 +38,29 @@ export const TRUSTED_PROXIES = [
       .join('')
   ),
 ];
+export const API = {
+  FILTER: 'filter',
+  RISK: 'risk'
+};
+export const EVENT_TYPE = {
+  CHALLENGE: '$challenge',
+  CUSTOM: '$custom',
+  LOGIN: '$login',
+  LOGOUT: '$logout',
+  PASSWORD_RESET_REQUEST: '$password_reset_request',
+  PROFILE_RESET: '$profile_reset',
+  PROFILE_UPDATE: '$profile_update',
+  REGISTRATION: '$registration',
+  TRANSACTION: '$transaction'
+};
+export const STATUS = {
+  ATTEMPTED: '$attempted',
+  FAILURE: '$failure',
+  REQUESTED: '$requested',
+  SUCCEEDED: '$succeeded'
+};
+export const ACTION = {
+  ALLOW: 'allow',
+  CHALLENGE: 'challenge',
+  DENY: 'deny'
+};
