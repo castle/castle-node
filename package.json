@@ -16,7 +16,7 @@
     "clean": "rimraf dist",
     "build": "tsc",
     "start": "tsc -w",
-    "test": "jest --runInBand",
+    "test": "jest",
     "lint-fix": "eslint --fix --quiet '{src,test}/**/*.{js,ts,tsx}' '*.{js,ts,tsx}'",
     "lint-verify": "eslint '{src,test}/**/*.{js,ts,tsx}' '*.{js,ts,tsx}'",
     "prepush": "yarn build && yarn lint-fix && yarn prettier-verify",
