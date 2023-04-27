@@ -9,11 +9,7 @@ export const CommandCreateListItemService = {
     options: ListItemPayload,
     configuration: Configuration
   ) => {
-    ValidatorPresentService.call(options, [
-      'list_id',
-      'primary_value',
-      'author',
-    ]);
+    ValidatorPresentService.call(options, ['list_id']);
 
     return CommandGenerateService.call(
       controller,
