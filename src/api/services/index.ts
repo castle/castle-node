@@ -14,3 +14,4 @@ export * from './api-unarchive-list-item.service';
 export * from './api-fetch-list-item.service';
 export * from './api-search-list-items.service';
 export * from './api-update-list-item.service';
+export * from './api-fetch-list.service';

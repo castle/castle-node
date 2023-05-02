@@ -14,3 +14,4 @@ export * from './command-update-list-item.service';
 export * from './command-archive-list-item.service';
 export * from './command-unarchive-list-item.service';
 export * from './command-fetch-list-item.service';
+export * from './command-fetch-list.service';

@@ -7,14 +7,23 @@ export type CreateListPayload = {
   color: string;
   primary_field: string;
   description?: string;
+  secondary_field?: string;
   default_item_archivation_time?: null | number;
-  secondary_field?: null | string;
 };
 
-export type UpdateListPayload = {
-  id: string;
+export type UpdateListPayload = ListPayload & {
   name?: string;
   color?: string;
   description?: string;
   default_item_archivation_time?: null | number;
+};
+
+export type SearchListsPayload = {
+  sort?: {
+    field: string;
+    order: string;
+  };
+  filters?: any[];
+  page?: number;
+  results_size?: number;
 };
