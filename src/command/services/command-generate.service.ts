@@ -8,6 +8,7 @@ import {
   LogPayload,
   RiskPayload,
   FilterPayload,
+  ListItemPayload,
 } from '../../payload/payload.module';
 
 const combineURLs = (baseURL, relativeURL) => {
@@ -18,7 +19,12 @@ export const CommandGenerateService = {
   call: (
     controller,
     path: string,
-    options: Payload | LogPayload | RiskPayload | FilterPayload,
+    options:
+      | Payload
+      | LogPayload
+      | RiskPayload
+      | FilterPayload
+      | ListItemPayload,
     method: string,
     configuration: Configuration
   ) => {

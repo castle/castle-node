@@ -9,6 +9,7 @@ import {
   APILogService,
   APIFilterService,
   APIRiskService,
+  APICreateListItemService,
 } from './api/api.module';
 import { FailoverStrategy } from './failover/failover.module';
 import type {
@@ -18,6 +19,7 @@ import type {
   RiskPayload,
 } from './payload/payload.module';
 import { Configuration, ConfigurationProperties } from './configuration';
+import { ListItemPayload } from './payload/models/list_item_payload';
 
 export class Castle {
   public configuration: Configuration;
@@ -90,6 +92,10 @@ export class Castle {
 
   public async reportDevice({ device_token }: Payload): Promise<any> {
     return APIReportDeviceService.call({ device_token }, this.configuration);
+  }
+
+  public async createListItem(params: ListItemPayload): Promise<any> {
+    return APICreateListItemService.call(params, this.configuration);
   }
 
   private generateDoNotTrackResponse(userId): object {
