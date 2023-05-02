@@ -1,5 +1,6 @@
 import type { IncomingHttpHeaders } from 'http2';
 
+// legacy Payload
 export interface Payload {
   event?: string;
   user_id?: string;

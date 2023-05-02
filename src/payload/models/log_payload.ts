@@ -1,8 +1,8 @@
 import type { IncomingHttpHeaders } from 'http2';
+import type { AddressPayload } from './address_payload';
 
 export type LogPayload = {
   request_token?: string;
-  // deprecated
   user?: {
     id?: string;
     phone?: string;
@@ -10,7 +10,7 @@ export type LogPayload = {
     registered_at?: string;
     traits?: { [key: string]: any };
     name?: string;
-    address?: { [key: string]: any };
+    address?: AddressPayload;
   };
   created_at?: string;
   properties?: { [key: string]: any };

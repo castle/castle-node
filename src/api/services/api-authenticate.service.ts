@@ -3,7 +3,7 @@ import { InternalServerError } from '../../errors';
 import { AuthenticateResult } from '../../models';
 import { CommandAuthenticateService } from '../../command/command.module';
 import { FailoverStrategy } from '../../failover/failover.module';
-import { Payload } from '../../payload/payload.module';
+import type { Payload } from '../../payload/payload.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 

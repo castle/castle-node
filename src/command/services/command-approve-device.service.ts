@@ -1,10 +1,10 @@
 import { Configuration } from '../../configuration';
 import { CommandGenerateService } from './command-generate.service';
-import { Payload } from '../../payload/payload.module';
+import { DevicePayload } from '../../payload/payload.module';
 import { ValidatorPresentService } from '../../validator/validator.module';
 
 export const CommandApproveDeviceService = {
-  call: (controller, options: Payload, configuration: Configuration) => {
+  call: (controller, options: DevicePayload, configuration: Configuration) => {
     ValidatorPresentService.call(options, ['device_token']);
 
     return CommandGenerateService.call(

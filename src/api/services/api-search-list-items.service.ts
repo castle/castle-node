@@ -1,16 +1,16 @@
 import { Configuration } from '../../configuration';
-import { CommandGetDeviceService } from '../../command/command.module';
-import type { DevicePayload } from '../../payload/payload.module';
+import { CommandSearchListItemsService } from '../../command/command.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
+import type { SearchListItemsPayload } from '../../payload/models';
 
-export const APIGetDeviceService = {
+export const APISearchListItemsService = {
   call: async (
-    options: DevicePayload,
+    options: SearchListItemsPayload,
     configuration: Configuration
   ): Promise<any> => {
     const controller = new AbortController();
-    const command = CommandGetDeviceService.call(
+    const command = CommandSearchListItemsService.call(
       controller,
       options,
       configuration

@@ -1,23 +1,15 @@
-import { APICreateListItemService } from '../../../src/api/api.module';
+import { APIFetchListItemService } from '../../../src/api/api.module';
 import { Configuration } from '../../../src/configuration';
 import fetchMock from 'fetch-mock';
-import { ListItemAuthorType, ListItemMode } from '../../../src/payload/models';
 
-describe('APICreateListItemService', () => {
+describe('APIFetchListItemService', () => {
   const sampleRequestData = {
     list_id: 'e6baae3a-0636-441a-ba4f-c73f266c7a17',
-    primary_value: 'A04t7AcfSA69cBTTusx0RQ',
-    secondary_value: '2ee938c8-24c2-4c26-9d25-19511dd75029',
-    comment: 'Fradulent user found through automated inspection',
-    author: {
-      type: '$other' as ListItemAuthorType,
-      identifier: 'Security bot',
-    },
-    mode: '$error' as ListItemMode,
+    id: '2ee938c8-24c2-4c26-9d25-19511dd75029',
   };
 
   describe('call', () => {
-    it('handles create list item response', async () => {
+    it('handles fetch list item response', async () => {
       const apiResponse = {
         primary_value: 'A04t7AcfSA69cBTTusx0RQ',
         secondary_value: '2ee938c8-24c2-4c26-9d25-19511dd75029',
@@ -35,8 +27,8 @@ describe('APICreateListItemService', () => {
 
       const fetch = fetchMock.sandbox().mock(
         {
-          url: `path:/v1/lists/${sampleRequestData.list_id}/items`,
-          method: 'POST',
+          url: `path:/v1/lists/${sampleRequestData.list_id}/items/${sampleRequestData.id}`,
+          method: 'GET',
         },
         apiResponse
       );
@@ -47,7 +39,7 @@ describe('APICreateListItemService', () => {
         logger: { info: () => {} },
       });
 
-      const response = await APICreateListItemService.call(
+      const response = await APIFetchListItemService.call(
         sampleRequestData,
         config
       );

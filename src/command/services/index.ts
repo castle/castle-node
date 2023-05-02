@@ -9,3 +9,8 @@ export * from './command-filter.service';
 export * from './command-log.service';
 export * from './command-risk.service';
 export * from './command-create-list-item.service';
+export * from './command-search-list-items.service';
+export * from './command-update-list-item.service';
+export * from './command-archive-list-item.service';
+export * from './command-unarchive-list-item.service';
+export * from './command-fetch-list-item.service';

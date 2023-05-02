@@ -1,11 +1,10 @@
-import { CommandCreateListItemService } from '../../../src/command/command.module';
+import { CommandSearchListItemsService } from '../../../src/command/command.module';
 import { Configuration } from '../../../src/configuration';
 import AbortController from 'abort-controller';
-import { ListItemAuthorType, ListItemMode } from '../../../src/payload/models';
 import MockDate from 'mockdate';
 import { InvalidParametersError } from '../../../src/errors';
 
-describe('CommandCreateListItem', () => {
+describe('CommandSearchListItems', () => {
   beforeEach(() => {
     MockDate.set(new Date('2023-04-15T00:00:00.000Z'));
   });
@@ -18,19 +17,11 @@ describe('CommandCreateListItem', () => {
 
     const options = {
       list_id: 'e6baae3a-0636-441a-ba4f-c73f266c7a17',
-      primary_value: 'A04t7AcfSA69cBTTusx0RQ',
-      secondary_value: '2ee938c8-24c2-4c26-9d25-19511dd75029',
-      comment: 'Fradulent user found through automated inspection',
-      author: {
-        type: '$other' as ListItemAuthorType,
-        identifier: 'Security bot',
-      },
-      mode: '$error' as ListItemMode,
     };
 
     const expected = {
       requestUrl: new URL(
-        `https://castle.io/v1/lists/${options.list_id}/items`
+        `https://castle.io/v1/lists/${options.list_id}/items/query`
       ),
       requestOptions: {
         signal: controller.signal,
@@ -52,7 +43,7 @@ describe('CommandCreateListItem', () => {
     });
 
     it('generates payload', () => {
-      const received = CommandCreateListItemService.call(
+      const received = CommandSearchListItemsService.call(
         controller,
         options,
         config
@@ -67,7 +58,7 @@ describe('CommandCreateListItem', () => {
         const invalidOptions = Object.assign({}, options);
         delete invalidOptions[prop];
         expect(() =>
-          CommandCreateListItemService.call(controller, invalidOptions, config)
+          CommandSearchListItemsService.call(controller, invalidOptions, config)
         ).toThrow(InvalidParametersError);
       }
     );

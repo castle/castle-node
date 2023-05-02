@@ -13,6 +13,11 @@ export type ListItemMode =
   | '$update_or_replace';
 
 export type ListItemPayload = {
+  id: string;
+  list_id: string;
+};
+
+export type CreateListItemPayload = {
   list_id: string;
   primary_value: string;
   author: {
@@ -23,4 +28,19 @@ export type ListItemPayload = {
   comment?: string;
   auto_archives_at?: string;
   mode?: ListItemMode;
+};
+
+export type UpdateListItemPayload = ListItemPayload & {
+  comment: string;
+};
+
+export type SearchListItemsPayload = {
+  list_id: string;
+  sort?: {
+    field: string;
+    order: string;
+  };
+  filters?: any[];
+  page?: number;
+  results_size?: number;
 };

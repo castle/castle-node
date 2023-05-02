@@ -1,6 +1,6 @@
 import { Configuration } from '../../configuration';
 import { CommandTrackService } from '../../command/command.module';
-import { Payload } from '../../payload/payload.module';
+import type { Payload } from '../../payload/payload.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 

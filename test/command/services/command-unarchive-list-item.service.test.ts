@@ -1,11 +1,10 @@
-import { CommandCreateListItemService } from '../../../src/command/command.module';
+import { CommandUnarchiveListItemService } from '../../../src/command/command.module';
 import { Configuration } from '../../../src/configuration';
 import AbortController from 'abort-controller';
-import { ListItemAuthorType, ListItemMode } from '../../../src/payload/models';
 import MockDate from 'mockdate';
 import { InvalidParametersError } from '../../../src/errors';
 
-describe('CommandCreateListItem', () => {
+describe('CommandUnarchiveListItemService', () => {
   beforeEach(() => {
     MockDate.set(new Date('2023-04-15T00:00:00.000Z'));
   });
@@ -18,30 +17,22 @@ describe('CommandCreateListItem', () => {
 
     const options = {
       list_id: 'e6baae3a-0636-441a-ba4f-c73f266c7a17',
-      primary_value: 'A04t7AcfSA69cBTTusx0RQ',
-      secondary_value: '2ee938c8-24c2-4c26-9d25-19511dd75029',
-      comment: 'Fradulent user found through automated inspection',
-      author: {
-        type: '$other' as ListItemAuthorType,
-        identifier: 'Security bot',
-      },
-      mode: '$error' as ListItemMode,
+      id: '2ee938c8-24c2-4c26-9d25-19511dd75029',
     };
 
     const expected = {
       requestUrl: new URL(
-        `https://castle.io/v1/lists/${options.list_id}/items`
+        `https://castle.io/v1/lists/${options.list_id}/items/${options.id}/unarchive`
       ),
       requestOptions: {
         signal: controller.signal,
-        method: 'POST',
+        method: 'PUT',
         headers: {
           Authorization: 'Basic OnRlc3Q=',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           sent_at: '2023-04-15T00:00:00.000Z',
-          ...options,
         }),
       },
     };
@@ -52,7 +43,7 @@ describe('CommandCreateListItem', () => {
     });
 
     it('generates payload', () => {
-      const received = CommandCreateListItemService.call(
+      const received = CommandUnarchiveListItemService.call(
         controller,
         options,
         config
@@ -61,13 +52,17 @@ describe('CommandCreateListItem', () => {
       expect(received).toMatchObject(expected);
     });
 
-    test.each(['list_id'])(
+    test.each(['list_id', 'id'])(
       'throws if %s is missing from the payload',
       (prop) => {
         const invalidOptions = Object.assign({}, options);
         delete invalidOptions[prop];
         expect(() =>
-          CommandCreateListItemService.call(controller, invalidOptions, config)
+          CommandUnarchiveListItemService.call(
+            controller,
+            invalidOptions,
+            config
+          )
         ).toThrow(InvalidParametersError);
       }
     );

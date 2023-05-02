@@ -4,7 +4,6 @@ export type FilterPayload = {
   request_token: string;
   // deprecated
   user?: {
-    id?: string;
     email?: string;
     phone?: string;
   };
@@ -19,7 +18,9 @@ export type FilterPayload = {
     ip: string;
     headers: IncomingHttpHeaders | { [key: string]: string | boolean };
   };
-  product?: any;
+  product?: {
+    id: string;
+  };
   session?: {
     id: string;
     created_at?: string;
@@ -32,4 +33,7 @@ export type FilterPayload = {
     phone?: string;
   };
   status?: string;
+  name?: string;
+  skip_request_token_validation?: boolean;
+  skip_context_validation?: boolean;
 } & ({ event: string } | { type: string });

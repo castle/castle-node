@@ -2,7 +2,7 @@ import { Configuration } from '../../configuration';
 import { InternalServerError } from '../../errors';
 import { CommandFilterService } from '../../command/command.module';
 import { FailoverStrategy } from '../../failover/failover.module';
-import { FilterPayload } from '../../payload/payload.module';
+import type { FilterPayload } from '../../payload/payload.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 
