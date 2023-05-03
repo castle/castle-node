@@ -18,7 +18,7 @@ describe('APICreateListItemService', () => {
 
   describe('call', () => {
     it('handles create list item response', async () => {
-      const createListItemResponse = {
+      const apiResponse = {
         primary_value: 'A04t7AcfSA69cBTTusx0RQ',
         secondary_value: '2ee938c8-24c2-4c26-9d25-19511dd75029',
         comment: 'Fradulent user found through manual inspection',
@@ -33,12 +33,13 @@ describe('APICreateListItemService', () => {
         created_at: '2021-09-27T16:46:38.313Z',
       };
 
-      const fetch = fetchMock
-        .sandbox()
-        .mock(
-          `path:/v1/lists/${sampleRequestData.list_id}/items`,
-          createListItemResponse
-        );
+      const fetch = fetchMock.sandbox().mock(
+        {
+          url: `path:/v1/lists/${sampleRequestData.list_id}/items`,
+          method: 'POST',
+        },
+        apiResponse
+      );
 
       const config = new Configuration({
         apiSecret: 'test',
@@ -50,7 +51,7 @@ describe('APICreateListItemService', () => {
         sampleRequestData,
         config
       );
-      expect(response).toEqual(createListItemResponse);
+      expect(response).toEqual(apiResponse);
     });
   });
 });

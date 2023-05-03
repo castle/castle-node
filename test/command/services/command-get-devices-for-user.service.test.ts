@@ -32,7 +32,7 @@ describe('CommandGetDevicesForUserService', () => {
     });
 
     const options = {
-      user_id: 'user_id',
+      id: 'user_id',
     };
 
     it('generates payload', () => {

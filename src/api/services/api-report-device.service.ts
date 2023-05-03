@@ -1,12 +1,12 @@
 import { Configuration } from '../../configuration';
 import { CommandReportDeviceService } from '../../command/command.module';
-import { Payload } from '../../payload/payload.module';
+import type { DevicePayload } from '../../payload/payload.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 
 export const APIReportDeviceService = {
   call: async (
-    options: Payload,
+    options: DevicePayload,
     configuration: Configuration
   ): Promise<any> => {
     const controller = new AbortController();

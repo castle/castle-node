@@ -13,7 +13,7 @@ describe('APIGetDevicesForUserService', () => {
   });
 
   const sampleRequestData = {
-    user_id: 'userid',
+    id: 'userid',
   };
 
   describe('call', () => {

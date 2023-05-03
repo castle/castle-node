@@ -1,12 +1,12 @@
 import { Configuration } from '../../configuration';
 import { CommandGenerateService } from './command-generate.service';
 import { ValidatorPresentService } from '../../validator/validator.module';
-import { ListItemPayload } from '../../payload/models/list_item_payload';
+import type { CreateListItemPayload } from '../../payload/models';
 
 export const CommandCreateListItemService = {
   call: (
     controller,
-    options: ListItemPayload,
+    options: CreateListItemPayload,
     configuration: Configuration
   ) => {
     ValidatorPresentService.call(options, ['list_id']);

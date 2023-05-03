@@ -1,16 +1,20 @@
 import { Configuration } from '../../configuration';
 import { CommandGenerateService } from './command-generate.service';
-import { Payload } from '../../payload/payload.module';
+import { UserDevicePayload } from '../../payload/payload.module';
 import { ValidatorPresentService } from '../../validator/validator.module';
 
 export const CommandGetDevicesForUserService = {
-  call: (controller, options: Payload, configuration: Configuration) => {
-    ValidatorPresentService.call(options, ['user_id']);
+  call: (
+    controller,
+    options: UserDevicePayload,
+    configuration: Configuration
+  ) => {
+    ValidatorPresentService.call(options, ['id']);
 
     return CommandGenerateService.call(
       controller,
-      `users/${options.user_id}/devices`,
-      {},
+      `users/${options.id}/devices`,
+      options,
       'GET',
       configuration
     );

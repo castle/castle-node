@@ -2,11 +2,11 @@ import { Configuration } from '../../configuration';
 import { CommandCreateListItemService } from '../../command/command.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
-import { ListItemPayload } from '../../payload/models/list_item_payload';
+import type { CreateListItemPayload } from '../../payload/models';
 
 export const APICreateListItemService = {
   call: async (
-    options: ListItemPayload,
+    options: CreateListItemPayload,
     configuration: Configuration
   ): Promise<any> => {
     const controller = new AbortController();

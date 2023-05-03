@@ -1,4 +1,4 @@
-import { ListItemAuthorType } from '../payload/models/list_item_payload';
+import { ListItemAuthorType } from '../payload/models';
 
 export interface ListItem {
   id: string;
@@ -6,7 +6,7 @@ export interface ListItem {
   primary_value: string;
   secondary_value?: string;
   comment?: string;
-  author: {
+  author?: {
     type: ListItemAuthorType;
     identifier: string;
   };

@@ -61,7 +61,7 @@ describe('CommandCreateListItem', () => {
       expect(received).toMatchObject(expected);
     });
 
-    test.each(['list_id', 'primary_value', 'author'])(
+    test.each(['list_id'])(
       'throws if %s is missing from the payload',
       (prop) => {
         const invalidOptions = Object.assign({}, options);

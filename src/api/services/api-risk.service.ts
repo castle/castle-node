@@ -2,11 +2,11 @@ import { Configuration } from '../../configuration';
 import { InternalServerError } from '../../errors';
 import { CommandRiskService } from '../../command/command.module';
 import { FailoverStrategy } from '../../failover/failover.module';
+import type { RiskPayload } from '../../payload/payload.module';
 import { APIService } from './api.service';
 import AbortController from 'abort-controller';
 
 const handleFailover = (
-  userId: string,
   reason: string,
   configuration: Configuration,
   err?: Error
@@ -31,7 +31,10 @@ const handleFailover = (
 const isTimeoutError = (e: Error) => e.name === 'AbortError';
 
 export const APIRiskService = {
-  call: async (options: any, configuration: Configuration): Promise<object> => {
+  call: async (
+    options: RiskPayload,
+    configuration: Configuration
+  ): Promise<object> => {
     const controller = new AbortController();
     const command = CommandRiskService.call(controller, options, configuration);
 
@@ -44,9 +47,9 @@ export const APIRiskService = {
       );
     } catch (e) {
       if (isTimeoutError(e)) {
-        return handleFailover(options.user.id, 'timeout', configuration, e);
+        return handleFailover('timeout', configuration, e);
       } else if (e instanceof InternalServerError) {
-        return handleFailover(options.user.id, 'server error', configuration);
+        return handleFailover('server error', configuration);
       } else {
         throw e;
       }

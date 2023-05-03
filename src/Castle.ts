@@ -17,9 +17,11 @@ import type {
   LogPayload,
   FilterPayload,
   RiskPayload,
+  DevicePayload,
+  UserDevicePayload,
+  CreateListItemPayload,
 } from './payload/payload.module';
 import { Configuration, ConfigurationProperties } from './configuration';
-import { ListItemPayload } from './payload/models/list_item_payload';
 
 export class Castle {
   public configuration: Configuration;
@@ -44,7 +46,7 @@ export class Castle {
 
   public async risk(params: RiskPayload): Promise<object> {
     if (this.configuration.doNotTrack) {
-      return this.generateDoNotTrackResponse(params.user?.id);
+      return this.generateDoNotTrackResponse();
     }
 
     return APIRiskService.call(params, this.configuration);
@@ -52,7 +54,7 @@ export class Castle {
 
   public async filter(params: FilterPayload): Promise<object> {
     if (this.configuration.doNotTrack) {
-      return this.generateDoNotTrackResponse(params.user?.id);
+      return this.generateDoNotTrackResponse();
     }
 
     return APIFilterService.call(params, this.configuration);
@@ -78,27 +80,27 @@ export class Castle {
     return APITrackService.call(params, this.configuration);
   }
 
-  public async getDevice({ device_token }: Payload): Promise<any> {
+  public async getDevice({ device_token }: DevicePayload): Promise<any> {
     return APIGetDeviceService.call({ device_token }, this.configuration);
   }
 
-  public async getDevicesForUser({ user_id }: Payload): Promise<any> {
-    return APIGetDevicesForUserService.call({ user_id }, this.configuration);
+  public async getDevicesForUser({ id, cid }: UserDevicePayload): Promise<any> {
+    return APIGetDevicesForUserService.call({ id, cid }, this.configuration);
   }
 
-  public async approveDevice({ device_token }: Payload): Promise<any> {
+  public async approveDevice({ device_token }: DevicePayload): Promise<any> {
     return APIApproveDeviceService.call({ device_token }, this.configuration);
   }
 
-  public async reportDevice({ device_token }: Payload): Promise<any> {
+  public async reportDevice({ device_token }: DevicePayload): Promise<any> {
     return APIReportDeviceService.call({ device_token }, this.configuration);
   }
 
-  public async createListItem(params: ListItemPayload): Promise<any> {
+  public async createListItem(params: CreateListItemPayload): Promise<any> {
     return APICreateListItemService.call(params, this.configuration);
   }
 
-  private generateDoNotTrackResponse(userId): object {
+  private generateDoNotTrackResponse(userId?): object {
     return {
       policy: {
         action: FailoverStrategy.allow,

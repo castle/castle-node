@@ -8,7 +8,16 @@ import {
   LogPayload,
   RiskPayload,
   FilterPayload,
+  CreateListItemPayload,
+  DevicePayload,
+  UserDevicePayload,
+  UpdateListItemPayload,
   ListItemPayload,
+  SearchListItemsPayload,
+  ListPayload,
+  CreateListPayload,
+  SearchListsPayload,
+  UpdateListPayload,
 } from '../../payload/payload.module';
 
 const combineURLs = (baseURL, relativeURL) => {
@@ -21,10 +30,19 @@ export const CommandGenerateService = {
     path: string,
     options:
       | Payload
+      | DevicePayload
+      | UserDevicePayload
       | LogPayload
       | RiskPayload
       | FilterPayload
-      | ListItemPayload,
+      | CreateListItemPayload
+      | ListItemPayload
+      | ListPayload
+      | UpdateListItemPayload
+      | CreateListPayload
+      | UpdateListPayload
+      | SearchListsPayload
+      | SearchListItemsPayload,
     method: string,
     configuration: Configuration
   ) => {

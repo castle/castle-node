@@ -1,9 +1,9 @@
 import { RiskPolicy, RiskPolicyFailover } from './risk-policy';
-import { EventAction } from './events';
+import { Action } from './action';
 import { Signals } from './signals';
 
 export interface AuthenticateResult {
-  action: EventAction | string;
+  action: Action | string;
   risk?: number;
   user_id?: string;
   user?: { email?: string; username?: string };
