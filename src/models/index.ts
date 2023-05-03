@@ -5,3 +5,4 @@ export * from './device';
 export * from './events';
 export * from './list-item';
 export * from './list';
+export * from './action';
