@@ -14,6 +14,10 @@ import {
   UpdateListItemPayload,
   ListItemPayload,
   SearchListItemsPayload,
+  ListPayload,
+  CreateListPayload,
+  SearchListsPayload,
+  UpdateListPayload,
 } from '../../payload/payload.module';
 
 const combineURLs = (baseURL, relativeURL) => {
@@ -33,7 +37,11 @@ export const CommandGenerateService = {
       | FilterPayload
       | CreateListItemPayload
       | ListItemPayload
+      | ListPayload
       | UpdateListItemPayload
+      | CreateListPayload
+      | UpdateListPayload
+      | SearchListsPayload
       | SearchListItemsPayload,
     method: string,
     configuration: Configuration
