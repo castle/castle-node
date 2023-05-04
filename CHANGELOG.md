@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.2.0
+
+- [#155](https://github.com/castle/castle-node/pull/155)
+- [#152](https://github.com/castle/castle-node/pull/152)
+- [#151](https://github.com/castle/castle-node/pull/151)
+- [#150](https://github.com/castle/castle-node/pull/150)
+  * added more typings, consts and added List API 
+
+- [#154](https://github.com/castle/castle-node/pull/154)
+- [#153](https://github.com/castle/castle-node/pull/153)
+  * dependencies bumps, removed express.js dependency
+
 ## 2.1.1
 
 - [#146](https://github.com/castle/castle-node/pull/146)
