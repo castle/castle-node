@@ -6,10 +6,10 @@ import { ClientIdExtractService } from '../../client-id/client-id.module';
 import { HeadersExtractService } from '../../headers/headers.module';
 import { IPsExtractService } from '../../ips/ips.module';
 import { version } from '../../../package.json';
-import type { Request as ExpressRequest } from 'express';
+import type { IncomingHttpHeaders } from 'http2';
 
 const requestContextData = (
-  request: ExpressRequest,
+  request: { headers: IncomingHttpHeaders },
   cookies: string | undefined,
   configuration: Configuration
 ): { [key: string]: any } => {
@@ -29,7 +29,7 @@ const requestContextData = (
 
 export const ContextGetDefaultService = {
   call: (
-    request: ExpressRequest,
+    request: { headers: IncomingHttpHeaders },
     cookies: string | undefined,
     configuration: Configuration
   ): { [key: string]: any } => {
