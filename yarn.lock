@@ -4052,12 +4052,10 @@ thread-stream@^2.0.0:
   dependencies:
     real-require "^0.2.0"
 
-timeout-signal@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/timeout-signal/-/timeout-signal-1.1.0.tgz#b3805c4b9422c239d87d5e69b20df7bc19b21da5"
-  integrity sha512-fuWY4tM1njcHCiOB7XkTmP0EOxzBkPbuQwPN+ZCzM6G0Tj4fMVgEffG/OPgiNUX48o+FhQEa2Oh4qjEDBCy5WQ==
-  dependencies:
-    abort-controller "^3.0.0"
+timeout-signal@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/timeout-signal/-/timeout-signal-2.0.0.tgz#23207ea448d50258bb0defe3beea4a467643abba"
+  integrity sha512-YBGpG4bWsHoPvofT6y/5iqulfXIiIErl5B0LdtHT1mGXDFTAhhRrbUpTvBgYbovr+3cKblya2WAOcpoy90XguA==
 
 tmpl@1.0.5:
   version "1.0.5"
