@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.1
+
+- [#157](https://github.com/castle/castle-node/pull/157)
+  * exposed more data types publicly
+
 ## 2.2.0
 
 - [#155](https://github.com/castle/castle-node/pull/155)
