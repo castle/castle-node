@@ -12,7 +12,7 @@ export enum EventType {
 
 export enum EventStatus {
   ATTEMPTED = '$attempted',
-  FAILURE = '$failure',
+  FAILED = '$failed',
   REQUESTED = '$requested',
   SUCCEEDED = '$succeeded',
 }
