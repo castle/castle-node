@@ -6,7 +6,7 @@
   * handle rate limiting and general API errors
 - [#159](https://github.com/castle/castle-node/pull/159)
   * fix failed event status name
-- [#160](https://github.com/castle/castle-node/pull/160) [#161](https://github.com/castle/castle-node/pull/161) [#162](https://github.com/castle/castle-node/pull/162) [#163](https://github.com/castle/castle-node/pull/163)
+- [#160](https://github.com/castle/castle-node/pull/160) [#161](https://github.com/castle/castle-node/pull/161) [#162](https://github.com/castle/castle-node/pull/162) [#163](https://github.com/castle/castle-node/pull/163) [#165](https://github.com/castle/castle-node/pull/165)
   * Bump dependencies
 
 ## 2.2.1
