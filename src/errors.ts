@@ -68,6 +68,14 @@ export class InvalidRequestTokenError extends InvalidParametersError {
   }
 }
 
+// api error rate limited 429
+export class RateLimitError extends APIError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'RateLimitError';
+  }
+}
+
 // all internal server errors
 export class InternalServerError extends APIError {
   constructor(message: string) {

@@ -1,6 +1,10 @@
 import { CoreProcessResponseService } from '../../../src/core/core.module';
 import { Response } from 'node-fetch';
-import { InvalidRequestTokenError } from '../../../src/errors';
+import {
+  APIError,
+  InvalidRequestTokenError,
+  RateLimitError,
+} from '../../../src/errors';
 
 describe('CoreProcessResponseService', () => {
   describe('call', () => {
@@ -159,7 +163,7 @@ describe('CoreProcessResponseService', () => {
     });
 
     describe('erroneous response statuses', () => {
-      const erroneousStatuses = [400, 401, 403, 404, 419, 422];
+      const erroneousStatuses = [400, 401, 403, 404, 419, 422, 429];
 
       erroneousStatuses.forEach((errorStatus) => {
         describe(`when ${errorStatus}`, () => {
@@ -200,6 +204,48 @@ describe('CoreProcessResponseService', () => {
               info: () => {},
             })
           ).rejects.toThrow(InvalidRequestTokenError);
+        });
+      });
+
+      describe('when request is rate limited', () => {
+        const response = new Response(
+          JSON.stringify({
+            type: 'rate_limit',
+            message: 'Rate Limit Exceeded',
+          }),
+          {
+            headers: { 'Content-Type': 'application/json' },
+            status: 429,
+          }
+        );
+
+        it('throws RateLimitError', async () => {
+          await expect(
+            CoreProcessResponseService.call('risk', {}, response, {
+              info: () => {},
+            })
+          ).rejects.toThrow(RateLimitError);
+        });
+      });
+
+      describe('when unknown error is returned', () => {
+        const response = new Response(
+          JSON.stringify({
+            type: 'unknown',
+            message: 'Something bad happened',
+          }),
+          {
+            headers: { 'Content-Type': 'application/json' },
+            status: 500,
+          }
+        );
+
+        it('throws APIError', async () => {
+          await expect(
+            CoreProcessResponseService.call('risk', {}, response, {
+              info: () => {},
+            })
+          ).rejects.toThrow(APIError);
         });
       });
     });

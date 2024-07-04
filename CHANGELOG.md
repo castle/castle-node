@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- [#164](https://github.com/castle/castle-node/pull/164)
+  * handle rate limiting and general API errors
+- [#159](https://github.com/castle/castle-node/pull/159)
+  * fix failed event status name
+- [#160](https://github.com/castle/castle-node/pull/160) [#161](https://github.com/castle/castle-node/pull/161) [#162](https://github.com/castle/castle-node/pull/162) [#163](https://github.com/castle/castle-node/pull/163)
+  * Bump dependencies
+
 ## 2.2.1
 
 - [#157](https://github.com/castle/castle-node/pull/157)

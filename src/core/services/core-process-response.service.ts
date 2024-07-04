@@ -8,6 +8,7 @@ import {
   InvalidRequestTokenError,
   InternalServerError,
   APIError,
+  RateLimitError,
 } from '../../errors';
 import { LoggerService } from '../../logger/logger.module';
 
@@ -18,6 +19,7 @@ const RESPONSE_ERRORS = {
   '404': NotFoundError,
   '419': UserUnauthorizedError,
   '422': InvalidParametersError,
+  '429': RateLimitError,
 };
 
 const RESPONSE_SUB_ERRORS = {
@@ -65,10 +67,12 @@ export const CoreProcessResponseService = {
 
     // Throw a special exception for subtype errors if defined. Eg. for
     // invalid request token, which is a subtype of InvalidParametersError.
-    // Otherwise, throw exception as defined per status code
+    // Otherwise, throw exception as defined per status code or a general
+    // API error
     const err =
       RESPONSE_SUB_ERRORS[body.type] ||
-      RESPONSE_ERRORS[response.status.toString()];
+      RESPONSE_ERRORS[response.status.toString()] ||
+      APIError;
 
     throw new err(`Castle: Responded with ${response.status} code`);
   },
