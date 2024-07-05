@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.2.2
+
 - [#164](https://github.com/castle/castle-node/pull/164)
   * handle rate limiting and general API errors
 - [#159](https://github.com/castle/castle-node/pull/159)
