@@ -1,7 +1,6 @@
 import type { IncomingHttpHeaders } from 'http2';
 
-export type FilterPayload = {
-  request_token: string;
+type BaseFilterPayload = {
   // deprecated
   user?: {
     email?: string;
@@ -14,10 +13,6 @@ export type FilterPayload = {
     username?: string;
   };
   properties?: { [key: string]: any };
-  context: {
-    ip: string;
-    headers: IncomingHttpHeaders | { [key: string]: string | boolean };
-  };
   product?: {
     id: string;
   };
@@ -34,6 +29,43 @@ export type FilterPayload = {
   };
   status?: string;
   name?: string;
-  skip_request_token_validation?: boolean;
-  skip_context_validation?: boolean;
 } & ({ event: string } | { type: string });
+
+type Context = {
+  ip: string;
+  headers: IncomingHttpHeaders | { [key: string]: string | boolean };
+};
+
+type RequiredContextAndToken = BaseFilterPayload & {
+  request_token: string;
+  context: Context;
+  skip_request_token_validation?: false;
+  skip_context_validation?: false;
+};
+
+type SkipRequestToken = BaseFilterPayload & {
+  request_token?: string;
+  context: Context;
+  skip_request_token_validation: true;
+  skip_context_validation?: false;
+};
+
+type SkipContext = BaseFilterPayload & {
+  request_token: string;
+  context?: Context;
+  skip_request_token_validation?: false;
+  skip_context_validation: true;
+};
+
+type SkipBoth = BaseFilterPayload & {
+  request_token?: string;
+  context?: Context;
+  skip_request_token_validation: true;
+  skip_context_validation: true;
+};
+
+export type FilterPayload =
+  | RequiredContextAndToken
+  | SkipRequestToken
+  | SkipContext
+  | SkipBoth;
