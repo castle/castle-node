@@ -19,6 +19,8 @@
     "test": "jest",
     "lint-fix": "eslint --fix --quiet '{src,test}/**/*.{js,ts,tsx}' '*.{js,ts,tsx}'",
     "lint-verify": "eslint '{src,test}/**/*.{js,ts,tsx}' '*.{js,ts,tsx}'",
+    "format": "yarn run prettier --write '{src,test}/**/*.{js,ts,tsx,yml,yaml,json,md}' '*.{js,ts,tsx,yml,yaml,json,md}'",
+    "format:check": "yarn run prettier --check '{src,test}/**/*.{js,ts,tsx,yml,yaml,json,md}' '*.{js,ts,tsx,yml,yaml,json,md}'",
     "prepush": "yarn build && yarn lint-fix",
     "prepublishOnly": "yarn build"
   },

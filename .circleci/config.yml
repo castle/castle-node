@@ -1,51 +1,69 @@
-aliases:
-  - &job-defaults
-    working_directory: ~/repo
-    docker:
-      - image: cimg/node:lts
-  - &yarn-checksum yarn-packages-{{ checksum "yarn.lock" }}-v1
-  - &yarn-restore
-    keys:
-      - *yarn-checksum
-
 version: 2.1
-jobs:
-  dependencies:
-    <<: *job-defaults
+
+executors:
+  node:
+    docker:
+      - image: cimg/node:22.17
+    working_directory: ~/repo
+    resource_class: small
+
+commands:
+  app-cache-restore:
     steps:
-      - checkout
-      - restore_cache: *yarn-restore
-      - run: yarn install --frozen-lockfile
+      - restore_cache:
+          keys:
+            - yarn-packages-{{ arch }}-{{ checksum "yarn.lock" }}-v1
+  app-cache-save:
+    steps:
       - save_cache:
           name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum "yarn.lock" }}-v1
+          key: yarn-packages-{{ arch }}-{{ checksum "yarn.lock" }}-v1
           paths:
             - node_modules
             - ~/.cache/yarn
+
+jobs:
+  dependencies:
+    executor: node
+    steps:
+      - checkout
+      - app-cache-restore
+      - run: yarn install --frozen-lockfile
+      - app-cache-save
   lint:
-    <<: *job-defaults
+    executor: node
     steps:
       - checkout
-      - restore_cache: *yarn-restore
+      - app-cache-restore
       - run: yarn lint-verify
-  test:
-    <<: *job-defaults
+  format:
+    executor: node
     steps:
       - checkout
-      - restore_cache: *yarn-restore
+      - app-cache-restore
+      - run: yarn format
+  test:
+    executor: node
+    steps:
+      - checkout
+      - app-cache-restore
       - run: yarn jest --runInBand
   build:
-    <<: *job-defaults
+    executor: node
     steps:
       - checkout
-      - restore_cache: *yarn-restore
+      - app-cache-restore
       - run: yarn build
+
 workflows:
   version: 2
   build_and_test:
     jobs:
       - dependencies
       - lint:
+          requires:
+            - dependencies
+      - format:
           requires:
             - dependencies
       - test:
