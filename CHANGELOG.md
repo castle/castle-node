@@ -5,16 +5,16 @@
 ## 2.2.2
 
 - [#164](https://github.com/castle/castle-node/pull/164)
-  * handle rate limiting and general API errors
+  - handle rate limiting and general API errors
 - [#159](https://github.com/castle/castle-node/pull/159)
-  * fix failed event status name
+  - fix failed event status name
 - [#160](https://github.com/castle/castle-node/pull/160) [#161](https://github.com/castle/castle-node/pull/161) [#162](https://github.com/castle/castle-node/pull/162) [#163](https://github.com/castle/castle-node/pull/163) [#165](https://github.com/castle/castle-node/pull/165)
-  * Bump dependencies
+  - Bump dependencies
 
 ## 2.2.1
 
 - [#157](https://github.com/castle/castle-node/pull/157)
-  * exposed more data types publicly
+  - exposed more data types publicly
 
 ## 2.2.0
 
@@ -22,158 +22,173 @@
 - [#152](https://github.com/castle/castle-node/pull/152)
 - [#151](https://github.com/castle/castle-node/pull/151)
 - [#150](https://github.com/castle/castle-node/pull/150)
-  * added more typings, consts and added List API 
+
+  - added more typings, consts and added List API
 
 - [#154](https://github.com/castle/castle-node/pull/154)
 - [#153](https://github.com/castle/castle-node/pull/153)
-  * dependencies bumps, removed express.js dependency
+  - dependencies bumps, removed express.js dependency
 
 ## 2.1.1
 
 - [#146](https://github.com/castle/castle-node/pull/146)
-  * add and expose more typings
+
+  - add and expose more typings
 
 - [#147](https://github.com/castle/castle-node/pull/147)
-  * internal dependencies bumps
+  - internal dependencies bumps
 
 ## 2.1.0
 
 - [#142](https://github.com/castle/castle-node/pull/142)
-  * dependencies  updates
+
+  - dependencies updates
 
 - [#143](https://github.com/castle/castle-node/pull/143)
 - [#144](https://github.com/castle/castle-node/pull/144)
-  * updated definitions to match API schema
+  - updated definitions to match API schema
 
 ## 2.0.1
 
 - [#140](https://github.com/castle/castle-node/pull/140)
 - [#138](https://github.com/castle/castle-node/pull/138)
-  * dependencies and readme updates
+  - dependencies and readme updates
 
 ## 2.0.0
 
 **BREAKING CHANGES:**
 
 - [#135](https://github.com/castle/castle-node/pull/135)
-  * removed auto context building from the command payload generation. Follow https://docs.castle.io/ for passing the context to the commands. This version does not build context when castle commands are called. `ContextPrepareService` should be used explicitly.
+  - removed auto context building from the command payload generation. Follow https://docs.castle.io/ for passing the context to the commands. This version does not build context when castle commands are called. `ContextPrepareService` should be used explicitly.
 
 **Enhancements**
 
 - allowed to import errors classes and constants
 
 - [#136](https://github.com/castle/castle-node/pull/136)
-  * fixes inconsistencies regarding failover responses between the commands
-  * removed unused code
+  - fixes inconsistencies regarding failover responses between the commands
+  - removed unused code
 
 ## 1.2.0
 
 **BugFix:**
 
 - [#132](https://github.com/castle/castle-node/pull/132)
-  * fixed how options in the context prepare are merged
-  * changed/fixed how payload prepare options are merge
+  - fixed how options in the context prepare are merged
+  - changed/fixed how payload prepare options are merge
 
 **Enhancements**
 
 - [#133](https://github.com/castle/castle-node/pull/133)
-  * increased default timeout from 1000 to 1500
+  - increased default timeout from 1000 to 1500
 - [#133](https://github.com/castle/castle-node/pull/133)
-  * exposed ContextPrepareService
+  - exposed ContextPrepareService
 
 ## 1.1.1
 
 **Enhancements**
 
 - [#131](https://github.com/castle/castle-node/pull/131)
-  * failover response enhancement, removed X-Castle header from allowlist
+  - failover response enhancement, removed X-Castle header from allowlist
 
 ## 1.1.0
 
 **Enhancements**
 
 - [#127](https://github.com/castle/castle-node/pull/127)
-  * Introduce a new exception `InvalidRequestTokenError` for facilitating handling of all request token related errors
+  - Introduce a new exception `InvalidRequestTokenError` for facilitating handling of all request token related errors
 
 ## 1.0.3
 
 **BugFix:**
 
 - [#120](https://github.com/castle/castle-node/pull/120)
-  * removes body in request for GET requests
+  - removes body in request for GET requests
 
 ## 1.0.2
 
 **BugFix:**
 
 - [#119](https://github.com/castle/castle-node/pull/119)
-  * fixed path resolving
+  - fixed path resolving
 
 ## 1.0.1
 
 **Enhancements:**
 
 - [#117](https://github.com/castle/castle-node/pull/117)
-  * typings improvements
+  - typings improvements
 
 ## 1.0.0
+
 **BREAKING CHANGES:**
-  - remove `identify` and `review` commands - they are no longer supported
 
-  - renamed setUseWhitelist with setUseAllowlist
+- remove `identify` and `review` commands - they are no longer supported
 
-  - added better support for configuration, replaced apiUrl with baseUrl option
-    * [#97](https://github.com/castle/castle-node/pull/97)
+- renamed setUseWhitelist with setUseAllowlist
 
-  - replace logLevel with logger in the config
-    * [#97](https://github.com/castle/castle-node/pull/111)
+- added better support for configuration, replaced apiUrl with baseUrl option
 
-  - dropped EVENTS const with list of events
-    * [#97](https://github.com/castle/castle-node/pull/114)
-**Enhancements:**
-  - restructuring the codebase
-    * [#89](https://github.com/castle/castle-node/pull/89)
-    * [#90](https://github.com/castle/castle-node/pull/90)
-    * [#91](https://github.com/castle/castle-node/pull/91)
-    * [#100](https://github.com/castle/castle-node/pull/100)
-    * [#101](https://github.com/castle/castle-node/pull/101)
-    * [#102](https://github.com/castle/castle-node/pull/102)
-    * [#110](https://github.com/castle/castle-node/pull/110)
-    * [#110](https://github.com/castle/castle-node/pull/113)
+  - [#97](https://github.com/castle/castle-node/pull/97)
 
-  - added failover and timeout support
-    * [#93](https://github.com/castle/castle-node/pull/93)
+- replace logLevel with logger in the config
 
-  - added ability to set ip headers and proxies
-    * [#96](https://github.com/castle/castle-node/pull/96)
+  - [#97](https://github.com/castle/castle-node/pull/111)
 
-  - added request context builder
-    * [#100](https://github.com/castle/castle-node/pull/100)
+- dropped EVENTS const with list of events \* [#97](https://github.com/castle/castle-node/pull/114)
+  **Enhancements:**
+- restructuring the codebase
 
-  - added request context builder
-    * [#100](https://github.com/castle/castle-node/pull/100)
+  - [#89](https://github.com/castle/castle-node/pull/89)
+  - [#90](https://github.com/castle/castle-node/pull/90)
+  - [#91](https://github.com/castle/castle-node/pull/91)
+  - [#100](https://github.com/castle/castle-node/pull/100)
+  - [#101](https://github.com/castle/castle-node/pull/101)
+  - [#102](https://github.com/castle/castle-node/pull/102)
+  - [#110](https://github.com/castle/castle-node/pull/110)
+  - [#110](https://github.com/castle/castle-node/pull/113)
 
-  - added device endpoints
-    * [#106](https://github.com/castle/castle-node/pull/106)
-    * [#107](https://github.com/castle/castle-node/pull/107)
-    * [#108](https://github.com/castle/castle-node/pull/108)
-    * [#109](https://github.com/castle/castle-node/pull/109)
+- added failover and timeout support
 
-   - added risk, filter, log endpoints
+  - [#93](https://github.com/castle/castle-node/pull/93)
+
+- added ability to set ip headers and proxies
+
+  - [#96](https://github.com/castle/castle-node/pull/96)
+
+- added request context builder
+
+  - [#100](https://github.com/castle/castle-node/pull/100)
+
+- added request context builder
+
+  - [#100](https://github.com/castle/castle-node/pull/100)
+
+- added device endpoints
+
+  - [#106](https://github.com/castle/castle-node/pull/106)
+  - [#107](https://github.com/castle/castle-node/pull/107)
+  - [#108](https://github.com/castle/castle-node/pull/108)
+  - [#109](https://github.com/castle/castle-node/pull/109)
+
+- added risk, filter, log endpoints
+
+
     * [#112](https://github.com/castle/castle-node/pull/112)
+
 ## 0.5.0
 
 **Enhancements:**
 
 - [#87](https://github.com/castle/castle-node/pull/87) added risk policy information to the authenticate response
 
-
 ## 0.4.7
+
 **BREAKING CHANGES:**
 
 - [#42](https://github.com/castle/castle-node//pull/42)
-  * remove `identify` and `review` commands - they are no longer supported
-  * renamed setUseWhitelist with setUseAllowlist
+  - remove `identify` and `review` commands - they are no longer supported
+  - renamed setUseWhitelist with setUseAllowlist
 
 **Enhancements:**
 
