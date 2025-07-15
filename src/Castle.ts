@@ -21,6 +21,7 @@ import {
   APIFetchListItemService,
   APIFetchListService,
   APIFetchAllListsService,
+  APISearchEventsService,
 } from './api/api.module';
 import { FailoverStrategy } from './failover/failover.module';
 import type {
@@ -38,6 +39,8 @@ import type {
   ListPayload,
   SearchListItemsPayload,
   SearchListsPayload,
+  SearchEventsPayload,
+  SearchEventsResponse,
 } from './payload/payload.module';
 import { Configuration, ConfigurationProperties } from './configuration';
 
@@ -160,6 +163,12 @@ export class Castle {
 
   public async searchLists(params: SearchListsPayload): Promise<any> {
     return APISearchListsService.call(params, this.configuration);
+  }
+
+  public async searchEvents(
+    params: SearchEventsPayload
+  ): Promise<SearchEventsResponse> {
+    return APISearchEventsService.call(params, this.configuration);
   }
 
   private generateDoNotTrackResponse(userId?): { [key: string]: any } {

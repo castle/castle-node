@@ -20,3 +20,4 @@ export * from './api-search-lists.service';
 export * from './api-update-list-item.service';
 export * from './api-update-list.service';
 export * from './api-fetch-all-lists.service';
+export * from './api-search-events.service';

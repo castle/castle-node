@@ -20,3 +20,4 @@ export * from './command-fetch-all-lists.service';
 export * from './command-search-lists.service';
 export * from './command-update-list.service';
 export * from './command-create-list.service';
+export * from './command-search-events.service';
