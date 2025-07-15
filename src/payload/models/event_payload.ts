@@ -4,7 +4,7 @@ export type SearchEventsPayload = {
     | SearchEventsRelativeRangeQueryFilter
     | SearchEventsRangeQueryFilter
     | SearchEventsExistsQueryFilter
-    | SerachEventsOrQueryFilter
+    | SearchEventsOrQueryFilter
   >;
   query_type?: SearchEventsQueryType;
   page?: number;
@@ -76,7 +76,7 @@ export type SearchEventsExistsQueryFilter = {
   op: '$exists' | '$nexists';
 };
 
-export type SerachEventsOrQueryFilter = {
+export type SearchEventsOrQueryFilter = {
   value: Array<
     | SearchEventsQueryFilter
     | SearchEventsRelativeRangeQueryFilter
