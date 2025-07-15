@@ -18,6 +18,7 @@
     "esModuleInterop": true,
     "declaration": true
   },
+  "strict": true,
   "compileOnSave": true,
   "buildOnSave": true,
   "exclude": ["**/*.test.ts", "dist", "node_modules"]
