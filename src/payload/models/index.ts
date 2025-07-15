@@ -8,3 +8,4 @@ export * from './address_payload';
 export * from './device_payload';
 export * from './event_payload';
 export * from './event_response';
+export * from './privacy_payload';

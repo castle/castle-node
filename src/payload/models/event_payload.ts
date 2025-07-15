@@ -85,3 +85,28 @@ export type SerachEventsOrQueryFilter = {
   >;
   op: '$or';
 };
+
+export type GroupEventsPayload = {
+  filters: any[];
+  group_by: {
+    fields: any[];
+    filters?: any[];
+  };
+  columns: any[];
+  query_type?: string;
+  page?: number;
+  aggregations?: any[];
+  formulas?: any[];
+  having?: any[];
+  sort?: {
+    field: string;
+    func: string;
+    transform?: {
+      transform: string;
+      options: object;
+    };
+    options?: object;
+    order?: 'asc' | 'desc';
+  };
+  results_size?: number;
+};

@@ -4,6 +4,10 @@ import {
   CoreGenerateRequestBody,
 } from '../../core/core.module';
 import {
+  DeleteUserDataPayload,
+  RequestUserDataPayload,
+} from '../../payload/models/privacy_payload';
+import {
   Payload,
   LogPayload,
   RiskPayload,
@@ -18,6 +22,8 @@ import {
   CreateListPayload,
   SearchListsPayload,
   UpdateListPayload,
+  GroupEventsPayload,
+  SearchEventsPayload,
 } from '../../payload/payload.module';
 
 const combineURLs = (baseURL, relativeURL) => {
@@ -42,7 +48,11 @@ export const CommandGenerateService = {
       | CreateListPayload
       | UpdateListPayload
       | SearchListsPayload
-      | SearchListItemsPayload,
+      | SearchListItemsPayload
+      | GroupEventsPayload
+      | SearchEventsPayload
+      | RequestUserDataPayload
+      | DeleteUserDataPayload,
     method: string,
     configuration: Configuration
   ) => {

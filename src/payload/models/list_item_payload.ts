@@ -17,8 +17,7 @@ export type ListItemPayload = {
   list_id: string;
 };
 
-export type CreateListItemPayload = {
-  list_id: string;
+export type FullListItemPayload = {
   primary_value: string;
   author: {
     type: ListItemAuthorType;
@@ -29,6 +28,10 @@ export type CreateListItemPayload = {
   auto_archives_at?: string;
   mode?: ListItemMode;
 };
+
+export type CreateListItemPayload = {
+  list_id: string;
+} & FullListItemPayload;
 
 export type UpdateListItemPayload = ListItemPayload & {
   comment: string;
@@ -43,4 +46,18 @@ export type SearchListItemsPayload = {
   filters?: any[];
   page?: number;
   results_size?: number;
+};
+
+export type BatchUpsertListItemsPayload = {
+  list_id: string;
+  items: FullListItemPayload[];
+};
+
+export type CountListItemsPayload = {
+  list_id: string;
+  filters?: {
+    field: string;
+    op: string;
+    value: string | boolean;
+  }[];
 };
