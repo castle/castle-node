@@ -157,7 +157,7 @@ describe('CoreProcessResponseService', () => {
             CoreProcessResponseService.call('authenticate', {}, response, {
               info: () => {},
             })
-          ).rejects.toThrowError('Castle: Malformed JSON response');
+          ).rejects.toThrow('Castle: Malformed JSON response');
         });
       });
     });
@@ -179,7 +179,7 @@ describe('CoreProcessResponseService', () => {
               CoreProcessResponseService.call('authenticate', {}, response, {
                 info: () => {},
               })
-            ).rejects.toThrowError(
+            ).rejects.toThrow(
               `Castle: Responded with ${errorStatus} code`
             );
           });

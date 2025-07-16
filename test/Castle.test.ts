@@ -296,7 +296,7 @@ describe('Castle', () => {
       // tests, instead of just logging unhandled rejections.
       await expect(
         castle.authenticate(sampleRequestDataLocal)
-      ).rejects.toThrowError('Castle: Responded with 401 code');
+      ).rejects.toThrow('Castle: Responded with 401 code');
     });
   });
 
@@ -450,7 +450,7 @@ describe('Castle', () => {
       // tests, instead of just logging unhandled rejections.
       await expect(
         castle.authenticate(sampleRequestDataLocal)
-      ).rejects.toThrowError('Castle: Responded with 401 code');
+      ).rejects.toThrow('Castle: Responded with 401 code');
     });
   });
 
