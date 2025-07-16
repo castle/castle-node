@@ -27,7 +27,6 @@
 - [#152](https://github.com/castle/castle-node/pull/152)
 - [#151](https://github.com/castle/castle-node/pull/151)
 - [#150](https://github.com/castle/castle-node/pull/150)
-
   - added more typings, consts and added List API
 
 - [#154](https://github.com/castle/castle-node/pull/154)
@@ -37,7 +36,6 @@
 ## 2.1.1
 
 - [#146](https://github.com/castle/castle-node/pull/146)
-
   - add and expose more typings
 
 - [#147](https://github.com/castle/castle-node/pull/147)
@@ -46,7 +44,6 @@
 ## 2.1.0
 
 - [#142](https://github.com/castle/castle-node/pull/142)
-
   - dependencies updates
 
 - [#143](https://github.com/castle/castle-node/pull/143)
@@ -133,17 +130,14 @@
 - renamed setUseWhitelist with setUseAllowlist
 
 - added better support for configuration, replaced apiUrl with baseUrl option
-
   - [#97](https://github.com/castle/castle-node/pull/97)
 
 - replace logLevel with logger in the config
-
   - [#97](https://github.com/castle/castle-node/pull/111)
 
 - dropped EVENTS const with list of events \* [#97](https://github.com/castle/castle-node/pull/114)
   **Enhancements:**
 - restructuring the codebase
-
   - [#89](https://github.com/castle/castle-node/pull/89)
   - [#90](https://github.com/castle/castle-node/pull/90)
   - [#91](https://github.com/castle/castle-node/pull/91)
@@ -154,30 +148,24 @@
   - [#110](https://github.com/castle/castle-node/pull/113)
 
 - added failover and timeout support
-
   - [#93](https://github.com/castle/castle-node/pull/93)
 
 - added ability to set ip headers and proxies
-
   - [#96](https://github.com/castle/castle-node/pull/96)
 
 - added request context builder
-
   - [#100](https://github.com/castle/castle-node/pull/100)
 
 - added request context builder
-
   - [#100](https://github.com/castle/castle-node/pull/100)
 
 - added device endpoints
-
   - [#106](https://github.com/castle/castle-node/pull/106)
   - [#107](https://github.com/castle/castle-node/pull/107)
   - [#108](https://github.com/castle/castle-node/pull/108)
   - [#109](https://github.com/castle/castle-node/pull/109)
 
 - added risk, filter, log endpoints
-
   - [#112](https://github.com/castle/castle-node/pull/112)
 
 ## 0.5.0

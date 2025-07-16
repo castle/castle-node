@@ -179,9 +179,7 @@ describe('CoreProcessResponseService', () => {
               CoreProcessResponseService.call('authenticate', {}, response, {
                 info: () => {},
               })
-            ).rejects.toThrow(
-              `Castle: Responded with ${errorStatus} code`
-            );
+            ).rejects.toThrow(`Castle: Responded with ${errorStatus} code`);
           });
         });
       });
