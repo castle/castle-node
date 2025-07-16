@@ -178,8 +178,7 @@
 
 - added risk, filter, log endpoints
 
-
-    * [#112](https://github.com/castle/castle-node/pull/112)
+  - [#112](https://github.com/castle/castle-node/pull/112)
 
 ## 0.5.0
 

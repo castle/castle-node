@@ -1,5 +1,5 @@
 export type SearchEventsResponse = {
-  data: Array<Event>;
+  data: Event[];
   total_count: number;
 };
 
@@ -22,9 +22,9 @@ export type Event = {
     id: string;
   };
   device: {
-    user_agent: string;
     fingerprint: string;
-    hardware: {
+    user_agent?: string;
+    hardware?: {
       type: string;
       name: string | null;
       brand: string | null;
@@ -32,19 +32,19 @@ export type Event = {
         width: number;
         height: number;
       };
-      model: {
+      model?: {
         name: string | null;
         code: string | null;
       };
     };
-    os: {
+    os?: {
       name: string;
       version: {
         major: string;
         full: string | null;
       };
     };
-    software: {
+    software?: {
       type: string;
       name: string;
       languages: Array<string>;
@@ -95,9 +95,9 @@ export type Event = {
     response?: {
       status_code: number;
       body: string;
-      headers?: Array<{
-        name: string;
-        value: string;
+      headers: Array<{
+        name?: string;
+        value?: string;
       }>;
     } | null;
   };
@@ -122,7 +122,7 @@ export type Event = {
     };
   };
   created_at: string;
-  params: {
+  params?: {
     email?: string;
     phone?: string;
     username?: string;
@@ -130,18 +130,18 @@ export type Event = {
   transaction?: {
     type: string;
     id: string;
-    base_amount: string;
-    amount: {
+    base_amount?: string;
+    amount?: {
       type: string;
       value: string;
       currency: string;
     };
     payment_method?: {
       type: string;
-      fingerprint: string;
-      holder_name: string;
-      bank_name: string;
-      country_code: string;
+      fingerprint?: string;
+      holder_name?: string;
+      bank_name?: string;
+      country_code?: string;
       billing_address?: {
         line1?: string;
         line2?: string;
@@ -161,20 +161,20 @@ export type Event = {
       };
     };
     shipping_address?: {
+      country_code: string;
       line1?: string;
       line2?: string;
       city?: string;
-      country_code?: string;
       region_code?: string;
       postal_code?: string;
       fingerprint?: string;
     };
-    merchant: {
-      id: string;
-      name: string;
-      category: {
-        code: string;
-        description: string;
+    merchant?: {
+      id?: string;
+      name?: string;
+      category?: {
+        code?: string;
+        description?: string;
       };
       address?: {
         country_code: string;
@@ -193,7 +193,7 @@ export type Event = {
     email?: string;
     phone?: string;
   };
-  page: {
+  page?: {
     name: string;
     url: string;
     referrer?: string;
@@ -282,3 +282,128 @@ export enum EventAuthenticationMethod {
   PASSKEY = '$passkey',
   OTHER = '$other',
 }
+
+export type Op =
+  | '$eq'
+  | '$neq'
+  | '$in'
+  | '$nin'
+  | '$range'
+  | '$exists'
+  | '$nexists'
+  | '$geo'
+  | '$like'
+  | '$nlike'
+  | '$contains'
+  | '$ncontains'
+  | '$starts_with'
+  | '$nstarts_with'
+  | '$ends_with'
+  | '$nends_with'
+  | '$ip_range'
+  | '$nip_range';
+
+export type Func =
+  | '$sum'
+  | '$last'
+  | '$avg'
+  | '$min'
+  | '$max'
+  | '$count'
+  | '$top_k'
+  | '$date_histogram'
+  | '$count_unique';
+
+export type DataType =
+  | 'array'
+  | 'boolean'
+  | 'datetime'
+  | 'decimal'
+  | 'integer'
+  | 'ip'
+  | 'map'
+  | 'number'
+  | 'string'
+  | 'uuid';
+export type Transform = '$to_end_of_interval';
+
+export type NumberLike = number | string;
+
+export type Source = 'ios' | 'android' | 'web';
+
+export type SearchField = {
+  field: string;
+  op: Op[];
+  func: Func[];
+  type: DataType[];
+  nice_name: string;
+  description: string;
+  transform?: Transform[];
+  min?: NumberLike;
+  max?: NumberLike;
+  source?: Source[];
+  example?: string;
+  unit?: string;
+};
+
+export type CountBucket = {
+  name: string;
+  field: string;
+  type: '$count';
+  options?: {
+    size?: {
+      data_type: string;
+    };
+  };
+};
+
+export type DateHistogramBucket = {
+  name: string;
+  field: string;
+  type: '$date_histogram';
+  options: {
+    interval: {
+      required: boolean;
+      data_type: string;
+      enum: string;
+    };
+    time_zone: string;
+    min?: {
+      data_type: string;
+      format?: string[];
+    };
+    max?: {
+      data_type: string;
+      format?: string[];
+    };
+    size: {
+      data_type: string;
+    };
+  };
+};
+
+export type RangeBucket = {
+  name: string;
+  field: string;
+  type: '$range';
+  options: {
+    ranges: {
+      required: boolean;
+      data_type: 'string' | 'number';
+    };
+  };
+};
+
+export type Bucket = CountBucket | DateHistogramBucket | RangeBucket;
+
+export type GetEventsSchemaResponse = {
+  fields: SearchField[];
+  buckets: Bucket[];
+};
+
+export type GroupEventsResponse = {
+  data: GroupEvent[];
+  total_count: number;
+};
+
+export type GroupEvent = object;
