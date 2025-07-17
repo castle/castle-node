@@ -278,8 +278,7 @@ describe('Castle', () => {
 
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
-      // eslint:disable-next-line:no-unused-expression
-      expect(fetch.called()).toBeFalsy;
+      expect(fetch.called()).toBeFalsy();
     });
 
     it('should fail on unauthorized', async () => {
@@ -294,9 +293,9 @@ describe('Castle', () => {
 
       // Promise based expectations have to be awaited to properly fail
       // tests, instead of just logging unhandled rejections.
-      await expect(
-        castle.authenticate(sampleRequestDataLocal)
-      ).rejects.toThrowError('Castle: Responded with 401 code');
+      await expect(castle.authenticate(sampleRequestDataLocal)).rejects.toThrow(
+        'Castle: Responded with 401 code'
+      );
     });
   });
 
@@ -434,8 +433,7 @@ describe('Castle', () => {
 
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
-      // eslint:disable-next-line:no-unused-expression
-      expect(fetch.called()).toBeFalsy;
+      expect(fetch.called()).toBeFalsy();
     });
 
     it('should fail on unauthorized', async () => {
@@ -448,9 +446,9 @@ describe('Castle', () => {
       const sampleRequestDataLocal = sampleRequestData(castle.configuration);
       // Promise based expectations have to be awaited to properly fail
       // tests, instead of just logging unhandled rejections.
-      await expect(
-        castle.authenticate(sampleRequestDataLocal)
-      ).rejects.toThrowError('Castle: Responded with 401 code');
+      await expect(castle.authenticate(sampleRequestDataLocal)).rejects.toThrow(
+        'Castle: Responded with 401 code'
+      );
     });
   });
 

@@ -1,18 +1,25 @@
-const { FlatCompat } = require('@eslint/eslintrc');
+import { defineConfig } from 'eslint/config';
+import { FlatCompat } from '@eslint/eslintrc';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import prettierPlugin from 'eslint-plugin-prettier';
+import importPlugin from 'eslint-plugin-import';
+import preferArrowPlugin from 'eslint-plugin-prefer-arrow';
+
 const compat = new FlatCompat();
 
-module.exports = [
+// eslint-disable-next-line import/no-default-export
+export default defineConfig([
   {
     languageOptions: {
       parser: '@typescript-eslint/parser',
-      ecmaVersion: 2015, // Allows for the parsing of modern ECMAScript features
-      sourceType: 'module', // Allows for the use of imports
+      ecmaVersion: 2015,
+      sourceType: 'module',
     },
     plugins: {
-      '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
-      prettier: require('eslint-plugin-prettier'),
-      import: require('eslint-plugin-import'),
-      'prefer-arrow': require('eslint-plugin-prefer-arrow'),
+      '@typescript-eslint': tsPlugin,
+      prettier: prettierPlugin,
+      import: importPlugin,
+      'prefer-arrow': preferArrowPlugin,
     },
   },
   ...compat.extends('plugin:@typescript-eslint/recommended'),
@@ -36,4 +43,4 @@ module.exports = [
       'prefer-spread': 'off',
     },
   },
-];
+]);
