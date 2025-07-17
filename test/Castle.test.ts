@@ -278,8 +278,7 @@ describe('Castle', () => {
 
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
-      // eslint:disable-next-line:no-unused-expression
-      expect(fetch.called()).toBeFalsy;
+      expect(fetch.called()).toBeFalsy();
     });
 
     it('should fail on unauthorized', async () => {
@@ -434,8 +433,7 @@ describe('Castle', () => {
 
       // Ensure that fetch was never called. When do not track
       // is on, the SDK should generate no outbound requests.
-      // eslint:disable-next-line:no-unused-expression
-      expect(fetch.called()).toBeFalsy;
+      expect(fetch.called()).toBeFalsy();
     });
 
     it('should fail on unauthorized', async () => {
