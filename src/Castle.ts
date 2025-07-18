@@ -21,6 +21,13 @@ import {
   APIFetchListItemService,
   APIFetchListService,
   APIFetchAllListsService,
+  APISearchEventsService,
+  APIGetEventsSchemaService,
+  APIGroupEventsService,
+  APIRequestUserDataService,
+  APIDeleteUserDataService,
+  APIBatchUpsertListItemsService,
+  APICountListItemsService,
 } from './api/api.module';
 import { FailoverStrategy } from './failover/failover.module';
 import type {
@@ -38,6 +45,15 @@ import type {
   ListPayload,
   SearchListItemsPayload,
   SearchListsPayload,
+  SearchEventsPayload,
+  SearchEventsResponse,
+  GetEventsSchemaResponse,
+  GroupEventsPayload,
+  GroupEventsResponse,
+  BatchUpsertListItemsPayload,
+  CountListItemsPayload,
+  DeleteUserDataPayload,
+  RequestUserDataPayload,
 } from './payload/payload.module';
 import { Configuration, ConfigurationProperties } from './configuration';
 
@@ -160,6 +176,40 @@ export class Castle {
 
   public async searchLists(params: SearchListsPayload): Promise<any> {
     return APISearchListsService.call(params, this.configuration);
+  }
+
+  public async batchUpdateListItems(
+    params: BatchUpsertListItemsPayload
+  ): Promise<any> {
+    return APIBatchUpsertListItemsService.call(params, this.configuration);
+  }
+
+  public async countListItems(params: CountListItemsPayload): Promise<any> {
+    return APICountListItemsService.call(params, this.configuration);
+  }
+
+  public async searchEvents(
+    params: SearchEventsPayload
+  ): Promise<SearchEventsResponse> {
+    return APISearchEventsService.call(params, this.configuration);
+  }
+
+  public async getEventsSchema(): Promise<GetEventsSchemaResponse> {
+    return APIGetEventsSchemaService.call(this.configuration);
+  }
+
+  public async groupEvents(
+    params: GroupEventsPayload
+  ): Promise<GroupEventsResponse> {
+    return APIGroupEventsService.call(params, this.configuration);
+  }
+
+  public async requestUserData(params: RequestUserDataPayload): Promise<any> {
+    return APIRequestUserDataService.call(params, this.configuration);
+  }
+
+  public async deleteUserData(params: DeleteUserDataPayload): Promise<any> {
+    return APIDeleteUserDataService.call(params, this.configuration);
   }
 
   private generateDoNotTrackResponse(userId?): { [key: string]: any } {

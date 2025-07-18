@@ -1,8 +1,7 @@
 import type { IncomingHttpHeaders } from 'http2';
 import type { AddressPayload } from './address_payload';
 
-export type RiskPayload = {
-  request_token: string;
+type BaseRiskPayload = {
   user: {
     id: string;
     phone?: string;
@@ -13,10 +12,6 @@ export type RiskPayload = {
     address?: { [key: string]: any };
   };
   properties?: { [key: string]: any };
-  context: {
-    ip: string;
-    headers: IncomingHttpHeaders | { [key: string]: string | boolean };
-  };
   created_at?: string;
   product?: {
     id: string;
@@ -37,3 +32,42 @@ export type RiskPayload = {
   skip_request_token_validation?: boolean;
   skip_context_validation?: boolean;
 } & ({ event: string } | { type: string });
+
+type Context = {
+  ip: string;
+  headers: IncomingHttpHeaders | { [key: string]: string | boolean };
+};
+
+type RequiredContextAndToken = BaseRiskPayload & {
+  request_token: string;
+  context: Context;
+  skip_request_token_validation?: false;
+  skip_context_validation?: false;
+};
+
+type SkipRequestToken = BaseRiskPayload & {
+  request_token?: string;
+  context: Context;
+  skip_request_token_validation: true;
+  skip_context_validation?: false;
+};
+
+type SkipContext = BaseRiskPayload & {
+  request_token: string;
+  context?: Context;
+  skip_request_token_validation?: false;
+  skip_context_validation: true;
+};
+
+type SkipBoth = BaseRiskPayload & {
+  request_token?: string;
+  context?: Context;
+  skip_request_token_validation: true;
+  skip_context_validation: true;
+};
+
+export type RiskPayload =
+  | RequiredContextAndToken
+  | SkipRequestToken
+  | SkipContext
+  | SkipBoth;

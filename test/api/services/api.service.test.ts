@@ -51,7 +51,7 @@ describe('APIService', () => {
         );
         await expect(
           APIService.call(controller, command, configuration)
-        ).rejects.toThrowError('The request was aborted.');
+        ).rejects.toThrow('The request was aborted.');
       });
     });
 
@@ -71,7 +71,7 @@ describe('APIService', () => {
         );
         await expect(
           APIService.call(controller, command, configuration)
-        ).rejects.toThrowError('Castle: Responded with 400 code');
+        ).rejects.toThrow('Castle: Responded with 400 code');
       });
     });
   });
