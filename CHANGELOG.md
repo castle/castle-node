@@ -6,6 +6,11 @@
   - make request_token and context optional based on skip parameters
 - [#176](https://github.com/castle/castle-node/pull/176)
   - support for POST events/query
+- [#180](https://github.com/castle/castle-node/pull/180)
+  - Introduce APIs:
+    - events/schema, events/group
+    - POST privacy/users, DELETE privacy/users
+    - lists/:id/items/batch, lists/:id/items/count
 
 ## 2.2.2
 
