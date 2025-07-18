@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.3.1
+
 - [#168](https://github.com/castle/castle-node/pull/168)
   - make request_token and context optional based on skip parameters
 - [#176](https://github.com/castle/castle-node/pull/176)
