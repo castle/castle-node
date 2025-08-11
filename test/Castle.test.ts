@@ -1,4 +1,4 @@
-import { Castle } from '../index';
+import { Castle } from '../src/index';
 import fetchMock from 'fetch-mock';
 import { FailoverStrategy } from '../src/failover/models';
 import MockDate from 'mockdate';

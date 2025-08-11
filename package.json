@@ -3,8 +3,7 @@
   "name": "@castleio/sdk",
   "description": "Castle SDK for Node",
   "version": "2.3.1",
-  "main": "dist/index.js",
-  "type": "module",
+  "main": "dist/src/index.js",
   "repository": "git@github.com:castle/castle-node.git",
   "author": {
     "name": "castle.io",
