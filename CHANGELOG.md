@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 2.3.2
+## 2.3.3
 
 - [#184](https://github.com/castle/castle-node/pull/184)
   - revert incomplete ESM migration
