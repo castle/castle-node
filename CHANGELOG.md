@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 3.1.0
+
+**Housekeeping:**
+
+- Slim down the default request context to `headers`, `ip`, and `library`. The
+  client id is already carried by `headers` (the `x-castle-client-id` header /
+  `__cid` cookie) and resolved by Castle server-side, so the SDK no longer
+  derives it separately.
+- Remove the internal client-id extraction service and the now-unused cookie
+  plumbing (`HeadersGetCookieService`) in `ContextGetDefaultService` /
+  `ContextPrepareService`.
+
 ## 3.0.0
 
 **BREAKING CHANGES:**

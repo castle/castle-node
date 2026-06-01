@@ -22,7 +22,6 @@ describe('ContextPrepareService', () => {
     });
 
     const options = {
-      cookies: '__cid=abcd;',
       context: {
         client_id: 'client_id',
         active: true,

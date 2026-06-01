@@ -1,43 +1,19 @@
-import { isEmpty, pickByTruthy } from '../../utils/object';
 import { Configuration } from '../../configuration';
-import { ClientIdExtractService } from '../../client-id/client-id.module';
 import { HeadersExtractService } from '../../headers/headers.module';
 import { IPsExtractService } from '../../ips/ips.module';
 import { version } from '../../../package.json';
 import type { IncomingHttpHeaders } from 'http2';
 
-const requestContextData = (
-  request: { headers: IncomingHttpHeaders },
-  cookies: string | undefined,
-  configuration: Configuration
-): { [key: string]: any } => {
-  if (isEmpty(request)) {
-    return {};
-  }
-
-  const cookiesForClientId =
-    cookies || (request.headers as { [key: string]: any })?.cookies;
-  return {
-    client_id:
-      ClientIdExtractService.call(request.headers, cookiesForClientId) || false,
-    active: true,
-    headers: HeadersExtractService.call(request.headers, configuration),
-    ip: IPsExtractService.call(request.headers, configuration),
-  };
-};
-
 export const ContextGetDefaultService = {
   call: (
     request: { headers: IncomingHttpHeaders },
-    cookies: string | undefined,
     configuration: Configuration
-  ): { [key: string]: any } => {
-    return {
-      ...pickByTruthy(requestContextData(request, cookies, configuration)),
-      library: {
-        name: 'castle-node',
-        version,
-      },
-    };
-  },
+  ): { [key: string]: any } => ({
+    headers: HeadersExtractService.call(request.headers, configuration),
+    ip: IPsExtractService.call(request.headers, configuration),
+    library: {
+      name: 'castle-node',
+      version,
+    },
+  }),
 };
