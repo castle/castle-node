@@ -1,5 +1,4 @@
 import type { IncomingHttpHeaders } from 'http2';
-import reduce from 'lodash.reduce';
 import type { Configuration } from '../../configuration';
 
 const ALWAYS_ALLOWLISTED = ['user-agent'];
@@ -10,9 +9,8 @@ export const HeadersExtractService = {
     headers: IncomingHttpHeaders | { [key: string]: string },
     configuration: Configuration
   ): { [key: string]: boolean | string } => {
-    return reduce(
-      headers,
-      (accumulator: object, value: string, key: string) => {
+    return Object.entries(headers).reduce(
+      (accumulator: object, [key, value]: [string, any]) => {
         if (ALWAYS_DENYLISTED.includes(key.toLowerCase())) {
           return {
             ...accumulator,

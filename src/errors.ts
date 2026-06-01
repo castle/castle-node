@@ -84,10 +84,10 @@ export class InternalServerError extends APIError {
   }
 }
 
-// impersonation command failed
-export class ImpersonationFailed extends APIError {
+// webhook signature did not match
+export class WebhookVerificationError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'ImpersonationFailed';
+    this.name = 'WebhookVerificationError';
   }
 }

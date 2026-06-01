@@ -1,11 +1,4 @@
-import type { AuthenticateResult } from './models';
 import {
-  APIAuthenticateService,
-  APIApproveDeviceService,
-  APIGetDeviceService,
-  APIGetDevicesForUserService,
-  APIReportDeviceService,
-  APITrackService,
   APILogService,
   APIFilterService,
   APIRiskService,
@@ -30,13 +23,12 @@ import {
   APICountListItemsService,
 } from './api/api.module';
 import { FailoverStrategy } from './failover/failover.module';
+import { WebhookVerifyService } from './webhook/webhook.module';
+import { SecureModeService } from './secure-mode/secure-mode.module';
 import type {
-  Payload,
   LogPayload,
   FilterPayload,
   RiskPayload,
-  DevicePayload,
-  UserDevicePayload,
   CreateListItemPayload,
   CreateListPayload,
   UpdateListItemPayload,
@@ -64,23 +56,9 @@ export class Castle {
     this.configuration = new Configuration(configAttributes);
   }
 
-  public async authenticate(params: Payload): Promise<AuthenticateResult> {
-    if (!params.event) {
-      throw new Error('Castle: event is required when calling authenticate.');
-    }
-
-    if (this.configuration.doNotTrack) {
-      return <AuthenticateResult>(
-        this.generateDoNotTrackResponse(params.user_id)
-      );
-    }
-
-    return APIAuthenticateService.call(params, this.configuration);
-  }
-
   public async risk(params: RiskPayload): Promise<object> {
     if (this.configuration.doNotTrack) {
-      return this.generateDoNotTrackResponse(params.user.id);
+      return this.generateDoNotTrackResponse(params.user?.id);
     }
 
     return APIRiskService.call(params, this.configuration);
@@ -100,34 +78,6 @@ export class Castle {
     }
 
     APILogService.call(params, this.configuration);
-  }
-
-  public async track(params: Payload): Promise<void> {
-    if (!params.event) {
-      throw new Error('Castle: event is required when calling track.');
-    }
-
-    if (this.configuration.doNotTrack) {
-      return;
-    }
-
-    return APITrackService.call(params, this.configuration);
-  }
-
-  public async getDevice({ device_token }: DevicePayload): Promise<any> {
-    return APIGetDeviceService.call({ device_token }, this.configuration);
-  }
-
-  public async getDevicesForUser({ id, cid }: UserDevicePayload): Promise<any> {
-    return APIGetDevicesForUserService.call({ id, cid }, this.configuration);
-  }
-
-  public async approveDevice({ device_token }: DevicePayload): Promise<any> {
-    return APIApproveDeviceService.call({ device_token }, this.configuration);
-  }
-
-  public async reportDevice({ device_token }: DevicePayload): Promise<any> {
-    return APIReportDeviceService.call({ device_token }, this.configuration);
   }
 
   public async createListItem(params: CreateListItemPayload): Promise<any> {
@@ -212,7 +162,20 @@ export class Castle {
     return APIDeleteUserDataService.call(params, this.configuration);
   }
 
-  private generateDoNotTrackResponse(userId?): { [key: string]: any } {
+  public verifyWebhookSignature(
+    payload: string | Buffer,
+    signature: string | undefined
+  ): void {
+    WebhookVerifyService.call(payload, signature, this.configuration);
+  }
+
+  public secureModeSignature(userId: string): string {
+    return SecureModeService.call(userId, this.configuration);
+  }
+
+  private generateDoNotTrackResponse(userId?: string): {
+    [key: string]: any;
+  } {
     return {
       policy: {
         action: FailoverStrategy.allow,

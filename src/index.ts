@@ -6,3 +6,5 @@ export * from './errors';
 export * from './failover/failover.module';
 export * from './payload/payload.module';
 export { ContextPrepareService } from './context/context.module';
+export { WebhookVerifyService } from './webhook/webhook.module';
+export { SecureModeService } from './secure-mode/secure-mode.module';

@@ -1,6 +1,5 @@
 import { CommandCreateListItemService } from '../../../src/command/command.module';
 import { Configuration } from '../../../src/configuration';
-import AbortController from 'abort-controller';
 import { ListItemAuthorType, ListItemMode } from '../../../src/payload/models';
 import MockDate from 'mockdate';
 import { InvalidParametersError } from '../../../src/errors';

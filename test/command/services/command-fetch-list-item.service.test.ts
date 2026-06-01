@@ -1,6 +1,5 @@
 import { CommandFetchListItemService } from '../../../src/command/command.module';
 import { Configuration } from '../../../src/configuration';
-import AbortController from 'abort-controller';
 import MockDate from 'mockdate';
 import { InvalidParametersError } from '../../../src/errors';
 

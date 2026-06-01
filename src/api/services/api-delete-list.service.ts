@@ -1,7 +1,6 @@
 import { Configuration } from '../../configuration';
 import { CommandDeleteListService } from '../../command/command.module';
 import { APIService } from './api.service';
-import AbortController from 'abort-controller';
 import type { ListPayload } from '../../payload/models';
 
 export const APIDeleteListService = {

@@ -1,4 +1,4 @@
-import merge from 'lodash.merge';
+import { deepMerge } from '../../utils/object';
 import { Configuration } from '../../configuration';
 import { ContextPrepareService } from '../../context/context.module';
 import type { Request } from 'express';
@@ -12,9 +12,9 @@ export const PayloadPrepareService = {
   ) => {
     const context = ContextPrepareService.call(
       request,
-      merge(payloadParams, options),
+      deepMerge(payloadParams, options),
       configuration
     );
-    return merge(payloadParams, { context });
+    return deepMerge(payloadParams, { context });
   },
 };

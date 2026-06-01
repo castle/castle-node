@@ -2,8 +2,23 @@
   "$schema": "http://json.schemastore.org/package",
   "name": "@castleio/sdk",
   "description": "Castle SDK for Node",
-  "version": "2.3.3",
-  "main": "dist/index.js",
+  "version": "3.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
   "repository": "git@github.com:castle/castle-node.git",
   "author": {
     "name": "castle.io",
@@ -12,20 +27,24 @@
   "homepage": "https://github.com/castle/castle-node",
   "license": "MIT",
   "private": false,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "clean": "rimraf dist",
-    "build": "tsc",
-    "start": "tsc -w",
+    "build": "tsup",
+    "start": "tsup --watch",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
-    "lint-fix": "eslint --fix --quiet '{src,test}/**/*.{js,ts,tsx}' '*.{js,ts,tsx}'",
-    "lint-verify": "eslint '{src,test}/**/*.{js,ts,tsx}' '*.{js,ts,tsx}'",
-    "format": "yarn run prettier --write '{src,test}/**/*.{js,ts,tsx,yml,yaml,json,md}' '*.{js,ts,tsx,yml,yaml,json,md}'",
-    "format:check": "yarn run prettier --check '{src,test}/**/*.{js,ts,tsx,yml,yaml,json,md}' '*.{js,ts,tsx,yml,yaml,json,md}'",
-    "prepush": "yarn build && yarn lint-fix",
-    "prepublishOnly": "yarn build"
+    "lint-fix": "eslint --fix --quiet '{src,test}/**/*.{js,ts,tsx}' '*.{js,ts,tsx,mjs}'",
+    "lint-verify": "eslint '{src,test}/**/*.{js,ts,tsx}' '*.{js,ts,tsx,mjs}'",
+    "format": "prettier --write '{src,test}/**/*.{js,ts,tsx,yml,yaml,json,md}' '*.{js,ts,tsx,mjs,yml,yaml,json,md}'",
+    "format:check": "prettier --check '{src,test}/**/*.{js,ts,tsx,yml,yaml,json,md}' '*.{js,ts,tsx,mjs,yml,yaml,json,md}'",
+    "prepush": "npm run build && npm run lint-fix",
+    "prepublishOnly": "npm run build"
   },
   "files": [
-    "dist/*"
+    "dist"
   ],
   "husky": {
     "hooks": {
@@ -35,13 +54,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
     "@types/jest": "30.0.0",
-    "@types/lodash.get": "4.4.9",
-    "@types/lodash.isempty": "4.4.9",
-    "@types/lodash.merge": "4.6.9",
-    "@types/lodash.pickby": "4.6.9",
-    "@types/lodash.reduce": "4.6.9",
     "@types/node": "24.0.14",
-    "@types/node-fetch": "2.6.12",
     "@typescript-eslint/eslint-plugin": "8.37.0",
     "@typescript-eslint/parser": "8.37.0",
     "eslint": "9.31.0",
@@ -57,20 +70,13 @@
     "prettier": "3.6.2",
     "rimraf": "6.0.1",
     "source-map-support": "0.5.21",
-    "timeout-signal": "2.0.0",
     "ts-jest": "29.4.0",
     "ts-node": "10.9.2",
+    "tsup": "8.5.0",
     "typescript": "5.8.3"
   },
   "dependencies": {
-    "abort-controller": "^3.0.0",
-    "lodash.get": "^4.4.2",
-    "lodash.isempty": "^4.4.0",
-    "lodash.merge": "^4.6.2",
-    "lodash.pickby": "^4.6.0",
-    "lodash.reduce": "^4.6.0",
-    "node-fetch": "< 3",
-    "pino": "^8.12.1",
-    "pino-pretty": "^10.0.0"
+    "pino": "^9.7.0",
+    "pino-pretty": "^13.0.0"
   }
 }

@@ -1,7 +1,6 @@
 import { Configuration } from '../../configuration';
 import { CommandGetEventsSchemaService } from '../../command/command.module';
 import { APIService } from './api.service';
-import AbortController from 'abort-controller';
 import type { GetEventsSchemaResponse } from '../../payload/models';
 
 export const APIGetEventsSchemaService = {

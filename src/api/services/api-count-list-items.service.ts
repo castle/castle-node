@@ -1,7 +1,6 @@
 import { Configuration } from '../../configuration';
 import { CommandCountListItemsService } from '../../command/command.module';
 import { APIService } from './api.service';
-import AbortController from 'abort-controller';
 import type { CountListItemsPayload } from '../../payload/models';
 
 export const APICountListItemsService = {

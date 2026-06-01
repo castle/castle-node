@@ -1,9 +1,8 @@
 import { APIService } from '../../../src/api/api.module';
 import { Configuration } from '../../../src/configuration';
-import { CommandAuthenticateService } from '../../../src/command/services';
+import { CommandRiskService } from '../../../src/command/services';
 import MockDate from 'mockdate';
 import fetchMock from 'fetch-mock';
-import AbortController from 'abort-controller';
 
 describe('APIService', () => {
   beforeEach(() => {
@@ -14,13 +13,13 @@ describe('APIService', () => {
     MockDate.reset();
   });
 
-  const sampleRequestData = {
-    event: '$login.succeeded',
-    created_at: 'now',
-    user_id: 'userid',
-    user_traits: {
+  const sampleRequestData: any = {
+    event: '$login',
+    request_token: 'token',
+    status: '$succeeded',
+    user: {
+      id: 'userid',
       email: 'myemail',
-      updated_at: 'today',
     },
     context: {
       ip: '8.8.8.8',
@@ -44,7 +43,7 @@ describe('APIService', () => {
           logger: { info: () => {} },
         });
 
-        const command = CommandAuthenticateService.call(
+        const command = CommandRiskService.call(
           controller,
           sampleRequestData,
           configuration
@@ -64,7 +63,7 @@ describe('APIService', () => {
           logger: { info: () => {} },
         });
 
-        const command = CommandAuthenticateService.call(
+        const command = CommandRiskService.call(
           controller,
           sampleRequestData,
           configuration

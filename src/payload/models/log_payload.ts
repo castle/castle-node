@@ -1,5 +1,6 @@
 import type { IncomingHttpHeaders } from 'http2';
 import type { AddressPayload } from './address_payload';
+import type { TransactionPayload } from './risk_payload';
 
 export type LogPayload = {
   request_token?: string;
@@ -30,4 +31,5 @@ export type LogPayload = {
     phone?: string;
   };
   status?: string;
+  transaction?: TransactionPayload;
 } & ({ event: string } | { type: string });

@@ -1,7 +1,6 @@
 import { Configuration } from '../../configuration';
 import { CommandFetchListItemService } from '../../command/command.module';
 import { APIService } from './api.service';
-import AbortController from 'abort-controller';
 import type { ListItemPayload } from '../../payload/models';
 
 export const APIFetchListItemService = {

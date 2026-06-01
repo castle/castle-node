@@ -1,5 +1,4 @@
 import { CoreProcessResponseService } from '../../../src/core/core.module';
-import { Response } from 'node-fetch';
 import {
   APIError,
   InvalidRequestTokenError,

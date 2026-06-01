@@ -1,6 +1,4 @@
-import isEmpty from 'lodash.isempty';
-import get from 'lodash.get';
-import pickBy from 'lodash.pickby';
+import { isEmpty, pickByTruthy } from '../../utils/object';
 import { Configuration } from '../../configuration';
 import { ClientIdExtractService } from '../../client-id/client-id.module';
 import { HeadersExtractService } from '../../headers/headers.module';
@@ -17,7 +15,8 @@ const requestContextData = (
     return {};
   }
 
-  const cookiesForClientId = cookies || get(request, 'headers.cookies');
+  const cookiesForClientId =
+    cookies || (request.headers as { [key: string]: any })?.cookies;
   return {
     client_id:
       ClientIdExtractService.call(request.headers, cookiesForClientId) || false,
@@ -34,7 +33,7 @@ export const ContextGetDefaultService = {
     configuration: Configuration
   ): { [key: string]: any } => {
     return {
-      ...pickBy(requestContextData(request, cookies, configuration)),
+      ...pickByTruthy(requestContextData(request, cookies, configuration)),
       library: {
         name: 'castle-node',
         version,
