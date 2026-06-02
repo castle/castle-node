@@ -100,20 +100,20 @@ const castle = new Castle({
 
 ### Config options
 
-| Option              | Type               | Default                    | Description                                                                                                     |
-| ------------------- | ------------------ | -------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `apiSecret`         | `string`           |                            | API secret from the [dashboard](https://dashboard.castle.io/settings/general).                                  |
-| `timeout`           | `number`           | `1500`                     | Time in ms before returning the failover strategy.                                                              |
-| `failoverStrategy`  | `FailoverStrategy` | `FailoverStrategy.allow`   | Automatic `risk` response on timeout: `allow`, `deny`, or `challenge`.                                          |
-| `logger`            | `object`           |                            | Logs Castle API requests/responses; must respond to `info`.                                                     |
-| `doNotTrack`        | `boolean`          | `false`                    | When `true`, suppresses all requests and triggers failover on `risk`. Useful in development and testing.        |
-| `allowlisted`       | `string[]`         | `[]`                       | Strict header allow-list (see [Header allow/deny lists](#header-allowdeny-lists)).                              |
-| `denylisted`        | `string[]`         | `[]`                       | Headers to always scrub, in addition to the always-blocked `Cookie` / `Authorization`.                          |
-| `ipHeaders`         | `string[]`         | `[]`                       | Custom headers to read the client IP from (see [Client IP detection](#client-ip-detection)).                    |
-| `trustedProxies`    | `string[]`         | `[]`                       | Known proxy IPs (strings or regexes). Pick this **or** `trustedProxyDepth`, never both.                         |
-| `trustedProxyDepth` | `number`           | `0`                        | Number of known trusted proxies in the chain. Pick this **or** `trustedProxies`, never both.                    |
-| `trustProxyChain`   | `boolean`          | `false`                    | Trust the entire `X-Forwarded-For` chain. **Warning:** promiscuous — a malicious proxy can spoof the client IP. |
-| `baseUrl`           | `string`           | `https://api.castle.io/v1` | Base Castle API URL.                                                                                            |
+| Option              | Type                   | Default                    | Description                                                                                                     |
+| ------------------- | ---------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `apiSecret`         | `string`               |                            | API secret from the [dashboard](https://dashboard.castle.io/settings/general).                                  |
+| `timeout`           | `number`               | `1500`                     | Time in ms before returning the failover strategy.                                                              |
+| `failoverStrategy`  | `FailoverStrategy`     | `FailoverStrategy.allow`   | Automatic `risk` response on timeout: `allow`, `deny`, or `challenge`.                                          |
+| `logger`            | `object`               |                            | Logs Castle API requests/responses; must respond to `info`.                                                     |
+| `doNotTrack`        | `boolean`              | `false`                    | When `true`, suppresses all requests and triggers failover on `risk`. Useful in development and testing.        |
+| `allowlisted`       | `string[]`             | `[]`                       | Strict header allow-list (see [Header allow/deny lists](#header-allowdeny-lists)).                              |
+| `denylisted`        | `string[]`             | `[]`                       | Headers to always scrub, in addition to the always-blocked `Cookie` / `Authorization`.                          |
+| `ipHeaders`         | `string[]`             | `[]`                       | Custom headers to read the client IP from (see [Client IP detection](#client-ip-detection)).                    |
+| `trustedProxies`    | `(string \| RegExp)[]` | `[]`                       | Known proxy IPs (strings or regexes). Pick this **or** `trustedProxyDepth`, never both.                         |
+| `trustedProxyDepth` | `number`               | `0`                        | Number of known trusted proxies in the chain. Pick this **or** `trustedProxies`, never both.                    |
+| `trustProxyChain`   | `boolean`              | `false`                    | Trust the entire `X-Forwarded-For` chain. **Warning:** promiscuous — a malicious proxy can spoof the client IP. |
+| `baseUrl`           | `string`               | `https://api.castle.io/v1` | Base Castle API URL.                                                                                            |
 
 ### Multi-environment / multi-tenant
 
@@ -187,11 +187,12 @@ const list = await castle.createList({
 await castle.createListItem({
   list_id: list.id,
   primary_value: '1.2.3.4',
+  author: { type: '$analyst_email', identifier: 'analyst@example.com' },
 });
 
 await castle.searchListItems({
   list_id: list.id,
-  filters: { primary_value: '1.2.3.4' },
+  filters: [{ field: 'primary_value', op: '$eq', value: '1.2.3.4' }],
 });
 ```
 
@@ -329,7 +330,7 @@ Pick **either** `trustedProxies` **or** `trustedProxyDepth`, never both. Private
 
 ## Errors
 
-All API exceptions inherit from `APIError`; `ConfigurationError` is raised for setup problems. The most useful ones:
+All HTTP/API exceptions inherit from `APIError`. `ConfigurationError` (setup problems) and `WebhookVerificationError` (webhook signature mismatch) extend `Error` directly. The most useful ones:
 
 | Class                      | Raised when                                             |
 | -------------------------- | ------------------------------------------------------- |
