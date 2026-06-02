@@ -318,4 +318,73 @@ describe('Castle', () => {
       expect(payload.context.headers).toHaveProperty('Cookie', true);
     });
   });
+
+  describe('events', () => {
+    const buildCastle = (fetch) =>
+      new Castle({
+        apiSecret: 'some secret',
+        overrideFetch: fetch,
+        logger: { info: () => {} },
+      });
+
+    it('queryEvents posts to events/query', async () => {
+      const fetch = fetchMock
+        .sandbox()
+        .mock(
+          { url: 'path:/v1/events/query', method: 'POST' },
+          { data: [], total_count: 0 }
+        );
+
+      const response = await buildCastle(fetch).queryEvents({ filters: [] });
+
+      expect(response).toEqual({ data: [], total_count: 0 });
+    });
+
+    it('searchEvents is a deprecated alias of queryEvents', async () => {
+      const fetch = fetchMock
+        .sandbox()
+        .mock(
+          { url: 'path:/v1/events/query', method: 'POST' },
+          { data: [], total_count: 0 }
+        );
+
+      const response = await buildCastle(fetch).searchEvents({ filters: [] });
+
+      expect(response).toEqual({ data: [], total_count: 0 });
+    });
+
+    it('eventsSchema gets events/schema', async () => {
+      const fetch = fetchMock
+        .sandbox()
+        .mock({ url: 'path:/v1/events/schema', method: 'GET' }, { data: [] });
+
+      const response = await buildCastle(fetch).eventsSchema();
+
+      expect(response).toEqual({ data: [] });
+    });
+
+    it('getEventsSchema is a deprecated alias of eventsSchema', async () => {
+      const fetch = fetchMock
+        .sandbox()
+        .mock({ url: 'path:/v1/events/schema', method: 'GET' }, { data: [] });
+
+      const response = await buildCastle(fetch).getEventsSchema();
+
+      expect(response).toEqual({ data: [] });
+    });
+
+    it('groupEvents posts to events/group', async () => {
+      const fetch = fetchMock
+        .sandbox()
+        .mock({ url: 'path:/v1/events/group', method: 'POST' }, { data: [] });
+
+      const response = await buildCastle(fetch).groupEvents({
+        filters: [],
+        group_by: { fields: [] },
+        columns: [],
+      });
+
+      expect(response).toEqual({ data: [] });
+    });
+  });
 });

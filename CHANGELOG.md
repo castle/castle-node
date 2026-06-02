@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+**Enhancements:**
+
+- Rename the Events API methods to `queryEvents`, `eventsSchema`, and
+  `groupEvents`. `searchEvents` and `getEventsSchema` are kept as deprecated
+  aliases of `queryEvents` and `eventsSchema`, so existing code keeps working.
+
 ## 3.0.0
 
 **BREAKING CHANGES:**
@@ -38,10 +44,10 @@
   strict type-checking was effectively off), and drop unused decorator options.
   `strictNullChecks` is now enforced.
 - Bump `pino` to v9 and `pino-pretty` to v13.
-- Migrate CI from CircleCI to GitHub Actions with a Node 20/22/24 matrix.
+- Migrate CI from CircleCI to GitHub Actions with a Node 20/22/24/26 matrix.
 - Switch the package manager from Yarn (classic) to npm (`package-lock.json`,
   `npm ci` in CI).
-- Add `.tool-versions` / `.nvmrc` pinning Node `24.16.0`.
+- Add `.tool-versions` / `.nvmrc` pinning Node `26.2.0`.
 - Add `engines.node >= 20` and a `typecheck` script.
 - Remove the dead `ImpersonationFailed` error (impersonation endpoints no longer
   exist in the SDK).

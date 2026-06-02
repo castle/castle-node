@@ -138,13 +138,13 @@ export class Castle {
     return APICountListItemsService.call(params, this.configuration);
   }
 
-  public async searchEvents(
+  public async queryEvents(
     params: SearchEventsPayload
   ): Promise<SearchEventsResponse> {
     return APISearchEventsService.call(params, this.configuration);
   }
 
-  public async getEventsSchema(): Promise<GetEventsSchemaResponse> {
+  public async eventsSchema(): Promise<GetEventsSchemaResponse> {
     return APIGetEventsSchemaService.call(this.configuration);
   }
 
@@ -152,6 +152,18 @@ export class Castle {
     params: GroupEventsPayload
   ): Promise<GroupEventsResponse> {
     return APIGroupEventsService.call(params, this.configuration);
+  }
+
+  /** @deprecated Use {@link Castle.queryEvents} instead. */
+  public async searchEvents(
+    params: SearchEventsPayload
+  ): Promise<SearchEventsResponse> {
+    return this.queryEvents(params);
+  }
+
+  /** @deprecated Use {@link Castle.eventsSchema} instead. */
+  public async getEventsSchema(): Promise<GetEventsSchemaResponse> {
+    return this.eventsSchema();
   }
 
   public async requestUserData(params: RequestUserDataPayload): Promise<any> {

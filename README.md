@@ -215,8 +215,11 @@ await castle.deleteUserData({
 
 ### Events (enterprise)
 
+Query, group, and inspect the schema of stored events. Use `queryEvents`,
+`groupEvents`, and `eventsSchema`:
+
 ```js
-await castle.searchEvents({
+await castle.queryEvents({
   filters: [
     /* ... */
   ],
@@ -226,8 +229,12 @@ await castle.groupEvents({
   group_by: { fields: [] },
   columns: [],
 });
-await castle.getEventsSchema();
+await castle.eventsSchema();
 ```
+
+`searchEvents` and `getEventsSchema` are kept as **deprecated** aliases of
+`queryEvents` and `eventsSchema` for backwards compatibility; prefer the newer
+names in new code.
 
 ### Webhook signature verification
 
