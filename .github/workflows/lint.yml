@@ -1,0 +1,31 @@
+name: Lint
+
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint-verify
+
+      - name: Prettier
+        run: npm run format:check
+
+      - name: Typecheck
+        run: npm run typecheck

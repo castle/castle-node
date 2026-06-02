@@ -1,7 +1,6 @@
 import { Configuration } from '../../configuration';
 import { CommandSearchListsService } from '../../command/command.module';
 import { APIService } from './api.service';
-import AbortController from 'abort-controller';
 import type { SearchListsPayload } from '../../payload/models';
 
 export const APISearchListsService = {

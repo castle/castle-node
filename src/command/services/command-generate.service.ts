@@ -8,13 +8,10 @@ import {
   RequestUserDataPayload,
 } from '../../payload/models/privacy_payload';
 import {
-  Payload,
   LogPayload,
   RiskPayload,
   FilterPayload,
   CreateListItemPayload,
-  DevicePayload,
-  UserDevicePayload,
   UpdateListItemPayload,
   ListItemPayload,
   SearchListItemsPayload,
@@ -35,9 +32,6 @@ export const CommandGenerateService = {
     controller,
     path: string,
     options:
-      | Payload
-      | DevicePayload
-      | UserDevicePayload
       | LogPayload
       | RiskPayload
       | FilterPayload

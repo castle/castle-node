@@ -1,6 +1,5 @@
 import pino from 'pino';
 import pretty from 'pino-pretty';
-import fetch from 'node-fetch';
 
 import { DEFAULT_API_URL, DEFAULT_TIMEOUT } from './constants';
 import { ConfigurationError } from './errors';
@@ -24,18 +23,18 @@ export interface ConfigurationProperties {
 
 export class Configuration {
   apiSecret: string;
-  baseUrl?: URL;
-  timeout?: number;
-  allowlisted?: string[];
-  denylisted?: string[];
-  overrideFetch?: any;
-  failoverStrategy?: FailoverStrategy;
-  doNotTrack?: boolean;
-  ipHeaders?: string[];
-  trustedProxies?: RegExp[];
-  trustProxyChain?: boolean;
-  trustedProxyDepth?: number;
-  logger?: any;
+  baseUrl: URL;
+  timeout: number;
+  allowlisted: string[];
+  denylisted: string[];
+  overrideFetch: any;
+  failoverStrategy: FailoverStrategy;
+  doNotTrack: boolean;
+  ipHeaders: string[];
+  trustedProxies: RegExp[];
+  trustProxyChain: boolean;
+  trustedProxyDepth: number;
+  logger: any;
 
   constructor({
     apiSecret,

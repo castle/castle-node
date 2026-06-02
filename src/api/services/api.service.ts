@@ -1,8 +1,6 @@
 import { Configuration } from '../../configuration';
 import { CoreProcessResponseService } from '../../core/core.module';
 import { LoggerService } from '../../logger/logger.module';
-import AbortController from 'abort-controller';
-import fetch from 'node-fetch';
 
 export const APIService = {
   call: async (
@@ -19,7 +17,7 @@ export const APIService = {
 
     try {
       response = await fetcher(requestUrl, requestOptions);
-    } catch (err) {
+    } catch (err: any) {
       LoggerService.call(
         { requestUrl, requestOptions, err },
         configuration.logger

@@ -1,7 +1,6 @@
 import { Configuration } from '../../configuration';
 import { CommandBatchUpsertListItemsService } from '../../command/command.module';
 import { APIService } from './api.service';
-import AbortController from 'abort-controller';
 import type { BatchUpsertListItemsPayload } from '../../payload/models';
 
 export const APIBatchUpsertListItemsService = {

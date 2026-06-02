@@ -51,7 +51,7 @@ export const IPsExtractService = {
   ) => {
     const ipHeadersList = ipHeaders.length ? ipHeaders : DEFAULT;
     const proxiesList = trustedProxies.concat(TRUSTED_PROXIES);
-    let allIPs = [];
+    let allIPs: any[] = [];
     for (const ipHeader of ipHeadersList) {
       const IPs = IPsFrom(ipHeader, headers, trustedProxyDepth);
       const IPValue = removeProxies(IPs, trustProxyChain, proxiesList);

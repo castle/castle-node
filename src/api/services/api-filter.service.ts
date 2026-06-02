@@ -4,7 +4,6 @@ import { CommandFilterService } from '../../command/command.module';
 import { FailoverStrategy } from '../../failover/failover.module';
 import type { FilterPayload } from '../../payload/payload.module';
 import { APIService } from './api.service';
-import AbortController from 'abort-controller';
 
 const handleFailover = (
   reason: string,
@@ -48,7 +47,7 @@ export const APIFilterService = {
         command,
         configuration
       );
-    } catch (e) {
+    } catch (e: any) {
       if (isTimeoutError(e)) {
         return handleFailover('timeout', configuration, e);
       } else if (e instanceof InternalServerError) {

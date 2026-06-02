@@ -1,5 +1,8 @@
 export const HeadersGetCookieService = {
-  call: (cookies: string | string[], name: string): string | undefined => {
+  call: (
+    cookies: string | string[] | undefined,
+    name: string
+  ): string | undefined => {
     if (!cookies) {
       return;
     }

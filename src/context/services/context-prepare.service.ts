@@ -1,4 +1,4 @@
-import merge from 'lodash.merge';
+import { deepMerge } from '../../utils/object';
 import { Configuration } from '../../configuration';
 import { ContextGetDefaultService } from './context-get-default.service';
 import type { IncomingHttpHeaders } from 'http2';
@@ -14,6 +14,6 @@ export const ContextPrepareService = {
       options?.cookies,
       configuration
     );
-    return merge(defaultContext, options?.context);
+    return deepMerge(defaultContext, options?.context);
   },
 };

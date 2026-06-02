@@ -1,7 +1,6 @@
 import { CommandGenerateService } from '../../../src/command/command.module';
 import { Configuration } from '../../../src/configuration';
 import MockDate from 'mockdate';
-import AbortController from 'abort-controller';
 
 describe('CommandGenerateService', () => {
   beforeEach(() => {
@@ -42,7 +41,7 @@ describe('CommandGenerateService', () => {
       const received = CommandGenerateService.call(
         controller,
         'test',
-        { context },
+        { context } as any,
         'GET',
         config
       );

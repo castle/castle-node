@@ -1,6 +1,68 @@
 # Changelog
 
-## Unreleased
+## 3.0.0
+
+**BREAKING CHANGES:**
+
+- Remove the legacy endpoints and their `Castle` methods: `authenticate`,
+  `track`, and the device endpoints (`getDevice`, `getDevicesForUser`,
+  `approveDevice`, `reportDevice`). Use `risk` / `filter` / `log` instead. The
+  related public types (`Payload`, `DevicePayload`, `UserDevicePayload`,
+  `AuthenticateResult`) are removed as well.
+- Require Node.js `>= 20`. The SDK now uses the runtime's built-in global
+  `fetch` and `AbortSignal` instead of `node-fetch` and `abort-controller`,
+  which are no longer dependencies.
+- Ship a proper dual ESM + CommonJS build via `tsup` with an `exports` map
+  (separate `import`/`require` entry points and type definitions). Importing
+  from internal `dist/` paths is unsupported; import from the package root.
+
+**Features:**
+
+- Add webhook signature verification: `Castle#verifyWebhookSignature(rawBody, signature)`
+  (and `WebhookVerifyService`) validate the `X-Castle-Signature` header — a
+  base64 HMAC-SHA256 of the raw request body, compared in constant time — and
+  raise `WebhookVerificationError` on mismatch.
+- Add secure-mode signing: `Castle#secureModeSignature(userId)` (and
+  `SecureModeService`) return a hex HMAC-SHA256 of the user id, for signing user
+  IDs sent from the browser.
+
+**Enhancements:**
+
+- Rename the Events API methods to `queryEvents`, `eventsSchema`, and
+  `groupEvents`. `searchEvents` and `getEventsSchema` remain available as
+  aliases of `queryEvents` and `eventsSchema`, so existing code keeps working.
+- Drop the `lodash.get` / `lodash.isempty` / `lodash.merge` / `lodash.pickby` /
+  `lodash.reduce` micro-dependencies in favor of native JavaScript helpers
+  (`src/utils/object.ts`).
+- Modernize `tsconfig.json`: target `ES2022`, move the `strict` flag under
+  `compilerOptions` (it was previously a top-level key and silently ignored, so
+  strict type-checking was effectively off), and drop unused decorator options.
+  `strictNullChecks` is now enforced.
+- Bump `pino` to v9 and `pino-pretty` to v13.
+- Migrate CI from CircleCI to GitHub Actions with a Node 20/22/24/26 matrix.
+- Switch the package manager from Yarn (classic) to npm (`package-lock.json`,
+  `npm ci` in CI).
+- Add `.tool-versions` / `.nvmrc` pinning Node `26.2.0`.
+- Add `engines.node >= 20` and a `typecheck` script.
+- Remove the dead `ImpersonationFailed` error (impersonation endpoints no longer
+  exist in the SDK).
+- Restructure the README to match the other Castle SDKs: capabilities list,
+  quick start, a full Usage section (Risk/Filter/Log/Lists/Privacy/Events/
+  Webhooks/Secure mode), advanced header/IP configuration, and an errors table.
+
+**Bug fixes:**
+
+- Add a fully-typed `transaction` field to `RiskPayload`, modelled on the public
+  [OpenAPI schema](https://reference.castle.io/#operation/risk): `base_amount` is
+  a string, `amount` is a `$fiat`/`$crypto` object, plus `payment_method`,
+  `shipping_address` and `merchant`. Exported as `TransactionPayload` — addresses
+  [#188](https://github.com/castle/castle-node/issues/188).
+- Extend `FilterPayload` and `LogPayload` with the same `transaction` field, since
+  both endpoints accept it.
+- Add the missing `region_code` to `AddressPayload` and type
+  `RiskPayload.user.address` as `AddressPayload`.
+- `risk` no longer throws a `TypeError` in `doNotTrack` mode when the payload
+  has no `user` object.
 
 ## 2.3.3
 

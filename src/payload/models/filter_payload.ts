@@ -1,4 +1,5 @@
 import type { IncomingHttpHeaders } from 'http2';
+import type { TransactionPayload } from './risk_payload';
 
 type BaseFilterPayload = {
   // deprecated
@@ -29,6 +30,7 @@ type BaseFilterPayload = {
   };
   status?: string;
   name?: string;
+  transaction?: TransactionPayload;
 } & ({ event: string } | { type: string });
 
 type Context = {

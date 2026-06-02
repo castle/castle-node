@@ -1,6 +1,5 @@
 import { Configuration } from '../../configuration';
 import { APIService } from './api.service';
-import AbortController from 'abort-controller';
 import { DeleteUserDataPayload } from '../../payload/models/privacy_payload';
 import { CommandDeleteUserDataService } from '../../command/services/command-delete-user-data.service';
 
