@@ -232,9 +232,8 @@ await castle.groupEvents({
 await castle.eventsSchema();
 ```
 
-`searchEvents` and `getEventsSchema` are kept as **deprecated** aliases of
-`queryEvents` and `eventsSchema` for backwards compatibility; prefer the newer
-names in new code.
+`searchEvents` and `getEventsSchema` are also available as aliases of
+`queryEvents` and `eventsSchema`.
 
 ### Webhook signature verification
 

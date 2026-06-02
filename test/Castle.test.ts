@@ -340,7 +340,7 @@ describe('Castle', () => {
       expect(response).toEqual({ data: [], total_count: 0 });
     });
 
-    it('searchEvents is a deprecated alias of queryEvents', async () => {
+    it('searchEvents is an alias of queryEvents', async () => {
       const fetch = fetchMock
         .sandbox()
         .mock(
@@ -363,7 +363,7 @@ describe('Castle', () => {
       expect(response).toEqual({ data: [] });
     });
 
-    it('getEventsSchema is a deprecated alias of eventsSchema', async () => {
+    it('getEventsSchema is an alias of eventsSchema', async () => {
       const fetch = fetchMock
         .sandbox()
         .mock({ url: 'path:/v1/events/schema', method: 'GET' }, { data: [] });

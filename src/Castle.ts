@@ -154,14 +154,14 @@ export class Castle {
     return APIGroupEventsService.call(params, this.configuration);
   }
 
-  /** @deprecated Use {@link Castle.queryEvents} instead. */
+  /** Alias of {@link Castle.queryEvents}. */
   public async searchEvents(
     params: SearchEventsPayload
   ): Promise<SearchEventsResponse> {
     return this.queryEvents(params);
   }
 
-  /** @deprecated Use {@link Castle.eventsSchema} instead. */
+  /** Alias of {@link Castle.eventsSchema}. */
   public async getEventsSchema(): Promise<GetEventsSchemaResponse> {
     return this.eventsSchema();
   }

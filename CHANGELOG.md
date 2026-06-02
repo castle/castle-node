@@ -29,7 +29,7 @@
 **Enhancements:**
 
 - Rename the Events API methods to `queryEvents`, `eventsSchema`, and
-  `groupEvents`. `searchEvents` and `getEventsSchema` are kept as deprecated
+  `groupEvents`. `searchEvents` and `getEventsSchema` remain available as
   aliases of `queryEvents` and `eventsSchema`, so existing code keeps working.
 - Drop the `lodash.get` / `lodash.isempty` / `lodash.merge` / `lodash.pickby` /
   `lodash.reduce` micro-dependencies in favor of native JavaScript helpers
