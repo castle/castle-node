@@ -15,7 +15,7 @@ export interface ConfigurationProperties {
   failoverStrategy?: FailoverStrategy;
   doNotTrack?: boolean;
   ipHeaders?: string[];
-  trustedProxies?: RegExp[];
+  trustedProxies?: (string | RegExp)[];
   trustProxyChain?: boolean;
   trustedProxyDepth?: number;
   logger?: any;
