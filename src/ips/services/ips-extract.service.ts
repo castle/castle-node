@@ -47,13 +47,25 @@ export const IPsExtractService = {
       trustedProxies = [],
       trustProxyChain = false,
       trustedProxyDepth = 0,
-    }: Configuration
+    }: Configuration,
+    remoteAddress?: string
   ) => {
     const ipHeadersList = ipHeaders.length ? ipHeaders : DEFAULT;
     const proxiesList = trustedProxies.concat(TRUSTED_PROXIES);
+
+    // Node keeps the connection's peer address on the socket rather than in a
+    // header, unlike the WSGI/Rack `REMOTE_ADDR` the Python/Ruby SDKs read. When
+    // the caller supplies it and no `remote-addr` header is present, surface it
+    // as `remote-addr` so it takes part in extraction with the usual precedence
+    // (after `x-forwarded-for`). An existing `remote-addr` header is preserved.
+    const effectiveHeaders =
+      remoteAddress && !headers?.['remote-addr']
+        ? { ...headers, 'remote-addr': remoteAddress }
+        : headers;
+
     let allIPs: any[] = [];
     for (const ipHeader of ipHeadersList) {
-      const IPs = IPsFrom(ipHeader, headers, trustedProxyDepth);
+      const IPs = IPsFrom(ipHeader, effectiveHeaders, trustedProxyDepth);
       const IPValue = removeProxies(IPs, trustProxyChain, proxiesList);
       if (IPValue) {
         return IPValue;

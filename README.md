@@ -305,7 +305,7 @@ Header names are case-insensitive and accept both `_` and `-` as separators. A l
 
 ### Client IP detection
 
-Castle needs the original client IP, not the IP of your proxy or load balancer. The SDK reads `X-Forwarded-For` and `Remote-Addr` by default; pick **one** of the strategies below depending on your infrastructure:
+Castle needs the original client IP, not the IP of your proxy or load balancer. The SDK reads `X-Forwarded-For` and `Remote-Addr` by default, and falls back to the connection's peer address (`request.socket.remoteAddress`, with `request.connection.remoteAddress` and `request.info.remoteAddress` also supported) when neither header is present. Pick **one** of the strategies below depending on your infrastructure:
 
 ```js
 const castle = new Castle({

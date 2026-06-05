@@ -1,11 +1,11 @@
 import { deepMerge } from '../../utils/object';
 import { Configuration } from '../../configuration';
 import { ContextGetDefaultService } from './context-get-default.service';
-import type { IncomingHttpHeaders } from 'http2';
+import type { CastleRequest } from './request';
 
 export const ContextPrepareService = {
   call: (
-    request: { headers: IncomingHttpHeaders },
+    request: CastleRequest,
     options: undefined | { [key: string]: any },
     configuration: Configuration
   ) => {

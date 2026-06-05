@@ -136,5 +136,52 @@ describe('IPsExtractService', () => {
         expect(IPsExtractService.call(headers, config)).toEqual('6.6.6.6');
       });
     });
+
+    describe('when a remoteAddress fallback is provided', () => {
+      const config = new Configuration({
+        apiSecret: 'test',
+        ipHeaders: [],
+        trustedProxies: [],
+      });
+
+      it('uses it as remote-addr when no ip headers are present', () => {
+        expect(IPsExtractService.call({}, config, '8.8.8.8')).toEqual(
+          '8.8.8.8'
+        );
+      });
+
+      it('falls back to a loopback remoteAddress when nothing else is available', () => {
+        expect(IPsExtractService.call({}, config, '::1')).toEqual('::1');
+      });
+
+      it('prefers x-forwarded-for over the remoteAddress fallback', () => {
+        expect(
+          IPsExtractService.call(
+            { 'x-forwarded-for': '1.2.3.5' },
+            config,
+            '8.8.8.8'
+          )
+        ).toEqual('1.2.3.5');
+      });
+
+      it('preserves an existing remote-addr header over the fallback', () => {
+        expect(
+          IPsExtractService.call(
+            { 'remote-addr': '4.4.4.4' },
+            config,
+            '8.8.8.8'
+          )
+        ).toEqual('4.4.4.4');
+      });
+
+      it('ignores the fallback when custom ipHeaders exclude remote-addr', () => {
+        const cfConfig = new Configuration({
+          apiSecret: 'test',
+          ipHeaders: ['cf-connecting-ip'],
+          trustedProxies: [],
+        });
+        expect(IPsExtractService.call({}, cfConfig, '8.8.8.8')).toBeUndefined();
+      });
+    });
   });
 });

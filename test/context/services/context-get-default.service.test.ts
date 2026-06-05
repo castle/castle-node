@@ -42,5 +42,23 @@ describe('ContextGetDefaultService', () => {
       );
       expect(received).toMatchObject(expected);
     });
+
+    describe('when no forwarding header is present', () => {
+      const socketRequest = {
+        headers: {
+          'x-castle-client-id': 'client_id',
+        },
+        socket: { remoteAddress: '8.8.8.8' },
+      } as unknown as ExpressRequest;
+
+      it('derives the ip from the socket peer address', () => {
+        const received = ContextGetDefaultService.call(
+          socketRequest,
+          undefined,
+          config
+        );
+        expect(received).toMatchObject({ ip: '8.8.8.8' });
+      });
+    });
   });
 });
