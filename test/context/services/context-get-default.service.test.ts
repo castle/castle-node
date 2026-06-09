@@ -14,7 +14,6 @@ describe('ContextGetDefaultService', () => {
         name: 'castle-node',
         version,
       },
-      client_id: 'client_id',
       ip: '1.2.3.4',
     };
 
@@ -35,11 +34,7 @@ describe('ContextGetDefaultService', () => {
     } as ExpressRequest;
 
     it('generates default context', () => {
-      const received = ContextGetDefaultService.call(
-        mockRequest,
-        undefined,
-        config
-      );
+      const received = ContextGetDefaultService.call(mockRequest, config);
       expect(received).toMatchObject(expected);
     });
   });

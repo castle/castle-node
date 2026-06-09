@@ -44,7 +44,7 @@ const castle = new Castle({ apiSecret: process.env.CASTLE_API_SECRET });
 
 const context = ContextPrepareService.call(
   req,
-  { cookies: req.cookies },
+  undefined,
   castle.configuration
 );
 

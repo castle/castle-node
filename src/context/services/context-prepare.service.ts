@@ -11,7 +11,6 @@ export const ContextPrepareService = {
   ) => {
     const defaultContext = ContextGetDefaultService.call(
       request,
-      options?.cookies,
       configuration
     );
     return deepMerge(defaultContext, options?.context);
