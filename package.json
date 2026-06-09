@@ -2,7 +2,7 @@
   "$schema": "http://json.schemastore.org/package",
   "name": "@castleio/sdk",
   "description": "Castle SDK for Node",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
