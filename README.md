@@ -44,7 +44,7 @@ const castle = new Castle({ apiSecret: process.env.CASTLE_API_SECRET });
 
 const context = ContextPrepareService.call(
   req,
-  { cookies: req.cookies },
+  undefined,
   castle.configuration
 );
 
@@ -74,7 +74,7 @@ With CommonJS:
 const { Castle, ContextPrepareService } = require('@castleio/sdk');
 ```
 
-`ContextPrepareService.call(request, options, configuration)` extracts the IP, headers, and client id that Castle needs from a Node `request` object. See [Advanced configuration](#advanced-configuration) for how header allow/deny lists and proxy chains are resolved.
+`ContextPrepareService.call(request, options, configuration)` extracts the IP and headers that Castle needs from a Node `request` object. See [Advanced configuration](#advanced-configuration) for how header allow/deny lists and proxy chains are resolved.
 
 ## Configuration
 

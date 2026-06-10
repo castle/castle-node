@@ -11,7 +11,6 @@ describe('PayloadPrepareService', () => {
           version,
         },
         client_id: '123',
-        active: true,
       },
       user_id: '123',
     };
