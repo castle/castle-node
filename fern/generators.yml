@@ -1,0 +1,13 @@
+api:
+  specs:
+    - openapi: ./openapi/openapi.yml
+groups:
+  ts-sdk:
+    generators:
+      - name: fernapi/fern-typescript-sdk
+        version: 3.71.8
+        output:
+          location: local-file-system
+          path: ../generated/typescript
+        github:
+          repository: castle/castle-node
