@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.1
+
+- Add `PaymentRequiredError` for HTTP 402 responses.
+
 ## 3.1.0
 
 **Housekeeping:**
