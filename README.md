@@ -342,6 +342,7 @@ All HTTP/API exceptions inherit from `APIError`. `ConfigurationError` (setup pro
 | `InvalidParametersError`   | `422` response with validation details.                 |
 | `InvalidRequestTokenError` | `422` — the `request_token` is missing or invalid.      |
 | `RateLimitError`           | `429` — back off and retry.                             |
+| `PaymentRequiredError`     | `402` response.                                         |
 | `InternalServerError`      | `5xx` response from Castle.                             |
 | `WebhookVerificationError` | A webhook signature did not match.                      |
 

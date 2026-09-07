@@ -3,6 +3,7 @@ import {
   APIError,
   InvalidRequestTokenError,
   RateLimitError,
+  PaymentRequiredError,
 } from '../../../src/errors';
 
 describe('CoreProcessResponseService', () => {
@@ -162,7 +163,7 @@ describe('CoreProcessResponseService', () => {
     });
 
     describe('erroneous response statuses', () => {
-      const erroneousStatuses = [400, 401, 403, 404, 419, 422, 429];
+      const erroneousStatuses = [400, 401, 402, 403, 404, 419, 422, 429];
 
       erroneousStatuses.forEach((errorStatus) => {
         describe(`when ${errorStatus}`, () => {
@@ -222,6 +223,28 @@ describe('CoreProcessResponseService', () => {
               info: () => {},
             })
           ).rejects.toThrow(RateLimitError);
+        });
+      });
+
+      describe('when payment is required', () => {
+        const response = new Response(
+          JSON.stringify({
+            type: 'credit_exhausted',
+            message:
+              'Included usage credit for this billing period has been used up',
+          }),
+          {
+            headers: { 'Content-Type': 'application/json' },
+            status: 402,
+          }
+        );
+
+        it('throws PaymentRequiredError', async () => {
+          await expect(
+            CoreProcessResponseService.call('risk', {}, response, {
+              info: () => {},
+            })
+          ).rejects.toThrow(PaymentRequiredError);
         });
       });
 

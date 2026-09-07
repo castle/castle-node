@@ -76,6 +76,13 @@ export class RateLimitError extends APIError {
   }
 }
 
+export class PaymentRequiredError extends APIError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'PaymentRequiredError';
+  }
+}
+
 // all internal server errors
 export class InternalServerError extends APIError {
   constructor(message: string) {

@@ -9,12 +9,14 @@ import {
   InternalServerError,
   APIError,
   RateLimitError,
+  PaymentRequiredError,
 } from '../../errors';
 import { LoggerService } from '../../logger/logger.module';
 
 const RESPONSE_ERRORS = {
   '400': BadRequestError,
   '401': UnauthorizedError,
+  '402': PaymentRequiredError,
   '403': ForbiddenError,
   '404': NotFoundError,
   '419': UserUnauthorizedError,
