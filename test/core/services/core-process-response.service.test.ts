@@ -230,7 +230,8 @@ describe('CoreProcessResponseService', () => {
         const response = new Response(
           JSON.stringify({
             type: 'credit_exhausted',
-            message: 'Included usage credit for this billing period has been used up',
+            message:
+              'Included usage credit for this billing period has been used up',
           }),
           {
             headers: { 'Content-Type': 'application/json' },
